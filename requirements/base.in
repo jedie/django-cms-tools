@@ -1,4 +1,9 @@
 
+django<1.9
+
 # Django CMS
 # http://docs.django-cms.org/en/latest/upgrade/index.html
 django-cms>=3.4
+
+# https://github.com/jedie/django-tools
+django-tools

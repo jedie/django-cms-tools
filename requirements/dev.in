@@ -7,3 +7,4 @@ pylint
 pytest
 Sphinx
 tox
+pip-tools
