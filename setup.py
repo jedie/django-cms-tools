@@ -68,7 +68,7 @@ setup(
     name='django cms tools',
     version=__version__,  # noqa
     description='Tools/helpers around Django-CMS',
-    long_description=read('README.rst'),
+    long_description=read('README.creole'),
     author='Jens Diemer',
     author_email='django-cms-tools@jensdiemer.de',
     url='https://github.com/jedie/django-cms-tools',
