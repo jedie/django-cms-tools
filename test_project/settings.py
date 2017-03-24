@@ -37,7 +37,6 @@ SECRET_KEY = 'Only for the tests ;)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-TEMPLATE_DEBUG = True
 
 SITE_ID=1
 
@@ -103,6 +102,7 @@ TEMPLATES = [
                 'django.core.context_processors.tz',
                 'sekizai.context_processors.sekizai',
                 'django.core.context_processors.static',
+                'cms.context_processors.cms_settings',
             ],
         },
     },
