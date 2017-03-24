@@ -11,22 +11,38 @@ Look also at the siblings project: [[https://github.com/jedie/django-tools|djang
 
 == existing stuff
 
-TODO
+=== test fixture creation
+
+
+==== create_cms_index_pages
+
+Create CMS home page in all existing languages ({{{settings.LANGUAGES}}}) and fill placeholder with TextPlugin.
+
+Source: [[https://github.com/jedie/django-cms-tools/blob/master/django_cms_tools/fixtures/pages.py|django_cms_tools.fixtures.pages.create_cms_index_pages]]
+Test/Example: [[https://github.com/jedie/django-cms-tools/blob/master/tests/test_fixtures_pages.py|/tests/test_fixtures_pages.py]]
+
+
+==== create_cms_plugin_page
+
+Create CMS plugin page in all existing languages ({{{settings.LANGUAGES}}}) and add a link to the index page.
+
+Source: [[https://github.com/jedie/django-cms-tools/blob/master/django_cms_tools/fixtures/pages.py|django_cms_tools.fixtures.pages.create_cms_plugin_page]]
+Test/Example: [[https://github.com/jedie/django-cms-tools/blob/master/tests/test_fixtures_pages.py|/tests/test_fixtures_pages.py]]
+
 
 == Django compatibility
 
 |= django-cms-tools |= django version |= python         |
-| v0.1          | 1.8             | 2.7, 3.4, 3.5   |
+| v0.1.x            | 1.8             | 2.7, 3.4, 3.5   |
 
 (Look also into [[https://github.com/jedie/django-cms-tools/blob/master/.travis.yml|.travis.yml]] for version combination tested via travis-ci)
 
 
 == history
 
-* v0.2.0 *dev* - 24.03.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.1.0...master|compare v0.1.0...master]]
-** ...to be continue...
 * v0.1.0 - 24.03.2017
-** start the project
+** NEW: create_cms_index_pages
+** NEW: create_cms_plugin_page
 
 
 == links ==
