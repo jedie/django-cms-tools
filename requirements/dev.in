@@ -1,6 +1,7 @@
 -r base.txt
 
 coverage
+coveralls
 flake8
 pydocstyle
 pylint
@@ -11,3 +12,5 @@ Sphinx
 tox
 pip-tools
 piprot
+wheel
+twine
