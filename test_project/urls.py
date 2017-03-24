@@ -1,20 +1,25 @@
-"""test_project URL Configuration
+# coding: utf-8
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.8/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
-from django.conf.urls import include, url
+from __future__ import absolute_import, print_function, unicode_literals
+
+
+from django.conf.urls import include, url, static
+from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 
-urlpatterns = [
+from test_project import settings
+from test_project.test_app.views import IndexView
+
+
+admin.autodiscover()
+
+
+urlpatterns = i18n_patterns('',
     url(r'^admin/', include(admin.site.urls)),
-]
+    url(r'^index/', IndexView.as_view()),
+    url(r'^', include('cms.urls')),
+)
+
+if settings.DEBUG:
+    urlpatterns += static.static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

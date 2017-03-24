@@ -1,0 +1,21 @@
+{% load cms_tags menu_tags sekizai_tags %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Django-CMS-Tools Test Project</title>
+        <meta name="robots" content="noindex, follow">
+        {% render_block "css" %}
+    </head>
+    <body>
+        {% cms_toolbar %}
+        <h1>Django-CMS-Tools Test Project</h1>
+        <ul class="nav">
+            {% show_menu 0 100 100 100 %}
+        </ul>
+        {% block content %}
+            {% placeholder "content" %}
+        {% endblock content %}
+        {% render_block "js" %}
+    </body>
+</html>

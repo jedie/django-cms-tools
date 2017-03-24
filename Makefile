@@ -55,6 +55,19 @@ test:
 test-all:
 	tox
 
+test-ci:
+	python manage.py migrate
+	test-all
+
+migrate:
+	python manage.py migrate
+
+runserver:
+	python manage.py runserver
+
+createsuperuser:
+	python manage.py createsuperuser
+
 ## run style checks and static analysis with pylint
 pylint:
 	@-mkdir -p reports/
