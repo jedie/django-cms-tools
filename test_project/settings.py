@@ -66,6 +66,7 @@ INSTALLED_APPS = (
     'djangocms_text_ckeditor', # https://github.com/divio/djangocms-text-ckeditor
 
     'test_project.test_app',
+    'test_project.test_cms_plugin',
 )
 
 MIDDLEWARE_CLASSES = (

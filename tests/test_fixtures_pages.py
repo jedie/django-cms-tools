@@ -12,9 +12,9 @@ from django_tools.unittest_utils.template import set_string_if_invalid, \
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 
 from django_cms_tools.fixtures.pages import create_cms_index_pages
+from test_project.test_cms_plugin.fixtures import create_testapp_cms_plugin_page
 
 
-@pytest.mark.django_db
 @pytest.mark.usefixtures(
     create_cms_index_pages.__name__,
 )
@@ -74,3 +74,69 @@ class ExistingCmsPageTests(BaseTestCase):
             browser_traceback=True
         )
         self.assertNotIn(TEMPLATE_INVALID_PREFIX, response.content.decode('utf8'))
+
+
+@pytest.mark.usefixtures(
+    create_cms_index_pages.__name__,
+    create_testapp_cms_plugin_page.__name__,
+)
+class CreatePluginPageTests(BaseTestCase):
+    """
+    Tests for plugin page generation with:
+
+        django_cms_tools.fixtures.pages.create_cms_plugin_page
+    """
+    def test_index_link_en(self):
+        self.assertResponse(
+            self.client.get('/en/', HTTP_ACCEPT_LANGUAGE='en'),
+            must_contain=(
+                "<h1>Django-CMS-Tools Test Project</h1>",
+                '<a href="/en/simpletestapp-in-english/">SimpleTestApp</a>',
+            ),
+            must_not_contain=("error", "Traceback"),
+            template_name='base.html',
+            status_code=200, html=True,
+            browser_traceback=True
+        )
+
+    def test_index_link_de(self):
+        self.assertResponse(
+            self.client.get('/de/', HTTP_ACCEPT_LANGUAGE='de'),
+            must_contain=(
+                "<h1>Django-CMS-Tools Test Project</h1>",
+                '<a href="/de/simpletestapp-in-german/">SimpleTestApp</a>',
+            ),
+            must_not_contain=("error", "Traceback"),
+            template_name='base.html',
+            status_code=200, html=True,
+            browser_traceback=True
+        )
+
+    def test_plugin_view_en(self):
+        self.assertResponse(
+            self.client.get('/en/simpletestapp-in-english/', HTTP_ACCEPT_LANGUAGE='en'),
+            must_contain=(
+                "<h1>Django-CMS-Tools Test Project</h1>",
+                '<a href="/en/">index in English</a>', # cms menu link
+                "<p>Hello World from the Simple CMS test App!</p>"
+            ),
+            must_not_contain=("error", "Traceback"),
+            template_name='index_view.html',
+            status_code=200, html=True,
+            browser_traceback=True
+        )
+
+    def test_plugin_view_de(self):
+        self.assertResponse(
+            self.client.get('/de/simpletestapp-in-german/', HTTP_ACCEPT_LANGUAGE='de'),
+            must_contain=(
+                "<h1>Django-CMS-Tools Test Project</h1>",
+                '<a href="/de/">index in German</a>', # cms menu link
+                "<p>Hello World from the Simple CMS test App!</p>"
+            ),
+            must_not_contain=("error", "Traceback"),
+            template_name='index_view.html',
+            status_code=200, html=True,
+            browser_traceback=True
+        )
+

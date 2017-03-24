@@ -38,24 +38,26 @@ class ToxTestCommand(distutils.cmd.Command):
         return subprocess.call(['tox'])
 
 
+__version__="<unknown>"
 exec(read('django_cms_tools', 'version.py'))
 
+
 classifiers = """
-# The next line is important: it prevents accidental upload to PyPI!
-Private :: Do Not Upload
-Development Status :: 2 - Pre-Alpha
+Development Status :: 5 - Production/Stable
 Intended Audience :: Developers
 License :: OSI Approved :: GNU General Public License v3.0 or above
-#Operating System :: MacOS :: MacOS X
-#Operating System :: Microsoft :: Windows
+Operating System :: OS Independent
+Operating System :: MacOS :: MacOS X
+Operating System :: Microsoft :: Windows
 Operating System :: POSIX
 Programming Language :: Python
 Programming Language :: Python :: 2
 Programming Language :: Python :: 2.7
-#Programming Language :: Python :: 3
-#Programming Language :: Python :: 3.4
-#Programming Language :: Python :: 3.5
-#Programming Language :: Python :: 3.6
+Programming Language :: Python :: 3
+Programming Language :: Python :: 3.4
+Programming Language :: Python :: 3.5
+Programming Language :: Python :: 3.6
+Framework :: Django
 Topic :: Internet
 """
 
@@ -66,7 +68,7 @@ install_requires = [
 
 setup(
     name='django cms tools',
-    version=__version__,  # noqa
+    version=__version__,
     description='Tools/helpers around Django-CMS',
     long_description=read('README.creole'),
     author='Jens Diemer',

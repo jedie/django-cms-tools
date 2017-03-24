@@ -46,3 +46,61 @@ def create_cms_index_pages(placeholder_slot="content"):
     else:
         log.debug('Index page already exists.')
 
+
+def create_cms_plugin_page(apphook, apphook_namespace, placeholder_slot="content"):
+    """
+    Create cms plugin page in all existing languages.
+    Add a link to the index page.
+
+    :param apphook: e.g...........: 'FooBarApp'
+    :param apphook_namespace: e.g.: 'foobar'
+    :return:
+    """
+    try:
+        index_page = Page.objects.get(is_home=True, publisher_is_draft=False)
+    except Page.DoesNotExist:
+        log.error('ERROR: "index page" doesn\'t exists!')
+        log.error('run "./manage.py create_index_pages" first!')
+        raise RuntimeError('no index page')
+
+    plugin = CMSPlugin.objects.filter(plugin_type=apphook)
+    if plugin.exists():
+        log.debug('Plugin page for "%s" plugin already exist, ok.' % apphook)
+    else:
+        log.debug('Create "%s" plugin page in "en" and:' % apphook)
+
+        queryset = Page.objects.filter(application_namespace=apphook_namespace)
+        if queryset.exists():
+            log.debug('Plugin page "%s" already exists, ok.\n' % apphook)
+            return
+
+        plugin_page = create_page(
+            title='%s in english' % apphook,
+            template=TEMPLATE_INHERITANCE_MAGIC,
+            parent=index_page,
+            language=settings.LANGUAGE_CODE,
+            published=False,
+            in_navigation=True,
+            apphook=apphook,
+            apphook_namespace=apphook_namespace
+        )
+
+        placeholder, created = index_page.placeholders.get_or_create(slot=placeholder_slot)
+        for code, lang_name in settings.LANGUAGES:
+            print('\tcreate "%s" page in: %s' % (apphook, lang_name))
+            if code != settings.LANGUAGE_CODE:
+                create_title(code, '%s in %s' % (apphook, lang_name), plugin_page)
+
+            plugin_url = plugin_page.get_absolute_url(language=code)
+            add_plugin(
+                placeholder=placeholder,
+                plugin_type='TextPlugin', # djangocms_text_ckeditor
+                language=code,
+                body='<p><a href="{url}">{name}</a></p>'.format(
+                    url=plugin_url,
+                    name=apphook,
+                )
+            )
+            plugin_page.publish(code)
+
+    apphook_reload.reload_urlconf()
