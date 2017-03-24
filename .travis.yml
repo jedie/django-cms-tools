@@ -1,0 +1,37 @@
+# Config file for automatic testing at travis-ci.org
+
+language: python
+python:
+    - 3.5
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.pip-accel
+    - $HOME/.cache/pip
+
+env:
+  matrix:
+    - TOXENV=py27-django18
+#    - TOXENV=py27-django19
+#    - TOXENV=py27-django110
+    - TOXENV=py34-django18
+#    - TOXENV=py34-django19
+#    - TOXENV=py34-django110
+    - TOXENV=py35-django18
+#    - TOXENV=py35-django19
+#    - TOXENV=py35-django110
+
+matrix:
+  fast_finish: true
+
+install:
+#    - pip install -r$TRAVIS_BUILD_DIR/requirements-test.txt
+    - make install
+
+script:
+    - pip freeze
+#    - travis_retry tox
+    - travis_retry test-all
+
+
