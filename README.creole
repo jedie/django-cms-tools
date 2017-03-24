@@ -1,0 +1,42 @@
+= django-cms-tools
+
+Miscellaneous tools/helpers for django CMS.
+
+Look also at the siblings project: [[https://github.com/jedie/django-tools|django-tools]] (Tools/helpers around Django).
+
+| {{https://travis-ci.org/jedie/django-cms-tools.svg|Build Status on travis-ci.org}} | [[https://travis-ci.org/jedie/django-cms-tools/|travis-ci.org/jedie/django-cms-tools]] |
+| {{https://coveralls.io/repos/jedie/django-cms-tools/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/django-cms-tools|coveralls.io/r/jedie/django-cms-tools]] |
+| {{https://landscape.io/github/jedie/django-cms-tools/master/landscape.svg|Status on landscape.io}} | [[https://landscape.io/github/jedie/django-cms-tools/master|landscape.io/github/jedie/django-cms-tools/master]] |
+
+
+== existing stuff
+
+TODO
+
+== Django compatibility
+
+|= django-cms-tools |= django version |= python         |
+| v0.1          | 1.8             | 2.7, 3.4, 3.5   |
+
+(Look also into [[https://github.com/jedie/django-cms-tools/blob/master/.travis.yml|.travis.yml]] for version combination tested via travis-ci)
+
+
+== history
+
+* v0.2.0 *dev* - 24.03.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.1.0...master|compare v0.1.0...master]]
+** ...to be continue...
+* v0.1.0 - 24.03.2017
+** start the project
+
+
+== links ==
+
+| Homepage   | http://github.com/jedie/django-cms-tools
+| PyPi       | http://pypi.python.org/pypi/django-cms-tools/
+
+
+== donation ==
+
+* [[https://www.paypal.me/JensDiemer|paypal.me/JensDiemer]]
+* [[https://flattr.com/submit/auto?uid=jedie&url=https%3A%2F%2Fgithub.com%2Fjedie%2Fdjango-cms-tools%2F|Flattr This!]]
+* Send [[http://www.bitcoin.org/|Bitcoins]] to [[https://blockexplorer.com/address/1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F|1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F]]

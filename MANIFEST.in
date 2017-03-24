@@ -1,0 +1,12 @@
+include LICENSE
+include README.creole
+include tox.ini
+
+recursive-include tests *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+
+include requirements.txt
+recursive-include requirements *.txt
+
+recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif
