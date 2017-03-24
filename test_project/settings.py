@@ -40,7 +40,11 @@ DEBUG = True
 
 SITE_ID=1
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['*']
+
+from django_tools.settings_utils import InternalIps
+INTERNAL_IPS = InternalIps(["127.0.0.1", "::1", "192.168.*.*", "10.0.*.*"])
 
 
 # Application definition
