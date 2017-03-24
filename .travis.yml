@@ -26,12 +26,11 @@ matrix:
   fast_finish: true
 
 install:
-#    - pip install -r$TRAVIS_BUILD_DIR/requirements-test.txt
+    - travis_retry pip install -r$TRAVIS_BUILD_DIR/requirements/dev.txt
     - travis_retry make install
 
 script:
     - pip freeze
-#    - travis_retry tox
     - travis_retry make test-all
 
 
