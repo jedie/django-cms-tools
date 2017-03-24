@@ -27,11 +27,11 @@ matrix:
 
 install:
 #    - pip install -r$TRAVIS_BUILD_DIR/requirements-test.txt
-    - make install
+    - travis_retry make install
 
 script:
     - pip freeze
 #    - travis_retry tox
-    - travis_retry test-all
+    - travis_retry make test-all
 
 
