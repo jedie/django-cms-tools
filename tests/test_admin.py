@@ -1,10 +1,6 @@
 # coding: utf-8
 
-"""
-    $ pytest src/tests/test_admin.py
-"""
-
-from __future__ import unicode_literals, print_function
+from __future__ import absolute_import, print_function, unicode_literals
 
 import pytest
 
