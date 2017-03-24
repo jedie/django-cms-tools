@@ -5,6 +5,9 @@ flake8
 pydocstyle
 pylint
 pytest
+pytest-django
+pytest-cov
 Sphinx
 tox
 pip-tools
+piprot
