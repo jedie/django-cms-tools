@@ -12,3 +12,8 @@ django-tools==0.32.9
 django-treebeard==4.1.0
 django==1.8.17
 djangocms-admin-style==1.2.6.2
+djangocms-text-ckeditor==3.4.0
+html5lib==0.9999999
+olefile==0.44
+pillow==4.0.0
+six==1.10.0
