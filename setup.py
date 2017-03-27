@@ -228,7 +228,7 @@ install_requires = [
 
 
 setup(
-    name='django cms tools',
+    name='django-cms-tools',
     version=__version__,
     description='Tools/helpers around Django-CMS',
     long_description=long_description,
@@ -238,7 +238,7 @@ setup(
     license="GNU General Public License v3.0 or above",
     classifiers=[c.strip() for c in classifiers.splitlines()
                  if c.strip() and not c.startswith('#')],
-    packages=find_packages(exclude=['tests']),
+    packages=find_packages(exclude=['tests', 'test_project']),
     include_package_data=True,
     install_requires=install_requires,
     cmdclass={
