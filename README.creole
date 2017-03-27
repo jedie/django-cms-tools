@@ -37,10 +37,13 @@ Test/Example: [[https://github.com/jedie/django-cms-tools/blob/master/tests/test
 
 (Look also into [[https://github.com/jedie/django-cms-tools/blob/master/.travis.yml|.travis.yml]] for version combination tested via travis-ci)
 
+== TODO:
+
+Support Django 1.9 and 1.10 and run tests against these versions.
 
 == history
 
-* v0.1.0 - 24.03.2017
+* v0.1.0 - 27.03.2017
 ** NEW: create_cms_index_pages
 ** NEW: create_cms_plugin_page
 
