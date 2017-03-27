@@ -231,7 +231,7 @@ setup(
     name='django cms tools',
     version=__version__,
     description='Tools/helpers around Django-CMS',
-    long_description=read('README.creole'),
+    long_description=long_description,
     author='Jens Diemer',
     author_email='django-cms-tools@jensdiemer.de',
     url='https://github.com/jedie/django-cms-tools',

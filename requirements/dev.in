@@ -14,3 +14,4 @@ pip-tools
 piprot
 wheel
 twine
+python-creole>=v0.8
