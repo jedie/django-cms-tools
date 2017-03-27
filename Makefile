@@ -125,3 +125,6 @@ dist: clean
 ## install the package to the active Python's site-packages
 install: clean
 	python setup.py install
+
+publish: clean requirements
+	python setup.py publish
