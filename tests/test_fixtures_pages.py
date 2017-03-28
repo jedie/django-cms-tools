@@ -67,7 +67,7 @@ class ExistingCmsPageTests(BaseTestCase):
         self.assertResponse(response,
             must_contain=(
                 "<h1>Django-CMS-Tools Test Project</h1>",
-                "index in German",
+                "index in Deutsch",
             ),
             must_not_contain=("error", "Traceback"),
             status_code=200, html=False,
@@ -86,6 +86,18 @@ class CreatePluginPageTests(BaseTestCase):
 
         django_cms_tools.fixtures.pages.create_cms_plugin_page
     """
+    def test_urls_en(self):
+        pages = Page.objects.public()
+        urls = [page.get_absolute_url(language="en") for page in pages]
+        urls.sort()
+        self.assertEqual(urls, ["/en/", "/en/simpletestapp-in-english/"])
+
+    def test_urls_de(self):
+        pages = Page.objects.public()
+        urls = [page.get_absolute_url(language="de") for page in pages]
+        urls.sort()
+        self.assertEqual(urls, ["/de/", "/de/simpletestapp-in-deutsch/"])
+
     def test_index_link_en(self):
         self.assertResponse(
             self.client.get('/en/', HTTP_ACCEPT_LANGUAGE='en'),
@@ -104,7 +116,7 @@ class CreatePluginPageTests(BaseTestCase):
             self.client.get('/de/', HTTP_ACCEPT_LANGUAGE='de'),
             must_contain=(
                 "<h1>Django-CMS-Tools Test Project</h1>",
-                '<a href="/de/simpletestapp-in-german/">SimpleTestApp</a>',
+                '<a href="/de/simpletestapp-in-deutsch/">SimpleTestApp</a>',
             ),
             must_not_contain=("error", "Traceback"),
             template_name='base.html',
@@ -128,10 +140,10 @@ class CreatePluginPageTests(BaseTestCase):
 
     def test_plugin_view_de(self):
         self.assertResponse(
-            self.client.get('/de/simpletestapp-in-german/', HTTP_ACCEPT_LANGUAGE='de'),
+            self.client.get('/de/simpletestapp-in-deutsch/', HTTP_ACCEPT_LANGUAGE='de'),
             must_contain=(
                 "<h1>Django-CMS-Tools Test Project</h1>",
-                '<a href="/de/">index in German</a>', # cms menu link
+                '<a href="/de/">index in Deutsch</a>', # cms menu link
                 "<p>Hello World from the Simple CMS test App!</p>"
             ),
             must_not_contain=("error", "Traceback"),

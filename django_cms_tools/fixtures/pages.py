@@ -6,10 +6,13 @@ import logging
 
 import pytest
 
+from django.utils import translation
+
 from cms.api import create_page, create_title, add_plugin
 from cms.constants import TEMPLATE_INHERITANCE_MAGIC
 from cms.models import Page, CMSPlugin, settings
 from cms.utils import apphook_reload
+
 
 log = logging.getLogger(__name__)
 
@@ -31,18 +34,19 @@ def create_cms_index_pages(placeholder_slot="content"):
             in_navigation=True
         )
         placeholder, created = index_page.placeholders.get_or_create(slot=placeholder_slot)
-        for code, lang_name in settings.LANGUAGES:
-            title = 'index in %s' % lang_name
-            print('\tcreate %r' % title)
-            if code != settings.LANGUAGE_CODE:
-                create_title(code, title, index_page)
-            add_plugin(
-                placeholder=placeholder,
-                plugin_type='TextPlugin', # djangocms_text_ckeditor
-                language=code,
-                body='index page in %s' % lang_name
-            )
-            index_page.publish(code)
+        for language_code, lang_name in settings.LANGUAGES:
+            with translation.override(language_code):
+                title = 'index in %s' % lang_name
+                print('\tcreate %r' % title)
+                if language_code != settings.LANGUAGE_CODE:
+                    create_title(language_code, title, index_page)
+                add_plugin(
+                    placeholder=placeholder,
+                    plugin_type='TextPlugin', # djangocms_text_ckeditor
+                    language=language_code,
+                    body='index page in %s' % lang_name
+                )
+                index_page.publish(language_code)
     else:
         log.debug('Index page already exists.')
 
@@ -75,7 +79,7 @@ def create_cms_plugin_page(apphook, apphook_namespace, placeholder_slot="content
             return
 
         plugin_page = create_page(
-            title='%s in english' % apphook,
+            title='%s in English' % apphook,
             template=TEMPLATE_INHERITANCE_MAGIC,
             parent=index_page,
             language=settings.LANGUAGE_CODE,
@@ -86,21 +90,22 @@ def create_cms_plugin_page(apphook, apphook_namespace, placeholder_slot="content
         )
 
         placeholder, created = index_page.placeholders.get_or_create(slot=placeholder_slot)
-        for code, lang_name in settings.LANGUAGES:
-            print('\tcreate "%s" page in: %s' % (apphook, lang_name))
-            if code != settings.LANGUAGE_CODE:
-                create_title(code, '%s in %s' % (apphook, lang_name), plugin_page)
+        for language_code, lang_name in settings.LANGUAGES:
+            with translation.override(language_code):
+                print('\tcreate "%s" page in: %s' % (apphook, lang_name))
+                if language_code != settings.LANGUAGE_CODE:
+                    create_title(language_code, '%s in %s' % (apphook, lang_name), plugin_page)
 
-            plugin_url = plugin_page.get_absolute_url(language=code)
-            add_plugin(
-                placeholder=placeholder,
-                plugin_type='TextPlugin', # djangocms_text_ckeditor
-                language=code,
-                body='<p><a href="{url}">{name}</a></p>'.format(
-                    url=plugin_url,
-                    name=apphook,
+                plugin_url = plugin_page.get_absolute_url(language=language_code)
+                add_plugin(
+                    placeholder=placeholder,
+                    plugin_type='TextPlugin', # djangocms_text_ckeditor
+                    language=language_code,
+                    body='<p><a href="{url}">{name}</a></p>'.format(
+                        url=plugin_url,
+                        name=apphook,
+                    )
                 )
-            )
-            plugin_page.publish(code)
+                plugin_page.publish(language_code)
 
     apphook_reload.reload_urlconf()
