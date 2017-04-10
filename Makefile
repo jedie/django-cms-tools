@@ -57,7 +57,7 @@ tox:
 
 test-ci:
 	python manage.py migrate
-	test-all
+	tox
 
 migrate:
 	python manage.py migrate
