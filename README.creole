@@ -101,10 +101,13 @@ e.g.: You would like to make a clone of a existing installation, but without to 
 
 == TODO:
 
-Support Django 1.9 and 1.10 and run tests against these versions.
+ * Add tests for 'filer commands'
+ * Support Django 1.9 and 1.10 and run tests against these versions.
 
 == history
 
+* v0.2.0 - 10.04.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.1.2...v0.2.0|compare v0.1.2...v0.2.0]]
+** Experimental: Filer management commands: 'image_info' and 'replace_broken'
 * v0.1.2 - 28.03.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.1.1...v0.1.2|compare v0.1.1...v0.1.2]]
 ** Change: create pages with translated language name
 * v0.1.1 - 27.03.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.1.0...v0.1.1|compare v0.1.0...v0.1.1]]
