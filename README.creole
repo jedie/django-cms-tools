@@ -30,6 +30,68 @@ Source: [[https://github.com/jedie/django-cms-tools/blob/master/django_cms_tools
 Test/Example: [[https://github.com/jedie/django-cms-tools/blob/master/tests/test_fixtures_pages.py|/tests/test_fixtures_pages.py]]
 
 
+=== django filer tools *experimental*
+
+Activate by change your settings.py, e.g.:
+
+{{{
+INSTALLED_APPS = [
+    ...
+    'django_cms_tools.filer_tools',
+    ...
+]
+}}}
+
+
+==== 'image info' management command
+
+Display information about the number of existing, missing and ignored images. And a summary about all used images.
+usage:
+{{{
+$ ./manage.py image_info
+
+34 items - foo.Bar
+34 instanced checked:
+   0 exist    0 missing   34 ignored - foo.BarModel.meta_image
+  34 exist    0 missing    0 ignored - foo.BarModel.filer_overview_image
+
+...
+
+total:
+	existing images..: 6171
+	missing images...: 0
+-------------------------------------------------------------------------------
+Collect all filer IDs...
+File: 2 entries
+Image: 2 entries
+Information about File:
+	Total entry count: 8042 entries.
+	Used entry count: 2 entries.
+	Total size: 13.8 GB
+	Used size: 997.5 KB
+Information about Image:
+	Total entry count: 6993 entries.
+	Used entry count: 2 entries.
+	Total size: 13.7 GB
+	Used size: 997.5 KB
+(Note: 'File' contains 'Image' ;)
+}}}
+
+
+==== 'replace broken' management command
+
+Replace all not existing files files with a given filer ID.
+
+e.g.: You would like to make a clone of a existing installation, but without to move the real files:
+
+1. make a DB dump on the source system
+2. insert the DB dump the the cloned system
+3. log into django admin of the new cloned version
+4. upload a "dummy.jpg" filer image
+5. write down the filer image ID (e.g.: 123)
+6. start: {{{$ ./manage.py replace_broken 123}}}
+
+
 == Django compatibility
 
 |= django-cms-tools |= django version |= python         |
