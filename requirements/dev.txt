@@ -15,7 +15,10 @@ coverage==4.3.4
 coveralls==1.1
 django-classy-tags==0.8.0
 django-cms==3.4.2
+django-filer==1.2.7
 django-formtools==2.0
+django-mptt==0.8.7        # via django-filer
+django-polymorphic==1.0.2  # via django-filer
 django-sekizai==0.10.0
 django-tools==0.32.9
 django-treebeard==4.1.0
@@ -24,6 +27,7 @@ djangocms-admin-style==1.2.6.2
 djangocms-text-ckeditor==3.4.0
 docopt==0.6.2             # via coveralls
 docutils==0.13.1          # via sphinx
+easy-thumbnails==2.3      # via django-filer
 first==2.0.1              # via pip-tools
 flake8==3.3.0
 html5lib==0.9999999
@@ -60,6 +64,7 @@ snowballstemmer==1.2.1    # via sphinx
 sphinx==1.5.3
 tox==2.6.0
 twine==1.8.1
+unidecode==0.4.20         # via django-filer
 virtualenv==15.1.0        # via tox
 wheel==0.29.0
 wrapt==1.10.10            # via astroid

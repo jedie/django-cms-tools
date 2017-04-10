@@ -6,8 +6,8 @@ from __future__ import unicode_literals, absolute_import, print_function
 from cms.apphook_pool import apphook_pool
 from cms.app_base import CMSApp
 
-from test_project.test_cms_plugin.app_config import TestAppConfig
-from test_project.test_cms_plugin import urls
+from django_cms_tools_test_project.test_cms_plugin.app_config import TestAppConfig
+from django_cms_tools_test_project.test_cms_plugin import urls
 
 class SimpleTestApp(CMSApp):
 

@@ -65,8 +65,12 @@ INSTALLED_APPS = (
     'sekizai', # https://github.com/ojii/django-sekizai
     'djangocms_text_ckeditor', # https://github.com/divio/djangocms-text-ckeditor
 
-    'test_project.test_app',
-    'test_project.test_cms_plugin',
+    # Own management commands:
+    'django_cms_tools.filer_tools',
+
+    # Test project stuff:
+    'django_cms_tools_test_project.test_app',
+    'django_cms_tools_test_project.test_cms_plugin',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -86,13 +90,13 @@ MIDDLEWARE_CLASSES = (
     'cms.middleware.language.LanguageCookieMiddleware',
 )
 
-ROOT_URLCONF = 'test_project.urls'
+ROOT_URLCONF = 'django_cms_tools_test_project.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            "test_project/templates/",
+            "django_cms_tools_test_project/templates/",
         ],
         'APP_DIRS': True,
         'OPTIONS': {

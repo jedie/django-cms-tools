@@ -11,10 +11,9 @@ from django.core.management import call_command
 
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
 
-import django_cms_tools
+import django_cms_tools_test_project
 
-
-MANAGE_DIR = os.path.abspath(os.path.join(os.path.dirname(django_cms_tools.__file__), ".."))
+MANAGE_DIR = os.path.abspath(os.path.dirname(django_cms_tools_test_project.__file__))
 
 
 class CheckTestEnvironment(DjangoCommandMixin, TestCase):

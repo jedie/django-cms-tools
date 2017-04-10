@@ -3,7 +3,7 @@ import os
 import sys
 
 if __name__ == "__main__":
-    os.environ["DJANGO_SETTINGS_MODULE"]="test_project.settings"
+    os.environ["DJANGO_SETTINGS_MODULE"]="django_cms_tools_test_project.settings"
 
     from django.core.management import execute_from_command_line
 

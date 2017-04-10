@@ -12,7 +12,7 @@ from django_tools.unittest_utils.template import set_string_if_invalid, \
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 
 from django_cms_tools.fixtures.pages import create_cms_index_pages
-from test_project.test_cms_plugin.fixtures import create_testapp_cms_plugin_page
+from django_cms_tools_test_project.test_cms_plugin.fixtures import create_testapp_cms_plugin_page
 
 
 @pytest.mark.usefixtures(

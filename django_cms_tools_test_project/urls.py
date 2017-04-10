@@ -7,8 +7,8 @@ from django.conf.urls import include, url, static
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 
-from test_project import settings
-from test_project.test_app.views import IndexView
+from django_cms_tools_test_project import settings
+from django_cms_tools_test_project.test_app.views import IndexView
 
 
 admin.autodiscover()
