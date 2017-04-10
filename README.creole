@@ -84,12 +84,12 @@ Replace all not existing files files with a given filer ID.
 
 e.g.: You would like to make a clone of a existing installation, but without to move the real files:
 
-1. make a DB dump on the source system
-2. insert the DB dump the the cloned system
-3. log into django admin of the new cloned version
-4. upload a "dummy.jpg" filer image
-5. write down the filer image ID (e.g.: 123)
-6. start: {{{$ ./manage.py replace_broken 123}}}
+# make a DB dump on the source system
+# insert the DB dump the the cloned system
+# log into django admin of the new cloned version
+# upload a "dummy.jpg" filer image
+# write down the filer image ID (e.g.: 123)
+# start: {{{$ ./manage.py replace_broken 123}}}
 
 
 == Django compatibility
