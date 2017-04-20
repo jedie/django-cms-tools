@@ -62,11 +62,17 @@ class ElPaginationPlaceholder(Placeholder):
             log.debug("No content renderer from context -> render nothing")
             return ''
 
-        # Overwrite the plugin render method to catch all placeholder plugins
-        el_pagination_renderer = ElPaginationContentRenderer(content_renderer.render_plugin)
-        content_renderer.render_plugin = el_pagination_renderer
+        edit_mode = content_renderer.user_is_on_edit_mode()
+        if not edit_mode:
+            log.debug("User is not on edit mode: catch all placeholder plugins.")
+            el_pagination_renderer = ElPaginationContentRenderer(content_renderer.render_plugin)
+            content_renderer.render_plugin = el_pagination_renderer
 
-        super(ElPaginationPlaceholder, self).render_tag(context, name, extra_bits, nodelist=nodelist)
+        content = super(ElPaginationPlaceholder, self).render_tag(context, name, extra_bits, nodelist=nodelist)
+        if edit_mode:
+            log.debug("User is on edit mode: return origin content and empty 'all_plugins' list.")
+            context["all_plugins"]=[]
+            return content
 
         all_plugins = el_pagination_renderer.all_plugins
         context["all_plugins"] = all_plugins
