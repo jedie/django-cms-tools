@@ -7,61 +7,72 @@ import logging
 
 from django import template
 
+from cms.templatetags.cms_tags import Placeholder
 from cms.utils.placeholder import validate_placeholder_name
-from django.utils import translation
 
 
 log = logging.getLogger(__name__)
+
 register = template.Library()
 
 
 class Plugin(object):
-    def __init__(self, render_func, render_kwargs):
+    def __init__(self, render_func, render_args, render_kwargs):
         self.render_func = render_func
         self.render_kwargs = render_kwargs
+        self.render_args = render_args
 
     def render(self):
-        html = self.render_func(**self.render_kwargs)
+        html = self.render_func(*self.render_args, **self.render_kwargs)
         return html
 
 
-@register.simple_tag(takes_context=True)
-def el_pagination_placeholder(context, placeholder_slot, object_name):
+class ElPaginationContentRenderer(object):
+    def __init__(self, render_plugin_func):
+        self.all_plugins = []
+        self.render_plugin_func = render_plugin_func
+
+    def __call__(self, *args, **kwargs):
+        self.all_plugins.append(
+            Plugin(self.render_plugin_func, args, kwargs)
+        )
+        # Don't put the generated html code into the page, yet.
+        return ""
+
+
+class ElPaginationPlaceholder(Placeholder):
     """
     Takes a django cms placeholder and generate a paginate able list of objects,
     with the added cms plugins to this placeholder.
     
-    e.g.:
-        {% el_pagination_placeholder "placeholder_name" "var_name" %}
+    FIXME: Currently we do this by a hack: We change the method:
+        cms.plugin_rendering.ContentRenderer().render_plugin()
+    to get all plugins.
+    
+    usage e.g.:
+        {% el_pagination_placeholder "placeholder_name" %}
     """
-    log.debug("Endless placeholder for %r -> %r", placeholder_slot, object_name)
-    validate_placeholder_name(placeholder_slot)
+    def render_tag(self, context, name, extra_bits, nodelist=None):
+        validate_placeholder_name(name)
 
-    content_renderer = context.get('cms_content_renderer')
-    if not content_renderer:
-        log.debug("No content renderer from context -> render nothing")
+        content_renderer = context.get('cms_content_renderer')
+        # content_renderer == cms.plugin_rendering.ContentRenderer() instance
+
+        if not content_renderer:
+            log.debug("No content renderer from context -> render nothing")
+            return ''
+
+        # Overwrite the plugin render method to catch all placeholder plugins
+        el_pagination_renderer = ElPaginationContentRenderer(content_renderer.render_plugin)
+        content_renderer.render_plugin = el_pagination_renderer
+
+        super(ElPaginationPlaceholder, self).render_tag(context, name, extra_bits, nodelist=nodelist)
+
+        all_plugins = el_pagination_renderer.all_plugins
+        context["all_plugins"] = all_plugins
+
+        log.debug("Add %i items to context['all_plugins']", len(all_plugins))
         return ""
 
-    request = context["request"]
-    current_page = request.current_page
-    placeholder = current_page.placeholders.get(slot=placeholder_slot)
 
-    language=translation.get_language()
-    plugins = placeholder.get_plugins(language=language) # list of CMSPlugin instances
-
-    object_list = [
-        Plugin(
-            render_func=content_renderer.render_plugin,
-            render_kwargs={
-                "instance": plugin,
-                "context": context,
-                "placeholder": placeholder,
-                "editable": False
-            }
-        )
-        for plugin in plugins
-    ]
-    log.debug("Add %i items to context with name %r", len(object_list), object_name)
-    context[object_name] = object_list
-
-    return ""
+register.tag("el_pagination_placeholder", ElPaginationPlaceholder)
