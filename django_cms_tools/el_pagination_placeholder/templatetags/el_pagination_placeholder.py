@@ -68,6 +68,10 @@ class ElPaginationPlaceholder(Placeholder):
             el_pagination_renderer = ElPaginationContentRenderer(content_renderer.render_plugin)
             content_renderer.render_plugin = el_pagination_renderer
 
+            # deactivate the placeholder cache, oterhwise the "all_plugins" list will be
+            # empty on next request ;)
+            content_renderer.placeholder_cache_is_enabled = lambda: False
+
         content = super(ElPaginationPlaceholder, self).render_tag(context, name, extra_bits, nodelist=nodelist)
         if edit_mode:
             log.debug("User is on edit mode: return origin content and empty 'all_plugins' list.")
