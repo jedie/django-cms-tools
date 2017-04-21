@@ -75,9 +75,11 @@ class ElPaginationPlaceholder(Placeholder):
             return content
 
         all_plugins = el_pagination_renderer.all_plugins
+        all_plugins_count=len(all_plugins)
         context["all_plugins"] = all_plugins
+        context["all_plugins_count"] = all_plugins_count
 
-        log.debug("Add %i items to context['all_plugins']", len(all_plugins))
+        log.debug("Add %i items to context['all_plugins']", all_plugins_count)
         return ""
 
 
