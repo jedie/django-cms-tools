@@ -235,8 +235,9 @@ class CmsPluginPageCreator(object):
         Publish the page in all languages.
         """
         for language_code, lang_name in self.iter_languages():
-            print('\tPublish page "%s" page in: %s' % (self.apphook, lang_name))
             plugin_page.publish(language_code)
+            url = plugin_page.get_absolute_url()
+            print('\t"%s" page in: %s published: %s' % (self.apphook, lang_name, url))
 
 
 def create_cms_plugin_page(apphook, apphook_namespace, placeholder_slot="content"):
