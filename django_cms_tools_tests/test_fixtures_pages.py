@@ -4,9 +4,12 @@ from __future__ import unicode_literals, print_function
 
 import pytest
 
-from cms.models import Page
+from cms.models import Page, settings
 
 # https://github.com/jedie/django-tools
+from django.core.urlresolvers import resolve
+from django.utils import translation
+
 from django_tools.unittest_utils.template import set_string_if_invalid, \
     TEMPLATE_INVALID_PREFIX
 from django_tools.unittest_utils.unittest_base import BaseTestCase
@@ -98,12 +101,29 @@ class CreatePluginPageTests(BaseTestCase):
         urls.sort()
         self.assertEqual(urls, ["/de/", "/de/simpletestapp-in-deutsch/"])
 
+    def test_url_resolve(self):
+        url_data = {
+            "/en/": "pages-root",
+            "/de/": "pages-root",
+            "/en/simpletestapp-in-english/": "test_cms_app",
+            "/de/simpletestapp-in-deutsch/": "test_cms_app",
+        }
+        existing_lang_codes=[language_code for language_code, lang_name in settings.LANGUAGES]
+        for url, url_name in url_data.items():
+            language_code=url.split("/",2)[1]
+            self.assertIn(language_code, existing_lang_codes)
+            with translation.override(language_code):
+                resolver_match = resolve(url)
+                self.assertEqual(
+                    resolver_match.url_name, url_name
+                )
+
     def test_index_link_en(self):
         self.assertResponse(
             self.client.get('/en/', HTTP_ACCEPT_LANGUAGE='en'),
             must_contain=(
                 "<h1>Django-CMS-Tools Test Project</h1>",
-                '<a href="/en/simpletestapp-in-english/">SimpleTestApp</a>',
+                '<a href="/en/">index in English</a>',
             ),
             must_not_contain=("error", "Traceback"),
             template_name='base.html',
@@ -116,7 +136,7 @@ class CreatePluginPageTests(BaseTestCase):
             self.client.get('/de/', HTTP_ACCEPT_LANGUAGE='de'),
             must_contain=(
                 "<h1>Django-CMS-Tools Test Project</h1>",
-                '<a href="/de/simpletestapp-in-deutsch/">SimpleTestApp</a>',
+                '<a href="/de/">index in Deutsch</a>',
             ),
             must_not_contain=("error", "Traceback"),
             template_name='base.html',
@@ -151,4 +171,8 @@ class CreatePluginPageTests(BaseTestCase):
             status_code=200, html=True,
             browser_traceback=True
         )
+
+
+
+
 
