@@ -198,3 +198,33 @@ class PlaceholderContent(object):
 CMS_PLACEHOLDER_CONF = {
     PlaceholderContent.name: PlaceholderContent.config(text="Lorem ipsum dolor sit amet"),
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(msecs)d %(module)s.%(funcName)s line %(lineno)d: %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'null': {'class': 'logging.NullHandler',},
+        'console': {
+            'class': 'logging.StreamHandler',
+            # 'formatter': 'simple'
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        "django_cms_tools": {
+            'handlers': [
+                # 'null',
+                'console'
+            ],
+            'level': 'DEBUG',
+        },
+    },
+}
