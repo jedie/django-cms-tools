@@ -4,18 +4,23 @@ from __future__ import unicode_literals, print_function
 
 import pytest
 
-from cms.models import Page, settings
+from cms.models import Page, settings, Title
 
-# https://github.com/jedie/django-tools
 from django.core.urlresolvers import resolve
 from django.utils import translation
 
+# https://github.com/jedie/django-tools
 from django_tools.unittest_utils.template import set_string_if_invalid, \
     TEMPLATE_INVALID_PREFIX
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 
-from django_cms_tools.fixtures.pages import create_cms_index_pages
-from django_cms_tools_test_project.test_cms_plugin.fixtures import create_testapp_cms_plugin_page
+from django_cms_tools.fixtures.pages import create_cms_index_pages, \
+    CmsPageCreator
+from django_cms_tools.unittest_utils.page_mixins import CmsPageTestUtilsMixin
+from django_cms_tools_test_project.test_cms_plugin.fixtures import \
+    create_testapp_cms_plugin_page
+
+
 
 
 @pytest.mark.usefixtures(
@@ -77,6 +82,70 @@ class ExistingCmsPageTests(BaseTestCase):
             browser_traceback=True
         )
         self.assertNotIn(TEMPLATE_INVALID_PREFIX, response.content.decode('utf8'))
+
+
+class PageTestFixture(CmsPageCreator):
+    template='base.html'
+    def get_title(self, language_code, lang_name):
+        return "CreatePageTests() - %s" % lang_name
+
+@pytest.fixture()
+def empty_page_fixture():
+    PageTestFixture().create()
+
+
+@pytest.mark.usefixtures(
+    empty_page_fixture.__name__
+)
+class CreatePageTests(CmsPageTestUtilsMixin, BaseTestCase):
+    def assert_test_pages(self):
+        self.assert_page_titles(
+            language_code="en",
+            reference=["CreatePageTests() - English"]
+        )
+        self.assert_page_titles(
+            language_code="de",
+            reference=["CreatePageTests() - Deutsch"]
+        )
+        self.assert_page_templates(
+            reference=['base.html', 'base.html'],
+            queryset=None # all pages (drafts + published)
+        )
+        self.assertEqual(Page.objects.all().count(), 2)
+
+    def test_urls_en(self):
+        self.assert_public_urls(language_code="en", reference=["/en/"])
+
+    def test_urls_de(self):
+        self.assert_public_urls(language_code="de", reference=["/de/"])
+
+    def test_created_pages(self):
+        self.assert_test_pages()
+
+    def assert_changed_entries(self):
+        self.assert_page_templates(reference=["foo.html", "foo.html"])
+        self.assert_page_titles(language_code="en", reference=["bar"])
+        self.assert_page_titles(language_code="de", reference=["bar"])
+
+    def change_existing_entries(self):
+        Page.objects.all().update(template="foo.html")
+        Title.objects.all().update(title="bar")
+
+    def test_dont_change_existing(self):
+        self.change_existing_entries()
+        self.assert_changed_entries()
+
+        PageTestFixture(delete_first=False).create()
+
+        self.assert_changed_entries() # Not changed?
+
+    def test_delete_first(self):
+        self.change_existing_entries()
+        self.assert_changed_entries()
+
+        PageTestFixture(delete_first=True).create()
+
+        self.assert_test_pages() # recreated ?
 
 
 @pytest.mark.usefixtures(
@@ -171,8 +240,3 @@ class CreatePluginPageTests(BaseTestCase):
             status_code=200, html=True,
             browser_traceback=True
         )
-
-
-
-
-

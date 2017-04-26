@@ -29,7 +29,11 @@ class CmsPageCreator(object):
     template = TEMPLATE_INHERITANCE_MAGIC
     in_navigation = True
 
-    def __init__(self, delete_first):
+    apphook = None
+    apphook_namespace = None
+    placeholder_slot = None
+
+    def __init__(self, delete_first=False):
         self.delete_first = delete_first
         self.default_lang_name = dict(self.languages)[self.default_language_code]
         self.slug = self.get_slug(self.default_language_code, self.default_lang_name)
@@ -54,7 +58,7 @@ class CmsPageCreator(object):
         """
         :return: 'template' string for cms.api.create_page()
         """
-        return TEMPLATE_INHERITANCE_MAGIC
+        return self.template
 
     def get_home_page(self):
         """
@@ -74,43 +78,19 @@ class CmsPageCreator(object):
         """
         return None
 
-    # def get_or_create_page(self, slug):
-    #     page = create_page(
-    #         title="index in English",
-    #         template=TEMPLATE_INHERITANCE_MAGIC,
-    #         language=settings.LANGUAGE_CODE,
-    #         published=False,
-    #         in_navigation=True
-    #     )
-    #
-    #
-    #     try:
-    #         page = Page.objects.get(slug=slug)
-    #     except Page.DoesNotExist:
-    #         page = Page()
-    #         page.slug=slug
-
     def publish(self, page):
         """
         Publish the page in all languages.
         """
         for language_code, lang_name in iter_languages(self.languages):
-            page.publish(language_code)
+            # page = page.get_draft_object()
             url = page.get_absolute_url()
-            print('\tpage "%s" published in %s: %s' % (page, lang_name, url))
 
-    def create_page_in_default_lang(self):
-        page = create_page(
-            title=self.get_title(self.default_language_code, self.default_lang_name),
-            template=self.get_template(self.default_language_code, self.default_lang_name),
-            language=self.default_language_code,
-            slug=self.slug,
-            published=False,
-            parent=self.get_parent_page(),
-            in_navigation=self.in_navigation,
-        )
-        log.debug("Page created in %s: %s", self.default_lang_name, page)
-        return page
+            if page.publisher_is_draft:
+                page.publish(language_code)
+                print('\tpage "%s" published in %s: %s' % (page, lang_name, url))
+            else:
+                print('\tpublished page "%s" already exists in %s: %s' % (page, lang_name, url))
 
     def create_page(self):
         """
@@ -123,45 +103,70 @@ class CmsPageCreator(object):
             log.debug("Delete %i pages...", pages.count())
             pages.delete()
         else:
-            queryset = Title.objects.filter(language=self.default_language_code)
-            try:
-                title = queryset.get(slug=self.slug)
-            except Title.DoesNotExist:
-                pass # Create page
+            if self.apphook_namespace is not None:
+                # Create a plugin page
+                queryset = Page.objects.public()
+                try:
+                    page = queryset.get(application_namespace=self.apphook_namespace)
+                except Page.DoesNotExist:
+                    pass # Create page
+                else:
+                    log.debug("Use existing plugin page: %s", page)
+                    return page
             else:
-                log.debug("Use page from title with slug %r", self.slug)
-                page = title.page
+                # Not a plugin page
+                queryset = Title.objects.filter(language=self.default_language_code)
+                try:
+                    title = queryset.filter(slug=self.slug).first()
+                except Title.DoesNotExist:
+                    pass # Create page
+                else:
+                    if title is not None:
+                        log.debug("Use page from title with slug %r", self.slug)
+                        page = title.page
 
         if page is None:
-            page = self.create_page_in_default_lang()
-
+            page = create_page(
+                title=self.get_title(self.default_language_code, self.default_lang_name),
+                template=self.get_template(self.default_language_code, self.default_lang_name),
+                language=self.default_language_code,
+                slug=self.slug,
+                published=False,
+                parent=self.get_parent_page(),
+                in_navigation=self.in_navigation,
+                apphook=self.apphook,
+                apphook_namespace=self.apphook_namespace
+            )
+            log.debug("Page created in %s: %s", self.default_lang_name, page)
         return page
 
     def create_title(self, page):
         """
-        Create page title in all other languages
+        Create page title in all other languages with cms.api.create_title()
         """
         for language_code, lang_name in iter_languages(self.languages):
-            if language_code == self.default_language_code:
-                continue
-
-            queryset = Title.objects.filter(language=language_code, slug=self.slug)
-            if queryset.exists():
-                log.debug("Page title exist in '%s', skip.", lang_name)
-                continue
-
-            create_title(
-                language=language_code,
-                title=self.get_title(language_code, lang_name),
-                page=page,
-                slug=self.slug,
-            )
-            log.debug("Title created in %s for: %s", lang_name, page.get_absolute_url())
+            try:
+                title = Title.objects.get(page=page, language=language_code)
+            except Title.DoesNotExist:
+                title = create_title(
+                    language=language_code,
+                    title=self.get_title(language_code, lang_name),
+                    page=page,
+                    slug = self.get_slug(language_code, lang_name),
+                )
+                log.debug("Title created: %s", title)
+            else:
+                log.debug("Page title exist: %s", title)
 
     def create(self):
         page = self.create_page() # Create page (and page title) in default language
         self.create_title(page) # Create page title in all other languages
         self.publish(page) # Publish page in all languages
+
+        # Force to reload the url configuration.
+        # Important for unittests to "find" all plugins ;)
+        apphook_reload.reload_urlconf()
+
         return page
 
 
@@ -208,65 +213,24 @@ class CmsPluginPageCreator(CmsPageCreator):
     The idea is to inherit from this class and adpate it for your need by
     overwrite some methods ;)
     """
-    def __init__(self, apphook, apphook_namespace, placeholder_slot):
+    def __init__(self, apphook, apphook_namespace, placeholder_slot, *args, **kwargs):
         self.apphook = apphook
         self.apphook_namespace = apphook_namespace
         self.placeholder_slot = placeholder_slot
+
+        super(CmsPluginPageCreator, self).__init__(*args, **kwargs)
+
+    def get_title(self, language_code, lang_name):
+        """
+        Contruct the page title. Called from self.create_title()
+        """
+        return '%s in %s' % (self.apphook, lang_name)
 
     def get_parent_page(self):
         """
         For 'parent' in cms.api.create_page()
         """
         return self.get_home_page()
-
-    def get_or_create_plugin_page(self, parent_page):
-        """
-        Create the plugin page if not exist.
-        Used cms.api.create_page()
-        """
-        queryset = Page.objects.public()
-        try:
-            plugin_page = queryset.get(application_namespace=self.apphook_namespace)
-        except Page.DoesNotExist:
-            language_info = translation.get_language_info(self.default_language_code)
-            lang_name = language_info["name"]
-            title = self.get_title(lang_name)
-
-            log.debug('Create "%s" (apphook: "%s")', title, self.apphook)
-
-            plugin_page = create_page(
-                title=title,
-                template=self.template,
-                parent=parent_page,
-                language=self.default_language_code,
-                published=False,
-                in_navigation=self.in_navigation,
-                apphook=self.apphook,
-                apphook_namespace=self.apphook_namespace
-            )
-            created=True
-        else:
-            created=False
-            log.debug('Plugin page for "%s" plugin already exist, ok.', self.apphook)
-
-        return plugin_page, created
-
-    def get_title(self, lang_name):
-        """
-        Contruct the page title. Called from self.create_title()
-        """
-        return '%s in %s' % (self.apphook, lang_name)
-
-    def create_title(self, plugin_page):
-        """
-        Create title in all languages.
-        Used cms.api.create_title()
-        """
-        for language_code, lang_name in iter_languages(self.languages):
-            if language_code != self.default_language_code:
-                title=self.get_title(lang_name)
-                log.debug('\tcreate title "%s"', title)
-                create_title(language_code, title , plugin_page)
 
     def get_add_plugin_kwargs(self, plugin_page, language_code, lang_name):
         """
@@ -295,7 +259,6 @@ class CmsPluginPageCreator(CmsPageCreator):
                 language=language_code,
                 **add_plugin_kwargs
             )
-
 
     def get_or_create_placeholder(self, plugin_page):
         """
@@ -327,28 +290,12 @@ class CmsPluginPageCreator(CmsPageCreator):
             log.debug('Plugin page for "%s" plugin already exist, ok.', self.apphook)
             raise plugin
 
-        # Get the published home page, used for 'parent' in cms.api.create_page()
-        parent_page = self.get_parent_page()
+        page = super(CmsPluginPageCreator, self).create()
 
-        plugin_page, created = self.get_or_create_plugin_page(parent_page)
-        if created:
-            # Create title with cms.api.create_title in all languages
-            self.create_title(plugin_page)
+        # Add a plugin with content in all languages to the created page.
+        self.fill_content(page)
 
-            # Add a plugin with content in all languages to the created page.
-            self.fill_content(plugin_page)
-
-            # Publish the created page in all languages.
-            self.publish(plugin_page)
-
-        # Force to reload the url configuration.
-        # Important for unittests to "find" all plugins ;)
-        apphook_reload.reload_urlconf()
-
-        # for language_code, lang_name in iter_languages(self.languages):
-        #     print("Created: %r" % plugin_page.get_absolute_url())
-
-        return plugin_page
+        return page
 
 
 def create_cms_plugin_page(apphook, apphook_namespace, placeholder_slot="content"):
