@@ -113,6 +113,7 @@ e.g.: You would like to make a clone of a existing installation, but without to 
 
 == history
 
+* v0.3.0 - 27.04.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.2.0...v0.3.0|compare v0.2.0...v0.3.0]]
 ** NEW: //django_cms_tools.fixtures.pages.//**CmsPageCreator** for creating Django CMS pages in test fixtures
 * v0.2.0 - 10.04.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.1.2...v0.2.0|compare v0.1.2...v0.2.0]]
 ** Experimental: Filer management commands: 'image_info' and 'replace_broken'
