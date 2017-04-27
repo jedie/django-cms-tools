@@ -35,6 +35,7 @@ class CmsPageCreator(object):
 
     def __init__(self, delete_first=False):
         self.delete_first = delete_first
+        translation.activate(self.default_language_code)
         self.default_lang_name = dict(self.languages)[self.default_language_code]
         self.slug = self.get_slug(self.default_language_code, self.default_lang_name)
 
