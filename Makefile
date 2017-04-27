@@ -126,5 +126,9 @@ dist: clean
 install: clean
 	python setup.py install
 
+dev_install: clean
+	pip install -r requirements/dev.txt
+	pip install -e .
+
 publish: clean requirements
 	python setup.py publish
