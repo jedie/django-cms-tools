@@ -109,6 +109,7 @@ docs:
 
 ## pip-compile requirements templates
 requirements:
+	$(MAKE) -C requirements clean
 	$(MAKE) -C requirements all
 
 ## package and upload a release
