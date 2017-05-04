@@ -11,6 +11,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+.tox
 .Python
 env/
 build/

@@ -1,8 +1,13 @@
+include MANIFEST.in
+include AUTHORS
 include LICENSE
 include README.creole
 include tox.ini
 
-recursive-include tests *
+recursive-include django_cms_tools *.py
+recursive-include django_cms_tools_test_project *.py
+recursive-include django_cms_tools_tests *.py
+
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 
