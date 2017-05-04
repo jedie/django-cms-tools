@@ -35,8 +35,13 @@ class CmsPageCreator(object):
 
     def __init__(self, delete_first=False):
         self.delete_first = delete_first
-        self.default_lang_name = dict(self.languages)[self.default_language_code]
-        self.slug = self.get_slug(self.default_language_code, self.default_lang_name)
+
+        with translation.override(self.default_language_code):
+            # for evaluate the language name lazy translation
+            # e.g.: settings.LANGUAGE_CODE is not "en"
+
+            self.default_lang_name = dict(self.languages)[self.default_language_code]
+            self.slug = self.get_slug(self.default_language_code, self.default_lang_name)
 
     def get_title(self, language_code, lang_name):
         """
@@ -126,18 +131,23 @@ class CmsPageCreator(object):
                         page = title.page
 
         if page is None:
-            page = create_page(
-                title=self.get_title(self.default_language_code, self.default_lang_name),
-                template=self.get_template(self.default_language_code, self.default_lang_name),
-                language=self.default_language_code,
-                slug=self.slug,
-                published=False,
-                parent=self.get_parent_page(),
-                in_navigation=self.in_navigation,
-                apphook=self.apphook,
-                apphook_namespace=self.apphook_namespace
-            )
-            log.debug("Page created in %s: %s", self.default_lang_name, page)
+            with translation.override(self.default_language_code):
+                # set right translation language
+                # for evaluate language name lazy translation
+                # e.g.: settings.LANGUAGE_CODE is not "en"
+
+                page = create_page(
+                    title=self.get_title(self.default_language_code, self.default_lang_name),
+                    template=self.get_template(self.default_language_code, self.default_lang_name),
+                    language=self.default_language_code,
+                    slug=self.slug,
+                    published=False,
+                    parent=self.get_parent_page(),
+                    in_navigation=self.in_navigation,
+                    apphook=self.apphook,
+                    apphook_namespace=self.apphook_namespace
+                )
+                log.debug("Page created in %s: %s", self.default_lang_name, page)
         return page
 
     def create_title(self, page):
