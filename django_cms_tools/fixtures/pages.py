@@ -148,6 +148,9 @@ class CmsPageCreator(object):
                     apphook_namespace=self.apphook_namespace
                 )
                 log.debug("Page created in %s: %s", self.default_lang_name, page)
+        else:
+            # Get draft if existing page was found.
+            page = page.get_draft_object()
         return page
 
     def create_title(self, page):
@@ -168,9 +171,16 @@ class CmsPageCreator(object):
             else:
                 log.debug("Page title exist: %s", title)
 
+    def fill_content(self, page):
+        """
+        Can be overwritten to add content to the created page
+        """
+        pass
+
     def create(self):
         page = self.create_page() # Create page (and page title) in default language
         self.create_title(page) # Create page title in all other languages
+        self.fill_content(page) # Add content to the created page.
         self.publish(page) # Publish page in all languages
 
         # Force to reload the url configuration.

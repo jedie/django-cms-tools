@@ -109,6 +109,7 @@ docs:
 
 ## pip-compile requirements templates
 requirements:
+	$(MAKE) -C requirements clean
 	$(MAKE) -C requirements all
 
 ## package and upload a release
@@ -125,6 +126,10 @@ dist: clean
 ## install the package to the active Python's site-packages
 install: clean
 	python setup.py install
+
+dev_install: clean
+	pip install -r requirements/dev.txt
+	pip install -e .
 
 publish: clean requirements
 	python setup.py publish
