@@ -113,6 +113,8 @@ e.g.: You would like to make a clone of a existing installation, but without to 
 
 == history
 
+* v0.3.1 - 04.05.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.3.0...v0.3.1|compare v0.3.0...v0.3.1]]
+** Bugfix in {{{CmsPageCreator}}}: evaluate lazy "language name" translation in the right language (e.g.: e.g.: {{{settings.LANGUAGE_CODE}}} is not "en")
 * v0.3.0 - 27.04.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.2.0...v0.3.0|compare v0.2.0...v0.3.0]]
 ** NEW: //django_cms_tools.fixtures.pages.//**CmsPageCreator** for creating Django CMS pages in test fixtures
 * v0.2.0 - 10.04.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.1.2...v0.2.0|compare v0.1.2...v0.2.0]]
