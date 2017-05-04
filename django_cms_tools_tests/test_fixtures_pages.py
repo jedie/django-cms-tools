@@ -6,6 +6,7 @@ import pytest
 
 from cms.models import Page, settings, Title
 
+from django.test import SimpleTestCase
 from django.core.urlresolvers import resolve
 from django.utils import translation
 
@@ -14,6 +15,7 @@ from django_tools.unittest_utils.template import set_string_if_invalid, \
     TEMPLATE_INVALID_PREFIX
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 
+from django_cms_tools.fixtures.languages import iter_languages
 from django_cms_tools.fixtures.pages import create_cms_index_pages, \
     CmsPageCreator
 from django_cms_tools.unittest_utils.page_mixins import CmsPageTestUtilsMixin
@@ -21,6 +23,20 @@ from django_cms_tools_test_project.test_cms_plugin.fixtures import \
     create_testapp_cms_plugin_page
 
 
+class Unittests(SimpleTestCase):
+    def test_iter_languages(self):
+        codes = []
+        names = []
+        for language_code, lang_name in iter_languages(languages=None):
+            # check if language is activated.
+            self.assertEqual(translation.get_language(), language_code)
+            codes.append(language_code)
+            names.append("%s" % lang_name) # evaluate lazy translation
+
+        self.assertEqual(codes, ["de", "en"])
+
+        # Note: 'German' must be translated to 'Deutsch'
+        self.assertEqual(names, ['Deutsch', 'English'])
 
 
 @pytest.mark.usefixtures(
