@@ -113,6 +113,8 @@ e.g.: You would like to make a clone of a existing installation, but without to 
 
 == history
 
+* v0.3.2 - 22.05.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.3.1...v0.3.2|compare v0.3.1...v0.3.2]]
+** Bugfix in {{{{% el_pagination_placeholder %}}}} and render all plugins after the tag.
 * v0.3.1 - 04.05.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.3.0...v0.3.1|compare v0.3.0...v0.3.1]]
 ** Bugfix in {{{CmsPageCreator}}}: evaluate lazy "language name" translation in the right language (e.g.: e.g.: {{{settings.LANGUAGE_CODE}}} is not "en")
 * v0.3.0 - 27.04.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.2.0...v0.3.0|compare v0.2.0...v0.3.0]]
