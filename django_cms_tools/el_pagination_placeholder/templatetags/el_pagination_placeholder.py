@@ -66,6 +66,7 @@ class ElPaginationPlaceholder(Placeholder):
         if not edit_mode:
             log.debug("User is not on edit mode: catch all placeholder plugins.")
             el_pagination_renderer = ElPaginationContentRenderer(content_renderer.render_plugin)
+            origin_render_plugin = content_renderer.render_plugin
             content_renderer.render_plugin = el_pagination_renderer
 
             # deactivate the placeholder cache, oterhwise the "all_plugins" list will be
@@ -77,6 +78,8 @@ class ElPaginationPlaceholder(Placeholder):
             log.debug("User is on edit mode: return origin content and empty 'all_plugins' list.")
             context["all_plugins"]=[]
             return content
+        else:
+            content_renderer.render_plugin = origin_render_plugin
 
         all_plugins = el_pagination_renderer.all_plugins
         all_plugins_count=len(all_plugins)
