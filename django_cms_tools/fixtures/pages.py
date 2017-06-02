@@ -36,13 +36,6 @@ class CmsPageCreator(object):
     def __init__(self, delete_first=False):
         self.delete_first = delete_first
 
-        with translation.override(self.default_language_code):
-            # for evaluate the language name lazy translation
-            # e.g.: settings.LANGUAGE_CODE is not "en"
-
-            self.default_lang_name = dict(self.languages)[self.default_language_code]
-            self.slug = self.get_slug(self.default_language_code, self.default_lang_name)
-
     def get_title(self, language_code, lang_name):
         """
         :return: 'title' string for cms.api.create_page()
@@ -101,6 +94,13 @@ class CmsPageCreator(object):
         """
         Create page (and page title) in default language
         """
+        with translation.override(self.default_language_code):
+            # for evaluate the language name lazy translation
+            # e.g.: settings.LANGUAGE_CODE is not "en"
+
+            self.default_lang_name = dict(self.languages)[self.default_language_code]
+            self.slug = self.get_slug(self.default_language_code, self.default_lang_name)
+
         page = None
 
         if self.delete_first:
@@ -334,3 +334,58 @@ def create_cms_plugin_page(apphook, apphook_namespace, placeholder_slot="content
     )
     plugin_page = creator.create()
     return plugin_page
+
+
+
+class DummyPageGenerator(CmsPageCreator):
+    def __init__(self, delete_first=False, levels=3, count=2):
+        self.levels = levels
+        self.current_level = 1
+        self.count = count
+        self.current_count = 1
+        self.page_data = {}
+        super(DummyPageGenerator, self).__init__(delete_first=delete_first)
+
+    def get_title(self, language_code, lang_name):
+        """
+        :return: 'title' string for cms.api.create_page()
+        """
+        title = "%s %i-%i in %s" % (
+            self.__class__.__name__,
+            self.current_level, self.current_count,
+            language_code
+        )
+        print(title)
+        return title
+
+    def get_parent_page(self):
+        """
+        For 'parent' in cms.api.create_page()
+        """
+        if self.current_level == 1:
+            # 'root' page
+            return None
+        else:
+            return self.page_data[(self.current_level-1, self.current_count)]
+
+    def create(self):
+        for count in range(1, self.count+1):
+            self.current_count = count
+            for level in range(1, self.levels+1):
+                self.current_level = level
+
+                print(self.current_level, self.current_count)
+
+                page = self.create_page() # Create page (and page title) in default language
+                self.page_data[(self.current_level, self.current_count)] = page
+
+                self.create_title(page) # Create page title in all other languages
+                self.fill_content(page) # Add content to the created page.
+                self.publish(page) # Publish page in all languages
+
+        # Force to reload the url configuration.
+        # Important for unittests to "find" all plugins ;)
+        apphook_reload.reload_urlconf()
+
+        return self.page_data
+
