@@ -31,10 +31,27 @@ class CmsPageCreator(object):
 
     apphook = None
     apphook_namespace = None
-    placeholder_slot = None
+    placeholder_slot = "content"
 
-    def __init__(self, delete_first=False):
+    dummy_text_count = 3
+
+    prefix_dummy_part = "<h2>Dummy page in {lang_name}</h2>"
+    dummy_text_part = (
+        "<h3>dummy text part no. {no}</h3>\n"
+        "<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt"
+        " ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud"
+        " exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute"
+        " iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+        " Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt"
+        " mollit anim id est laborum.</p>"
+    )
+    suffix_dummy_part = "<p>(absolute url: {absolute_url})</p>"
+
+    def __init__(self, delete_first=False, placeholder_slot=None):
         self.delete_first = delete_first
+
+        if placeholder_slot is not None:
+            self.placeholder_slot = placeholder_slot
 
     def get_title(self, language_code, lang_name):
         """
@@ -116,7 +133,7 @@ class CmsPageCreator(object):
                 except Page.DoesNotExist:
                     pass # Create page
                 else:
-                    log.debug("Use existing plugin page: %s", page)
+                    log.debug("Use existing page: %s", page)
                     return page
             else:
                 # Not a plugin page
@@ -171,11 +188,71 @@ class CmsPageCreator(object):
             else:
                 log.debug("Page title exist: %s", title)
 
+    def get_dummy_text(self, page, no, language_code, lang_name):
+        if no==1:
+            source = self.prefix_dummy_part
+        elif no==self.dummy_text_count:
+            source = self.suffix_dummy_part
+        else:
+            source = self.dummy_text_part
+
+        dummy_text = source.format(
+            absolute_url = page.get_absolute_url(language=language_code),
+            no = no,
+            language_code = language_code,
+            lang_name = lang_name,
+        )
+        return dummy_text
+
+    def get_add_plugin_kwargs(self, page, no, language_code, lang_name):
+        """
+        Return "content" for create the plugin.
+        Called from self.add_plugins()
+        """
+        return {
+            "plugin_type": 'TextPlugin', # djangocms_text_ckeditor
+            "body": self.get_dummy_text(page, no, language_code, lang_name)
+        }
+
+    def add_plugins(self, page, placeholder):
+        """
+        Add a "TextPlugin" in all languages.
+        """
+        for language_code, lang_name in iter_languages(self.languages):
+            for no in range(1, self.dummy_text_count+1):
+                add_plugin_kwargs = self.get_add_plugin_kwargs(page, no, language_code, lang_name)
+
+                print('\tadd plugin to placeholder "%s" (pk:%i) in: %s - no: %i' % (
+                    placeholder, placeholder.pk, lang_name, no
+                ))
+                plugin = add_plugin(
+                    placeholder=placeholder,
+                    language=language_code,
+                    **add_plugin_kwargs
+                )
+                print('\tPlugin "%s" (pk:%i) added.' % (plugin, plugin.pk))
+                placeholder.save()
+
+    def get_or_create_placeholder(self, page):
+        """
+        Add a placeholder if not exists.
+        """
+        placeholder, created = page.placeholders.get_or_create(
+            slot=self.placeholder_slot
+        )
+        if created:
+            log.debug("Create placeholder %r for %r", self.placeholder_slot, page)
+        else:
+            log.debug("Use existing placeholder %r for %r", self.placeholder_slot, page)
+        return placeholder
+
     def fill_content(self, page):
         """
-        Can be overwritten to add content to the created page
+        Add a placeholder to the page.
+        Here we add a "TextPlugin" in all languages.
         """
-        pass
+        placeholder = self.get_or_create_placeholder(page)
+        self.add_plugins(page, placeholder)
 
     def create(self):
         page = self.create_page() # Create page (and page title) in default language
@@ -229,14 +306,13 @@ class CmsPluginPageCreator(CmsPageCreator):
     """
     Create a Django CMS plugin page and fill the content.
     Useable for default production fixtures or unittests fixtures.
-    
+
     The idea is to inherit from this class and adpate it for your need by
     overwrite some methods ;)
     """
-    def __init__(self, apphook, apphook_namespace, placeholder_slot, *args, **kwargs):
+    def __init__(self, apphook, apphook_namespace, *args, **kwargs):
         self.apphook = apphook
         self.apphook_namespace = apphook_namespace
-        self.placeholder_slot = placeholder_slot
 
         super(CmsPluginPageCreator, self).__init__(*args, **kwargs)
 
@@ -260,46 +336,12 @@ class CmsPluginPageCreator(CmsPageCreator):
         plugin_url = plugin_page.get_absolute_url(language=language_code)
         return {
             "plugin_type": 'TextPlugin', # djangocms_text_ckeditor
-            "body": '<p><a href="{url}">{name}</a></p>'.format(
+            "body": '<p><a href="{url}">{name}</a> ({lang_name}) </p>'.format(
                 url=plugin_url,
                 name=self.apphook,
+                lang_name=lang_name,
             )
         }
-
-    def add_plugins(self, plugin_page, placeholder):
-        """
-        Add a "TextPlugin" in all languages.
-        """
-        for language_code, lang_name in iter_languages(self.languages):
-            add_plugin_kwargs = self.get_add_plugin_kwargs(plugin_page, language_code, lang_name)
-
-            print('\tcreate "%s" page in: %s' % (self.apphook, lang_name))
-            add_plugin(
-                placeholder=placeholder,
-                language=language_code,
-                **add_plugin_kwargs
-            )
-
-    def get_or_create_placeholder(self, plugin_page):
-        """
-        Add a placeholder if not exists.
-        """
-        placeholder, created = plugin_page.placeholders.get_or_create(
-            slot=self.placeholder_slot
-        )
-        if created:
-            log.debug("Create placeholder %r for %r", self.placeholder_slot, plugin_page)
-        else:
-            log.debug("Use existing placeholder %r for %r", self.placeholder_slot, plugin_page)
-        return placeholder
-
-    def fill_content(self, plugin_page):
-        """
-        Add a placeholder to the page.
-        Here we add a "TextPlugin" in all languages. 
-        """
-        placeholder = self.get_or_create_placeholder(plugin_page)
-        self.add_plugins(plugin_page, placeholder)
 
     def create(self):
         """
@@ -318,7 +360,7 @@ class CmsPluginPageCreator(CmsPageCreator):
         return page
 
 
-def create_cms_plugin_page(apphook, apphook_namespace, placeholder_slot="content"):
+def create_cms_plugin_page(apphook, apphook_namespace, placeholder_slot=None):
     """
     Create cms plugin page in all existing languages.
     Add a link to the index page.
