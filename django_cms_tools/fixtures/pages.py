@@ -338,7 +338,12 @@ def create_cms_plugin_page(apphook, apphook_namespace, placeholder_slot="content
 
 
 class DummyPageGenerator(CmsPageCreator):
-    def __init__(self, delete_first=False, levels=3, count=2):
+    def __init__(self, delete_first=False, title_prefix=None, levels=3, count=2):
+        if title_prefix is None:
+            self.title_prefix = self.__class__.__name__
+        else:
+            self.title_prefix = title_prefix
+
         self.levels = levels
         self.current_level = 1
         self.count = count
@@ -351,8 +356,8 @@ class DummyPageGenerator(CmsPageCreator):
         :return: 'title' string for cms.api.create_page()
         """
         title = "%s %i-%i in %s" % (
-            self.__class__.__name__,
-            self.current_level, self.current_count,
+            self.title_prefix,
+            self.current_count, self.current_level,
             language_code
         )
         print(title)
@@ -389,3 +394,12 @@ class DummyPageGenerator(CmsPageCreator):
 
         return self.page_data
 
+
+def create_dummy_pages(delete_first, title_prefix, levels, count):
+    page_data = DummyPageGenerator(
+        delete_first=delete_first,
+        title_prefix=title_prefix,
+        levels=levels,
+        count=count
+    ).create()
+    return page_data
