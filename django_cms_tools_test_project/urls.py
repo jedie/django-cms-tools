@@ -14,7 +14,7 @@ from django_cms_tools_test_project.test_app.views import IndexView
 admin.autodiscover()
 
 
-urlpatterns = i18n_patterns('',
+urlpatterns = i18n_patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^index/', IndexView.as_view()),
     url(r'^', include('cms.urls')),
