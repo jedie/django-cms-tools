@@ -328,12 +328,12 @@ class CmsPluginPageCreator(CmsPageCreator):
         """
         return self.get_home_page()
 
-    def get_add_plugin_kwargs(self, plugin_page, language_code, lang_name):
+    def get_add_plugin_kwargs(self, page, no, language_code, lang_name):
         """
         Return "content" for create the plugin.
         Called from self.add_plugins()
         """
-        plugin_url = plugin_page.get_absolute_url(language=language_code)
+        plugin_url = page.get_absolute_url(language=language_code)
         return {
             "plugin_type": 'TextPlugin', # djangocms_text_ckeditor
             "body": '<p><a href="{url}">{name}</a> ({lang_name}) </p>'.format(
