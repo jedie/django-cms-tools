@@ -103,9 +103,9 @@ class CmsPageCreator(object):
 
             if page.publisher_is_draft:
                 page.publish(language_code)
-                print('\tpage "%s" published in %s: %s' % (page, lang_name, url))
+                log.info('page "%s" published in %s: %s', page, lang_name, url)
             else:
-                print('\tpublished page "%s" already exists in %s: %s' % (page, lang_name, url))
+                log.info('published page "%s" already exists in %s: %s' , page, lang_name, url)
 
     def create_page(self):
         """
@@ -222,15 +222,16 @@ class CmsPageCreator(object):
             for no in range(1, self.dummy_text_count+1):
                 add_plugin_kwargs = self.get_add_plugin_kwargs(page, no, language_code, lang_name)
 
-                print('\tadd plugin to placeholder "%s" (pk:%i) in: %s - no: %i' % (
+                log.info(
+                    'add plugin to placeholder "%s" (pk:%i) in: %s - no: %i',
                     placeholder, placeholder.pk, lang_name, no
-                ))
+                )
                 plugin = add_plugin(
                     placeholder=placeholder,
                     language=language_code,
                     **add_plugin_kwargs
                 )
-                print('\tPlugin "%s" (pk:%i) added.' % (plugin, plugin.pk))
+                log.info('Plugin "%s" (pk:%i) added.', plugin, plugin.pk)
                 placeholder.save()
 
     def get_or_create_placeholder(self, page):
@@ -287,7 +288,7 @@ def create_cms_index_pages(placeholder_slot="content"):
         for language_code, lang_name in settings.LANGUAGES:
             with translation.override(language_code):
                 title = 'index in %s' % lang_name
-                print('\tcreate %r' % title)
+                log.info('create %r', title)
                 if language_code != settings.LANGUAGE_CODE:
                     create_title(language_code, title, index_page)
                 add_plugin(
@@ -402,7 +403,7 @@ class DummyPageGenerator(CmsPageCreator):
             self.current_count, self.current_level,
             language_code
         )
-        print(title)
+        log.info(title)
         return title
 
     def get_parent_page(self):
@@ -421,7 +422,7 @@ class DummyPageGenerator(CmsPageCreator):
             for level in range(1, self.levels+1):
                 self.current_level = level
 
-                print(self.current_level, self.current_count)
+                log.info(self.current_level, self.current_count)
 
                 page = self.create_page() # Create page (and page title) in default language
                 self.page_data[(self.current_level, self.current_count)] = page
