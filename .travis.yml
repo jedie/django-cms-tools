@@ -15,19 +15,18 @@ env:
     - TOXENV=py27-django18
 #    - TOXENV=py27-django19
 #    - TOXENV=py27-django110
-    - TOXENV=py34-django18
-#    - TOXENV=py34-django19
-#    - TOXENV=py34-django110
     - TOXENV=py35-django18
 #    - TOXENV=py35-django19
 #    - TOXENV=py35-django110
+    - TOXENV=py36-django18
+#    - TOXENV=py36-django19
+#    - TOXENV=py36-django110
 
 matrix:
   fast_finish: true
 
 install:
-    - travis_retry pip install -r$TRAVIS_BUILD_DIR/requirements/dev.txt
-    - travis_retry make install
+    - travis_retry make dev_install
 
 script:
     - pip freeze

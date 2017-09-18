@@ -222,10 +222,6 @@ Framework :: Django
 Topic :: Internet
 """
 
-install_requires = [
-    # 'six',
-]
-
 
 setup(
     name='django-cms-tools',
@@ -240,7 +236,6 @@ setup(
                  if c.strip() and not c.startswith('#')],
     packages=find_packages(exclude=['tests', 'test_project']),
     include_package_data=True,
-    install_requires=install_requires,
     cmdclass={
         'test': ToxTestCommand,
     }

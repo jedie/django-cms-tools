@@ -107,11 +107,6 @@ docs:
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
 
-## pip-compile requirements templates
-requirements:
-	$(MAKE) -C requirements clean
-	$(MAKE) -C requirements all
-
 ## package and upload a release
 release: clean
 	python setup.py sdist upload
@@ -131,5 +126,5 @@ dev_install: clean
 	pip install -r requirements/dev.txt
 	pip install -e .
 
-publish: clean requirements
+publish: clean
 	python setup.py publish
