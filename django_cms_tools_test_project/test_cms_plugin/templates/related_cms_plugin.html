@@ -1,0 +1,5 @@
+<ul>
+    {% for entry in instance.entries.all %}
+        <li><p>{{ entry.text }}</p></li>
+    {% endfor %}
+</ul>
