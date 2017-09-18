@@ -8,6 +8,8 @@ IP=$(hostname -I | cut -f1 -d' ')
 
 echo IP: ${IP}
 
+cd django_cms_tools_test_project
+
 #echo -n "Use 'runserver_plus' [y/n]: "
 #read -n 1 usage
 #if [ "${usage}" == "y" ]; then
