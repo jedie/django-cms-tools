@@ -31,10 +31,11 @@ known_external=pytest
 known_django=django
 known_cms=cms
 
+import_heading_djangotools=https://github.com/jedie/django-tools
 known_djangotools=django_tools
 
 import_heading_firstparty=Django CMS Tools
-known_first_party=django_cms_tools
+known_first_party=django_cms_tools,django_cms_tools_test_project
 
 default_section=THIRDPARTY
 sections=FUTURE,STDLIB,EXTERNAL,DJANGO,CMS,THIRDPARTY,DJANGOTOOLS,FIRSTPARTY,LOCALFOLDER
