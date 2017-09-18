@@ -27,6 +27,7 @@ matrix:
   fast_finish: true
 
 install:
+    - pip install --upgrade pip
     - travis_retry make dev_install
 
 script:
