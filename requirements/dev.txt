@@ -15,8 +15,6 @@ pytest-django
 pytest-cov
 Sphinx
 tox
-pip-tools
-piprot
 wheel
 twine
 python-creole>=v0.8
