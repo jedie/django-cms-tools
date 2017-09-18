@@ -102,6 +102,7 @@ e.g.: You would like to make a clone of a existing installation, but without to 
 == Django compatibility
 
 |= django-cms-tools |= django version |= python         |
+| v0.4.0            | 1.8             | 2.7, 3.5, 3.6   |
 | v0.1.x            | 1.8             | 2.7, 3.4, 3.5   |
 
 (Look also into [[https://github.com/jedie/django-cms-tools/blob/master/.travis.yml|.travis.yml]] for version combination tested via travis-ci)
@@ -113,6 +114,11 @@ e.g.: You would like to make a clone of a existing installation, but without to 
 
 == history
 
+* v0.4.0 - 18.09.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.3.2...v0.4.0|compare v0.3.2...v0.4.0]]
+** NEW: [[https://github.com/jedie/django-cms-tools/blob/master/django_cms_tools/models.py|django_cms_tools.models.RelatedPluginModelMixin]]
+** NEW: [[https://github.com/jedie/django-cms-tools/blob/master/django_cms_tools/fixtures/pages.py|DummyPageGenerator]]
+** NEW: [[https://github.com/jedie/django-cms-tools/blob/master/django_cms_tools/permissions.py|ModelPermissionMixin]]
+** misc updates/changes
 * v0.3.2 - 22.05.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.3.1...v0.3.2|compare v0.3.1...v0.3.2]]
 ** Bugfix in {{{{% el_pagination_placeholder %}}}} and render all plugins after the tag.
 * v0.3.1 - 04.05.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.3.0...v0.3.1|compare v0.3.0...v0.3.1]]
