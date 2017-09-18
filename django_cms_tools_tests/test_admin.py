@@ -37,7 +37,7 @@ class AdminLoggedinTests(AdminAnonymousTests):
         self.assertResponse(response,
             must_contain=(
                 'Django administration',
-                'staff test user',
+                'staff_test_user',
                 'Site administration',
                 'You don\'t have permission to edit anything.'
             ),
