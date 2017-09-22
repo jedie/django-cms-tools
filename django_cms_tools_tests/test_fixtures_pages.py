@@ -139,12 +139,12 @@ class CreatePageTests(CmsPageTestUtilsMixin, BaseTestCase):
         self.assert_test_pages()
 
     def assert_changed_entries(self):
-        self.assert_page_templates(reference=["foo.html", "foo.html"])
+        self.assert_page_templates(reference=["other_template.html", "other_template.html"])
         self.assert_page_titles(language_code="en", reference=["bar"])
         self.assert_page_titles(language_code="de", reference=["bar"])
 
     def change_existing_entries(self):
-        Page.objects.all().update(template="foo.html")
+        Page.objects.all().update(template="other_template.html")
         Title.objects.all().update(title="bar")
 
     def test_dont_change_existing(self):
