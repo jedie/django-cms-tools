@@ -134,7 +134,8 @@ class CmsPageCreator(object):
                     pass # Create page
                 else:
                     log.debug("Use existing page: %s", page)
-                    return page
+                    created=False
+                    return page, created
             else:
                 # Not a plugin page
                 queryset = Title.objects.filter(language=self.default_language_code)
@@ -146,6 +147,7 @@ class CmsPageCreator(object):
                     if title is not None:
                         log.debug("Use page from title with slug %r", self.slug)
                         page = title.page
+                        created=False
 
         if page is None:
             with translation.override(self.default_language_code):
@@ -164,11 +166,12 @@ class CmsPageCreator(object):
                     apphook=self.apphook,
                     apphook_namespace=self.apphook_namespace
                 )
+                created=True
                 log.debug("Page created in %s: %s", self.default_lang_name, page)
         else:
             # Get draft if existing page was found.
             page = page.get_draft_object()
-        return page
+        return page, created
 
     def create_title(self, page):
         """
@@ -245,27 +248,31 @@ class CmsPageCreator(object):
             log.debug("Create placeholder %r for %r", self.placeholder_slot, page)
         else:
             log.debug("Use existing placeholder %r for %r", self.placeholder_slot, page)
-        return placeholder
+        return placeholder, created
 
     def fill_content(self, page):
         """
         Add a placeholder to the page.
         Here we add a "TextPlugin" in all languages.
         """
-        placeholder = self.get_or_create_placeholder(page)
+        placeholder, created = self.get_or_create_placeholder(page)
         self.add_plugins(page, placeholder)
 
     def create(self):
-        page = self.create_page() # Create page (and page title) in default language
+        page, created = self.create_page() # Create page (and page title) in default language
         self.create_title(page) # Create page title in all other languages
-        self.fill_content(page) # Add content to the created page.
+        if created:
+            # Add plugins only on new created pages
+            # otherwise we will add more and more plugins
+            # on every run!
+            self.fill_content(page) # Add content to the created page.
         self.publish(page) # Publish page in all languages
 
         # Force to reload the url configuration.
         # Important for unittests to "find" all plugins ;)
         apphook_reload.reload_urlconf()
 
-        return page
+        return page, created
 
 
 @pytest.fixture()
@@ -353,12 +360,14 @@ class CmsPluginPageCreator(CmsPageCreator):
             log.debug('Plugin page for "%s" plugin already exist, ok.', self.apphook)
             raise plugin
 
-        page = super(CmsPluginPageCreator, self).create()
+        page, created = super(CmsPluginPageCreator, self).create()
 
-        # Add a plugin with content in all languages to the created page.
-        self.fill_content(page)
+        if created:
+            # Add a plugin with content in all languages to the created page.
+            # But only on new created page
+            self.fill_content(page)
 
-        return page
+        return page, created
 
 
 def create_cms_plugin_page(apphook, apphook_namespace, placeholder_slot=None):
