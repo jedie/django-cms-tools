@@ -22,7 +22,7 @@ from django_cms_tools_test_project.test_cms_plugin.cms_plugin import RelatedPlug
 log = logging.getLogger(__name__)
 
 
-@pytest.fixture()
+@pytest.fixture(scope="class")
 def create_testapp_cms_plugin_page():
     """
     Create cms plugin page for the test app in all existing languages
@@ -53,6 +53,21 @@ class RelatedPluginPageCreator(CmsPageCreator):
 
             log.info('Plugin "%s" (pk:%i) added.', str(plugin_instance), plugin_instance.pk)
             placeholder.save()
+
+
+class ParentCmsPageCreator(CmsPageCreator):
+    def __init__(self, parent_page, *args, **kwargs):
+        self.parent_page = parent_page
+        super(ParentCmsPageCreator, self).__init__(*args, **kwargs)
+
+    def get_parent_page(self):
+        return self.parent_page
+
+    def get_title(self, language_code, lang_name):
+        return "parent_test"
+
+    def fill_content(self, page):
+        pass # create a empty page, without dummy content
 
 
 @pytest.fixture(scope="session")

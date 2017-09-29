@@ -119,15 +119,20 @@ class CmsPageCreator(object):
             self.slug = self.get_slug(self.default_language_code, self.default_lang_name)
 
         page = None
+        parent=self.get_parent_page()
 
         if self.delete_first:
-            pages = Page.objects.filter(title_set__slug=self.slug)
+            pages = Page.objects.filter(
+                title_set__slug=self.slug,
+                parent=parent,
+            )
             log.debug("Delete %i pages...", pages.count())
             pages.delete()
         else:
             if self.apphook_namespace is not None:
                 # Create a plugin page
                 queryset = Page.objects.public()
+                queryset = queryset.filter(parent=parent)
                 try:
                     page = queryset.get(application_namespace=self.apphook_namespace)
                 except Page.DoesNotExist:
@@ -139,6 +144,7 @@ class CmsPageCreator(object):
             else:
                 # Not a plugin page
                 queryset = Title.objects.filter(language=self.default_language_code)
+                queryset = queryset.filter(page__parent=parent)
                 try:
                     title = queryset.filter(slug=self.slug).first()
                 except Title.DoesNotExist:
@@ -161,7 +167,7 @@ class CmsPageCreator(object):
                     language=self.default_language_code,
                     slug=self.slug,
                     published=False,
-                    parent=self.get_parent_page(),
+                    parent=parent,
                     in_navigation=self.in_navigation,
                     apphook=self.apphook,
                     apphook_namespace=self.apphook_namespace

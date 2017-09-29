@@ -20,7 +20,7 @@ from django_cms_tools.fixtures.pages import create_cms_index_pages, \
     CmsPageCreator
 from django_cms_tools.unittest_utils.page_mixins import CmsPageTestUtilsMixin
 from django_cms_tools_test_project.test_cms_plugin.fixtures import \
-    create_testapp_cms_plugin_page
+    create_testapp_cms_plugin_page, ParentCmsPageCreator
 
 
 class Unittests(SimpleTestCase):
@@ -256,3 +256,65 @@ class CreatePluginPageTests(BaseTestCase):
             status_code=200, html=True,
             browser_traceback=True
         )
+
+
+@pytest.mark.usefixtures(create_cms_index_pages.__name__)
+class CreateCMSPageTests(BaseTestCase):
+    def test_urls_en(self):
+        pages = Page.objects.public()
+        urls = [page.get_absolute_url(language="en") for page in pages]
+        urls.sort()
+        self.assertEqual(urls, ["/en/"])
+
+    def test_urls_de(self):
+        pages = Page.objects.public()
+        urls = [page.get_absolute_url(language="de") for page in pages]
+        urls.sort()
+        self.assertEqual(urls, ["/de/"])
+
+    def test_other_parent_but_same_slug(self):
+        home_page = Page.objects.get(is_home=True, publisher_is_draft=False)
+
+        page1, created = ParentCmsPageCreator(parent_page=home_page).create()
+        self.assertTrue(created)
+        page2, created = ParentCmsPageCreator(parent_page=page1).create()
+        self.assertTrue(created)
+        page3, created = ParentCmsPageCreator(parent_page=page2).create()
+        self.assertTrue(created)
+
+        pages = Page.objects.public()
+        pages = pages.order_by('id')
+        urls = [page.get_absolute_url(language="en") for page in pages]
+        self.assertEqual(urls,
+            [
+                '/en/',
+                '/en/parent_test/',
+                '/en/parent_test/parent_test/',
+                '/en/parent_test/parent_test/parent_test/'
+            ]
+        )
+
+        pks = [page.pk for page in pages]
+        print(pks)
+        self.assertEqual(pks,
+            [
+                home_page.pk,
+                page1.publisher_public.pk,
+                page2.publisher_public.pk,
+                page3.publisher_public.pk
+            ]
+        )
+        self.assertLess(home_page.pk, page1.publisher_public.pk)
+        self.assertLess(page1.publisher_public.pk, page2.publisher_public.pk)
+        self.assertLess(page2.publisher_public.pk, page3.publisher_public.pk)
+
+    def test_double_detection(self):
+        home_page = Page.objects.get(is_home=True, publisher_is_draft=False)
+
+        page1, created = ParentCmsPageCreator(parent_page=home_page).create()
+        self.assertTrue(created)
+
+        # same parent and same slug should be not created:
+        page2, created = ParentCmsPageCreator(parent_page=home_page).create()
+        self.assertEqual(page1.pk, page2.pk)
+        self.assertFalse(created)
