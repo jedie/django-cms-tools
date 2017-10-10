@@ -288,7 +288,7 @@ class CmsPageCreator(object):
         return page, created
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def create_cms_index_pages(placeholder_slot="content"):
     """
     create cms home page and fill >content< placeholder with TextPlugin
