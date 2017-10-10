@@ -59,6 +59,12 @@ class CmsPageCreator(object):
         """
         return "%s in %s" % (self.__class__.__name__, language_code)
 
+    def get_menu_title(self, language_code, lang_name):
+        """
+        :return: 'menu_title' string for cms.api.create_page()
+        """
+        return None # No extra title for menu
+
     def get_slug(self, language_code, lang_name):
         """
         Notes:
@@ -163,6 +169,7 @@ class CmsPageCreator(object):
 
                 page = create_page(
                     title=self.get_title(self.default_language_code, self.default_lang_name),
+                    menu_title=self.get_menu_title(self.default_language_code, self.default_lang_name),
                     template=self.get_template(self.default_language_code, self.default_lang_name),
                     language=self.default_language_code,
                     slug=self.slug,
