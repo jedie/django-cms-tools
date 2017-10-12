@@ -250,25 +250,25 @@ class CmsPageCreator(object):
                 log.info('Plugin "%s" (pk:%i) added.', plugin, plugin.pk)
                 placeholder.save()
 
-    def get_or_create_placeholder(self, page):
+    def get_or_create_placeholder(self, page, placeholder_slot):
         """
         Add a placeholder if not exists.
         """
         placeholder, created = page.placeholders.get_or_create(
-            slot=self.placeholder_slot
+            slot=placeholder_slot
         )
         if created:
-            log.debug("Create placeholder %r for %r", self.placeholder_slot, page)
+            log.debug("Create placeholder %r for %r", placeholder_slot, page)
         else:
-            log.debug("Use existing placeholder %r for %r", self.placeholder_slot, page)
+            log.debug("Use existing placeholder %r for %r", placeholder_slot, page)
         return placeholder, created
 
-    def fill_content(self, page):
+    def fill_content(self, page, placeholder_slot):
         """
         Add a placeholder to the page.
         Here we add a "TextPlugin" in all languages.
         """
-        placeholder, created = self.get_or_create_placeholder(page)
+        placeholder, created = self.get_or_create_placeholder(page, placeholder_slot)
         self.add_plugins(page, placeholder)
 
     def create(self):
@@ -278,7 +278,7 @@ class CmsPageCreator(object):
             # Add plugins only on new created pages
             # otherwise we will add more and more plugins
             # on every run!
-            self.fill_content(page) # Add content to the created page.
+            self.fill_content(page, self.placeholder_slot) # Add content to the created page.
         self.publish(page) # Publish page in all languages
 
         # Force to reload the url configuration.
