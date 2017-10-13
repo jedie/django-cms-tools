@@ -30,7 +30,7 @@ def create_testapp_cms_plugin_page():
     CmsPluginPageCreator(
         apphook='SimpleTestApp',
         apphook_namespace='simpletest',
-        placeholder_slot="content"
+        placeholder_slots=("content",)
     ).create()
 
 
@@ -56,6 +56,8 @@ class RelatedPluginPageCreator(CmsPageCreator):
 
 
 class ParentCmsPageCreator(CmsPageCreator):
+    placeholder_slots = () # create a empty page, without dummy content
+
     def __init__(self, parent_page, *args, **kwargs):
         self.parent_page = parent_page
         super(ParentCmsPageCreator, self).__init__(*args, **kwargs)
@@ -66,12 +68,9 @@ class ParentCmsPageCreator(CmsPageCreator):
     def get_title(self, language_code, lang_name):
         return "parent_test"
 
-    def fill_content(self, page):
-        pass # create a empty page, without dummy content
-
 
 @pytest.fixture(scope="session")
 def create_related_plugin():
     RelatedPluginPageCreator(
-        placeholder_slot="content",
+        placeholder_slots=("content",)
     ).create()

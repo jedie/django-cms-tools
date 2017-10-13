@@ -31,7 +31,7 @@ class CmsPageCreator(object):
 
     apphook = None
     apphook_namespace = None
-    placeholder_slot = "content"
+    placeholder_slots = ("content",)
 
     dummy_text_count = 3
 
@@ -47,11 +47,11 @@ class CmsPageCreator(object):
     )
     suffix_dummy_part = "<p>(absolute url: {absolute_url})</p>"
 
-    def __init__(self, delete_first=False, placeholder_slot=None):
+    def __init__(self, delete_first=False, placeholder_slots=None):
         self.delete_first = delete_first
 
-        if placeholder_slot is not None:
-            self.placeholder_slot = placeholder_slot
+        if placeholder_slots is not None:
+            self.placeholder_slots = placeholder_slots
 
     def get_title(self, language_code, lang_name):
         """
@@ -278,7 +278,8 @@ class CmsPageCreator(object):
             # Add plugins only on new created pages
             # otherwise we will add more and more plugins
             # on every run!
-            self.fill_content(page, self.placeholder_slot) # Add content to the created page.
+            for placeholder_slot in self.placeholder_slots:
+                self.fill_content(page, placeholder_slot) # Add content to the created page.
         self.publish(page) # Publish page in all languages
 
         # Force to reload the url configuration.
@@ -378,7 +379,8 @@ class CmsPluginPageCreator(CmsPageCreator):
         if created:
             # Add a plugin with content in all languages to the created page.
             # But only on new created page
-            self.fill_content(page)
+            for placeholder_slot in self.placeholder_slots:
+                self.fill_content(page, placeholder_slot)
 
         return page, created
 
