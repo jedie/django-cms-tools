@@ -137,7 +137,7 @@ pk:3 /en/foo/bar/                             INHERIT
 == history
 
 * *dev*
-** NEW: {{./manage.py template_info}}
+** NEW: {{{./manage.py template_info}}}
 ** CmsPageCreator API changed:
 *** the string {{{CmsPageCreator.placeholder_slot}}} changed to iterable {{{CmsPageCreator.placeholder_slots}}}
 *** add {{{placeholder}}} argument in {{{CmsPageCreator.get_dummy_text()}}} and {{{CmsPageCreator.get_add_plugin_kwargs()}}}
