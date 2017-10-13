@@ -329,9 +329,11 @@ class CmsPluginPageCreator(CmsPageCreator):
     Create a Django CMS plugin page and fill the content.
     Useable for default production fixtures or unittests fixtures.
 
-    The idea is to inherit from this class and adpate it for your need by
+    The idea is to inherit from this class and update it for your need by
     overwrite some methods ;)
     """
+    placeholder_slots=() # Fill no placeholders
+
     def __init__(self, apphook, apphook_namespace, *args, **kwargs):
         self.apphook = apphook
         self.apphook_namespace = apphook_namespace
@@ -349,21 +351,6 @@ class CmsPluginPageCreator(CmsPageCreator):
         For 'parent' in cms.api.create_page()
         """
         return self.get_home_page()
-
-    def get_add_plugin_kwargs(self, page, no, language_code, lang_name):
-        """
-        Return "content" for create the plugin.
-        Called from self.add_plugins()
-        """
-        plugin_url = page.get_absolute_url(language=language_code)
-        return {
-            "plugin_type": 'TextPlugin', # djangocms_text_ckeditor
-            "body": '<p><a href="{url}">{name}</a> ({lang_name}) </p>'.format(
-                url=plugin_url,
-                name=self.apphook,
-                lang_name=lang_name,
-            )
-        }
 
     def create(self):
         """

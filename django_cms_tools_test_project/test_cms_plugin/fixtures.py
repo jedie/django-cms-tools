@@ -30,7 +30,6 @@ def create_testapp_cms_plugin_page():
     CmsPluginPageCreator(
         apphook='SimpleTestApp',
         apphook_namespace='simpletest',
-        placeholder_slots=("content",)
     ).create()
 
 
