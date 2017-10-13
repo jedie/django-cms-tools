@@ -99,6 +99,28 @@ e.g.: You would like to make a clone of a existing installation, but without to 
 # start: {{{$ ./manage.py replace_broken 123}}}
 
 
+=== 'template_info' management command
+
+Activate e.g.:
+
+{{{
+INSTALLED_APPS = [
+    ...
+    'django_cms_tools',
+    ...
+]
+}}}
+It looks like:
+{{{
+$ ./manage.py template_info
+
+There are 3 public pages:
+pk:1 /en/                                     /foo/homepage.html
+pk:2 /en/foo/                                 INHERIT
+pk:3 /en/foo/bar/                             INHERIT
+}}}
+
+
 == Django compatibility
 
 |= django-cms-tools |= django version |= python         |
@@ -115,6 +137,7 @@ e.g.: You would like to make a clone of a existing installation, but without to 
 == history
 
 * *dev*
+** NEW: {{./manage.py template_info}}
 ** CmsPageCreator API changed:
 *** the string {{{CmsPageCreator.placeholder_slot}}} changed to iterable {{{CmsPageCreator.placeholder_slots}}}
 *** add {{{placeholder}}} argument in {{{CmsPageCreator.get_dummy_text()}}} and {{{CmsPageCreator.get_add_plugin_kwargs()}}}

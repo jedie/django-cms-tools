@@ -66,6 +66,7 @@ INSTALLED_APPS = (
     'djangocms_text_ckeditor', # https://github.com/divio/djangocms-text-ckeditor
 
     # Own management commands:
+    'django_cms_tools',
     'django_cms_tools.filer_tools',
 
     # Test project stuff:
