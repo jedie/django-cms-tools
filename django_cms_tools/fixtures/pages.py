@@ -35,9 +35,9 @@ class CmsPageCreator(object):
 
     dummy_text_count = 3
 
-    prefix_dummy_part = "<h2>Dummy page in {lang_name}</h2>"
+    prefix_dummy_part = "<h2>Dummy no. {no} in {lang_name} (placeholder {slot})</h2>"
     dummy_text_part = (
-        "<h3>dummy text part no. {no}</h3>\n"
+        "<h3>dummy text part no. {no} in placeholder {slot}</h3>\n"
         "<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt"
         " ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud"
         " exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute"
@@ -204,7 +204,7 @@ class CmsPageCreator(object):
             else:
                 log.debug("Page title exist: %s", title)
 
-    def get_dummy_text(self, page, no, language_code, lang_name):
+    def get_dummy_text(self, page, no, placeholder, language_code, lang_name):
         if no==1:
             source = self.prefix_dummy_part
         elif no==self.dummy_text_count:
@@ -215,19 +215,20 @@ class CmsPageCreator(object):
         dummy_text = source.format(
             absolute_url = page.get_absolute_url(language=language_code),
             no = no,
+            slot = placeholder.slot,
             language_code = language_code,
             lang_name = lang_name,
         )
         return dummy_text
 
-    def get_add_plugin_kwargs(self, page, no, language_code, lang_name):
+    def get_add_plugin_kwargs(self, page, no, placeholder, language_code, lang_name):
         """
         Return "content" for create the plugin.
         Called from self.add_plugins()
         """
         return {
             "plugin_type": 'TextPlugin', # djangocms_text_ckeditor
-            "body": self.get_dummy_text(page, no, language_code, lang_name)
+            "body": self.get_dummy_text(page, no, placeholder, language_code, lang_name)
         }
 
     def add_plugins(self, page, placeholder):
@@ -236,7 +237,9 @@ class CmsPageCreator(object):
         """
         for language_code, lang_name in iter_languages(self.languages):
             for no in range(1, self.dummy_text_count+1):
-                add_plugin_kwargs = self.get_add_plugin_kwargs(page, no, language_code, lang_name)
+                add_plugin_kwargs = self.get_add_plugin_kwargs(
+                    page, no, placeholder, language_code, lang_name
+                )
 
                 log.info(
                     'add plugin to placeholder "%s" (pk:%i) in: %s - no: %i',

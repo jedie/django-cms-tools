@@ -105,6 +105,12 @@ class PageTestFixture(CmsPageCreator):
     def get_title(self, language_code, lang_name):
         return "CreatePageTests() - %s" % lang_name
 
+
+class TwoSlotsPageCreator(CmsPageCreator):
+    template='two_placeholder_slots.html'
+    placeholder_slots = ("one", "two")
+
+
 @pytest.fixture()
 def empty_page_fixture():
     PageTestFixture().create()
@@ -318,3 +324,23 @@ class CreateCMSPageTests(BaseTestCase):
         page2, created = ParentCmsPageCreator(parent_page=home_page).create()
         self.assertEqual(page1.pk, page2.pk)
         self.assertFalse(created)
+
+    def test_create_two_placeholders(self):
+        page, created = TwoSlotsPageCreator().create()
+        self.assertTrue(created)
+
+        url = page.get_absolute_url(language="en")
+        self.assertEqual(url, "/en/twoslotspagecreator-in-en/")
+
+        self.assertResponse(
+            self.client.get(url, HTTP_ACCEPT_LANGUAGE="en"),
+            must_contain=(
+                "<h1>Django-CMS-Tools Test Project</h1>",
+                "<h2>Dummy no. 1 in English (placeholder one)</h2>",
+                "<h2>Dummy no. 1 in English (placeholder two)</h2>",
+            ),
+            must_not_contain=("error", "Traceback"),
+            template_name='two_placeholder_slots.html',
+            status_code=200, html=True,
+            browser_traceback=True
+        )

@@ -171,6 +171,7 @@ PASSWORD_HASHERS = ( # Speedup tests
 
 CMS_TEMPLATES = (
     ('base.html', 'Basic Page'),
+    ('two_placeholder_slots.html', 'Page with two placeholders'),
 )
 CMS_PERMISSION = True
 
