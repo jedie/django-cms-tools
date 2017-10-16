@@ -28,9 +28,9 @@ def get_or_create_placeholder(page, placeholder_slot, delete_existing=False):
         slot=placeholder_slot
     )
     if created:
-        log.debug("Create placeholder %r for %r", placeholder_slot, page)
+        log.debug("Create placeholder %r for page %r", placeholder_slot, page.get_title())
     else:
-        log.debug("Use existing placeholder %r for %r", placeholder_slot, page)
+        log.debug("Use existing placeholder %r for page %r", placeholder_slot, page.get_title())
 
     if delete_existing:
         queryset = CMSPlugin.objects.all().filter(placeholder = placeholder)
