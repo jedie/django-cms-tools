@@ -64,7 +64,6 @@ class CmsPageCreator(object):
     default_language_code = settings.LANGUAGE_CODE # First language to start create the page
     template = TEMPLATE_INHERITANCE_MAGIC
     in_navigation = True
-
     apphook = None
     apphook_namespace = None
     placeholder_slots = ("content",)
@@ -141,9 +140,16 @@ class CmsPageCreator(object):
         """
         publish_page(page, languages=self.languages)
 
-    def create_page(self):
+    def create_page(self, **extra_kwargs):
         """
         Create page (and page title) in default language
+
+        extra_kwargs will be pass to cms.api.create_page()
+        e.g.:
+            extra_kwargs={
+                "soft_root": True,
+                "reverse_id": my_reverse_id,
+            }
         """
         with translation.override(self.default_language_code):
             # for evaluate the language name lazy translation
@@ -205,7 +211,8 @@ class CmsPageCreator(object):
                     parent=parent,
                     in_navigation=self.in_navigation,
                     apphook=self.apphook,
-                    apphook_namespace=self.apphook_namespace
+                    apphook_namespace=self.apphook_namespace,
+                    **extra_kwargs,
                 )
                 created=True
                 log.debug("Page created in %s: %s", self.default_lang_name, page)
