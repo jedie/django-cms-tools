@@ -160,6 +160,7 @@ class CmsPageCreator(object):
 
         page = None
         parent=self.get_parent_page()
+        assert parent.publisher_is_draft==True, "Parent page '%s' must be a draft!" % parent
 
         if self.delete_first:
             pages = Page.objects.filter(
