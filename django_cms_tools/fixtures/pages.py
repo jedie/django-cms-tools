@@ -286,7 +286,7 @@ class CmsPageCreator(object):
                     language=language_code,
                     **add_plugin_kwargs
                 )
-                log.info('Plugin "%s" (pk:%i) added.', plugin, plugin.pk)
+                log.info('Plugin "%s" (pk:%r) added.', str(plugin), plugin.pk)
                 placeholder.save()
 
     def get_or_create_placeholder(self, page, placeholder_slot):
