@@ -214,7 +214,7 @@ class CmsPageCreator(object):
                     in_navigation=self.in_navigation,
                     apphook=self.apphook,
                     apphook_namespace=self.apphook_namespace,
-                    **extra_kwargs,
+                    **extra_kwargs
                 )
                 created=True
                 log.debug("Page created in %s: %s", self.default_lang_name, page)
