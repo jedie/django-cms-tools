@@ -279,14 +279,19 @@ class CreateCMSPageTests(BaseTestCase):
         self.assertEqual(urls, ["/de/"])
 
     def test_other_parent_but_same_slug(self):
-        home_page = Page.objects.get(is_home=True, publisher_is_draft=False)
+        home_page_draft = Page.objects.get(is_home=True, publisher_is_draft=True)
 
-        page1, created = ParentCmsPageCreator(parent_page=home_page).create()
+        page1, created = ParentCmsPageCreator(parent_page=home_page_draft).create()
         self.assertTrue(created)
+        self.assertTrue(page1.publisher_is_draft, "not draft?!?")
+
         page2, created = ParentCmsPageCreator(parent_page=page1).create()
         self.assertTrue(created)
+        self.assertTrue(page2.publisher_is_draft, "not draft?!?")
+
         page3, created = ParentCmsPageCreator(parent_page=page2).create()
         self.assertTrue(created)
+        self.assertTrue(page3.publisher_is_draft, "not draft?!?")
 
         pages = Page.objects.public()
         pages = pages.order_by('id')
@@ -304,24 +309,25 @@ class CreateCMSPageTests(BaseTestCase):
         print(pks)
         self.assertEqual(pks,
             [
-                home_page.pk,
+                home_page_draft.publisher_public.pk,
                 page1.publisher_public.pk,
                 page2.publisher_public.pk,
                 page3.publisher_public.pk
             ]
         )
-        self.assertLess(home_page.pk, page1.publisher_public.pk)
+        self.assertLess(home_page_draft.publisher_public.pk, page1.publisher_public.pk)
         self.assertLess(page1.publisher_public.pk, page2.publisher_public.pk)
         self.assertLess(page2.publisher_public.pk, page3.publisher_public.pk)
 
     def test_double_detection(self):
-        home_page = Page.objects.get(is_home=True, publisher_is_draft=False)
+        home_page_draft = Page.objects.get(is_home=True, publisher_is_draft=True)
 
-        page1, created = ParentCmsPageCreator(parent_page=home_page).create()
+        page1, created = ParentCmsPageCreator(parent_page=home_page_draft).create()
         self.assertTrue(created)
+        self.assertTrue(page1.publisher_is_draft, "not draft?!?")
 
         # same parent and same slug should be not created:
-        page2, created = ParentCmsPageCreator(parent_page=home_page).create()
+        page2, created = ParentCmsPageCreator(parent_page=home_page_draft).create()
         self.assertEqual(page1.pk, page2.pk)
         self.assertFalse(created)
 

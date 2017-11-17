@@ -122,11 +122,11 @@ class CmsPageCreator(object):
         Used for 'parent' in cms.api.create_page()
         """
         try:
-            home_page = Page.objects.get(is_home=True, publisher_is_draft=False)
+            home_page_draft = Page.objects.get(is_home=True, publisher_is_draft=True)
         except Page.DoesNotExist:
             log.error('ERROR: "home page" doesn\'t exists!')
             raise RuntimeError('no home page')
-        return home_page
+        return home_page_draft
 
     def get_parent_page(self):
         """
@@ -173,7 +173,7 @@ class CmsPageCreator(object):
         else:
             if self.apphook_namespace is not None:
                 # Create a plugin page
-                queryset = Page.objects.public()
+                queryset = Page.objects.drafts()
                 queryset = queryset.filter(parent=parent)
                 try:
                     page = queryset.get(application_namespace=self.apphook_namespace)
@@ -218,9 +218,8 @@ class CmsPageCreator(object):
                 )
                 created=True
                 log.debug("Page created in %s: %s", self.default_lang_name, page)
-        else:
-            # Get draft if existing page was found.
-            page = page.get_draft_object()
+
+        assert page.publisher_is_draft==True
         return page, created
 
     def create_title(self, page):

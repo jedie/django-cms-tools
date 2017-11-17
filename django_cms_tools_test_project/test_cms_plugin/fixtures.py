@@ -58,6 +58,7 @@ class ParentCmsPageCreator(CmsPageCreator):
     placeholder_slots = () # create a empty page, without dummy content
 
     def __init__(self, parent_page, *args, **kwargs):
+        assert parent_page.publisher_is_draft==True, "Parent page '%s' must be a draft!" % parent_page
         self.parent_page = parent_page
         super(ParentCmsPageCreator, self).__init__(*args, **kwargs)
 
