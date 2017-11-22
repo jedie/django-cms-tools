@@ -18,14 +18,18 @@ from django_tools.permissions import ModelPermissionMixin as ModelPermissionBase
 log = logging.getLogger(__name__)
 
 
-class ModelPermissionMixin(ModelPermissionBaseMixin):
+class EditModeAndChangePermissionMixin:
     """
     Helper for easy model permission checks.
 
-    e.g.:
-        from django_cms_tools.permissions import ModelPermissionMixin
+    Note, needs 'has_change_permission' from:
+        django_tools.permissions.ModelPermissionMixin.has_change_permission
 
-        class FooModel(ModelPermissionMixin, models.Model):
+    e.g.:
+        from django_tools.permissions import ModelPermissionMixin
+        from django_cms_tools.permissions import EditModeAndChangePermissionMixin
+
+        class FooModel(ModelPermissionMixin, EditModeAndChangePermissionMixin, models.Model):
             ...
 
         def view(request):
@@ -47,3 +51,24 @@ class ModelPermissionMixin(ModelPermissionBaseMixin):
             return False
 
         return True
+
+
+class ModelPermissionMixin(ModelPermissionBaseMixin, EditModeAndChangePermissionMixin):
+    """
+    Helper for easy model permission checks.
+
+    Combinded with needed
+        django_tools.permissions.ModelPermissionMixin
+
+    e.g.:
+        from django_cms_tools.permissions import ModelPermissionMixin
+
+        class FooModel(ModelPermissionMixin, models.Model):
+            ...
+
+        def view(request):
+            if FooModel.edit_mode_and_change_permission(request):
+                ...
+    """
+    pass
+
