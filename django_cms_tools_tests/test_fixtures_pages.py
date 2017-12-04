@@ -17,7 +17,7 @@ from django_tools.unittest_utils.unittest_base import BaseTestCase
 
 from django_cms_tools.fixtures.languages import iter_languages
 from django_cms_tools.fixtures.pages import create_cms_index_pages, \
-    CmsPageCreator
+    CmsPageCreator, create_cms_plugin_page
 from django_cms_tools.unittest_utils.page_mixins import CmsPageTestUtilsMixin
 from django_cms_tools_test_project.test_cms_plugin.fixtures import \
     create_testapp_cms_plugin_page, ParentCmsPageCreator
@@ -350,3 +350,14 @@ class CreateCMSPageTests(BaseTestCase):
             status_code=200, html=True,
             browser_traceback=True
         )
+
+    def test_create_cms_plugin_page(self):
+        create_cms_plugin_page(
+            apphook='SimpleTestApp',
+            apphook_namespace='simpletest',
+            placeholder_slot=None
+        )
+        pages = Page.objects.public()
+        urls = [page.get_absolute_url(language="en") for page in pages]
+        urls.sort()
+        self.assertEqual(urls, ["/en/", "/en/simpletestapp-in-english/"])
