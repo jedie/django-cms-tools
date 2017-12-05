@@ -7,7 +7,12 @@ import logging
 import pytest
 
 from django.utils import translation
-from django.template.defaultfilters import slugify
+
+try:
+    # https://pypi.org/project/python-slugify/
+    from slugify import slugify
+except ImportError:
+    from django.template.defaultfilters import slugify
 
 from cms.api import create_page, create_title, add_plugin
 from cms.constants import TEMPLATE_INHERITANCE_MAGIC
