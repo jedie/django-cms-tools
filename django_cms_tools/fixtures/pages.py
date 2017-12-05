@@ -429,8 +429,8 @@ def create_cms_plugin_page(apphook, apphook_namespace, placeholder_slot=None):
     creator = CmsPluginPageCreator(
         apphook=apphook,
         apphook_namespace=apphook_namespace,
-        placeholder_slot=placeholder_slot,
     )
+    creator.placeholder_slot=placeholder_slot
     plugin_page = creator.create()
     return plugin_page
 
