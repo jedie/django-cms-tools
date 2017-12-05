@@ -138,6 +138,7 @@ class CmsPageCreator(object):
         """
         Publish the page in all languages.
         """
+        assert page.publisher_is_draft==True, "Page '%s' must be a draft!" % page
         publish_page(page, languages=self.languages)
 
     def create_page(self, **extra_kwargs):
