@@ -108,7 +108,11 @@ class CmsPageCreator(object):
         :return: 'slug' string for cms.api.create_page()
         """
         title = self.get_title(language_code, lang_name)
-        return slugify(title)
+        assert title != ""
+
+        slug = slugify(title)
+        assert slug != "", "Title %r results in empty slug!" % title
+        return slug
 
     def get_template(self, language_code, lang_name):
         """
@@ -158,6 +162,7 @@ class CmsPageCreator(object):
 
             self.default_lang_name = dict(self.languages)[self.default_language_code]
             self.slug = self.get_slug(self.default_language_code, self.default_lang_name)
+            assert self.slug != ""
 
         page = None
         parent=self.get_parent_page()
@@ -231,11 +236,13 @@ class CmsPageCreator(object):
             try:
                 title = Title.objects.get(page=page, language=language_code)
             except Title.DoesNotExist:
+                slug = self.get_slug(language_code, lang_name)
+                assert slug != "", "No slug for %r" % language_code
                 title = create_title(
                     language=language_code,
                     title=self.get_title(language_code, lang_name),
                     page=page,
-                    slug = self.get_slug(language_code, lang_name),
+                    slug = slug,
                 )
                 log.debug("Title created: %s", title)
             else:
