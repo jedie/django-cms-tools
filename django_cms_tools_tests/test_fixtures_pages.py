@@ -6,6 +6,14 @@ import pytest
 
 from cms.models import Page, settings, Title
 
+try:
+    # https://pypi.org/project/python-slugify/
+    from slugify import slugify
+except ImportError:
+    python_slugify = False
+else:
+    python_slugify = True
+
 from django.test import SimpleTestCase
 from django.core.urlresolvers import resolve
 from django.utils import translation
@@ -296,14 +304,24 @@ class CreateCMSPageTests(BaseTestCase):
         pages = Page.objects.public()
         pages = pages.order_by('id')
         urls = [page.get_absolute_url(language="en") for page in pages]
-        self.assertEqual(urls,
-            [
+
+        if python_slugify:
+            # https://pypi.org/project/python-slugify/
+            reference = [
+                '/en/',
+                '/en/parent-test/',
+                '/en/parent-test/parent-test/',
+                '/en/parent-test/parent-test/parent-test/'
+            ]
+        else:
+            # django.template.defaultfilters.slugify used:
+            reference = [
                 '/en/',
                 '/en/parent_test/',
                 '/en/parent_test/parent_test/',
                 '/en/parent_test/parent_test/parent_test/'
             ]
-        )
+        self.assertEqual(urls,reference)
 
         pks = [page.pk for page in pages]
         print(pks)
