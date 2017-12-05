@@ -6,6 +6,7 @@ import pytest
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.unittest_base import BaseTestCase
+from django_tools.unittest_utils.user import TestUserMixin
 
 
 @pytest.mark.django_db
@@ -23,14 +24,10 @@ class AdminAnonymousTests(BaseTestCase):
 
 
 @pytest.mark.django_db
-class AdminLoggedinTests(AdminAnonymousTests):
+class AdminLoggedinTests(TestUserMixin, AdminAnonymousTests):
     """
     Some basics test with the django admin
     """
-    def setUp(self):
-        super(AdminLoggedinTests, self).setUp()
-        self.create_testusers()
-
     def test_staff_admin_index(self):
         self.login(usertype='staff')
         response = self.client.get('/en/admin/', HTTP_ACCEPT_LANGUAGE='en')
@@ -59,4 +56,3 @@ class AdminLoggedinTests(AdminAnonymousTests):
             must_not_contain=('error', 'traceback'),
             template_name='admin/index.html',
         )
-
