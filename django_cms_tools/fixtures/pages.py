@@ -115,6 +115,8 @@ class CmsPageCreator(object):
         title = self.get_title(language_code, lang_name)
         assert title != ""
 
+        title = str(title) # e.g.: evaluate a lazy translation
+
         slug = slugify(title)
         assert slug != "", "Title %r results in empty slug!" % title
         return slug
