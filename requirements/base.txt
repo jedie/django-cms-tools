@@ -14,4 +14,4 @@ django-cms>=3.4
 djangocms-text-ckeditor
 
 # https://github.com/jedie/django-tools
-django-tools>=0.34
+django-tools>=0.37
