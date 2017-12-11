@@ -124,6 +124,7 @@ pk:3 /en/foo/bar/                             INHERIT
 == Django compatibility
 
 |= django-cms-tools |= django version |= python         |
+| **dev**           | 1.8             | 3.5, 3.6        |
 | v0.4.0            | 1.8             | 2.7, 3.5, 3.6   |
 | v0.1.x            | 1.8             | 2.7, 3.4, 3.5   |
 
@@ -137,6 +138,7 @@ pk:3 /en/foo/bar/                             INHERIT
 == history
 
 * **dev** - [[https://github.com/jedie/django-cms-tools/compare/v0.4.0...master|compare v0.4.0...master]]
+** Skip official support for python v2 (remove from text matrix)
 ** NEW: {{{./manage.py template_info}}}
 ** NEW: {{{./manage.py cms_page_info}}}
 ** CmsPageCreator API changed:
