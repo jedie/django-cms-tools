@@ -135,9 +135,10 @@ pk:3 /en/foo/bar/                             INHERIT
  * Add tests for 'filer commands'
  * Support Django 1.9 and 1.10 and run tests against these versions.
 
+
 == history
 
-* **dev** - [[https://github.com/jedie/django-cms-tools/compare/v0.4.0...master|compare v0.4.0...master]]
+* v0.5.0 - 19.12.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.4.0...v0.5.0|compare v0.4.0...v0.5.0]]
 ** Skip official support for python v2 (remove from text matrix)
 ** NEW: {{{./manage.py template_info}}}
 ** NEW: {{{./manage.py cms_page_info}}}
