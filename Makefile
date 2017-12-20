@@ -12,8 +12,6 @@ help:
 	@echo "install        install the package to the active Python environment"
 	@echo "requirements   pip-compile requirements file templates"
 	@echo "docs           generate Sphinx HTML documentation, including API docs"
-	@echo "py-test        run tests via py.test with the default Python version"
-	@echo "tox            run tests on every Python version with tox"
 	@echo "flake8         run style checks and static analysis with flake8"
 	@echo "pylint         run style checks and static analysis with pylint"
 	@echo "docstrings     check docstring presence and style conventions with pydocstyle"
@@ -50,14 +48,6 @@ clean-test:
 ## run tests quickly with the default Python
 py-test:
 	py.test -v django_cms_tools_tests/
-
-## run tests on every Python version with tox
-tox:
-	tox
-
-test-ci:
-	python manage.py migrate
-	tox
 
 migrate:
 	python manage.py migrate

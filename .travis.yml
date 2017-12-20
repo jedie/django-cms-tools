@@ -31,12 +31,12 @@ matrix:
             python: pypy3
 
 install:
-    - pip install --upgrade pip
-
-script:
     # install only the needed package to run tox
     # tox will install all needed packages
-    - travis_retry make tox
+    - travis_retry pip install tox python-creole docutils
+
+script:
+    - ./setup.py tox
 
 after_success:
     # https://github.com/codecov/codecov-bash
