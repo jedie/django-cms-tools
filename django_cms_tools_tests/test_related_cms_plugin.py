@@ -2,8 +2,6 @@
 
 from __future__ import print_function, unicode_literals
 
-import pytest
-
 from cms.models import Page
 
 # https://github.com/jedie/django-tools
@@ -14,16 +12,19 @@ from django_cms_tools.fixtures.pages import create_cms_index_pages
 from django_cms_tools_test_project.test_cms_plugin.fixtures import create_related_plugin
 
 
-@pytest.mark.usefixtures(
-    create_cms_index_pages.__name__,
-    create_related_plugin.__name__,
-)
+
 class RelatedPluginTests(BaseTestCase):
     """
     Tests for from:
 
     django_cms_tools_test_project.test_cms_plugin.cms_plugin.RelatedPlugin
     """
+    @classmethod
+    def setUpTestData(cls):
+        super(RelatedPluginTests, cls).setUpTestData()
+        create_cms_index_pages()
+        create_related_plugin()
+
     def test_urls_en(self):
         pages = Page.objects.public()
         urls = [page.get_absolute_url(language="en") for page in pages]
