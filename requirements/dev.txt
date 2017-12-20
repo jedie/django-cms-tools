@@ -5,14 +5,9 @@
 -r base.txt
 
 django-filer
-coverage
-coveralls
 flake8
 pydocstyle
 pylint
-pytest
-pytest-django
-pytest-cov
 Sphinx
 tox
 wheel

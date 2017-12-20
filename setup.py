@@ -38,7 +38,7 @@ class TestCommand(BaseCommand):
 
     def run(self):
         self.announce("Running tests...", level=distutils.log.INFO)
-        returncode = subprocess.call(['pytest', 'django_tools_tests'])
+        returncode = subprocess.call(['pytest'])
         sys.exit(returncode)
 
 
@@ -231,10 +231,7 @@ Operating System :: MacOS :: MacOS X
 Operating System :: Microsoft :: Windows
 Operating System :: POSIX
 Programming Language :: Python
-Programming Language :: Python :: 2
-Programming Language :: Python :: 2.7
 Programming Language :: Python :: 3
-Programming Language :: Python :: 3.4
 Programming Language :: Python :: 3.5
 Programming Language :: Python :: 3.6
 Framework :: Django
@@ -253,7 +250,7 @@ setup(
     license="GNU General Public License v3.0 or above",
     classifiers=[c.strip() for c in classifiers.splitlines()
                  if c.strip() and not c.startswith('#')],
-    packages=find_packages(exclude=['tests', 'test_project']),
+    packages=find_packages(),
     include_package_data=True,
     cmdclass={
         'test': TestCommand,

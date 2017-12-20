@@ -3,9 +3,10 @@ include AUTHORS
 include LICENSE
 include README.creole
 include tox.ini
+include pytest.ini
 
 recursive-include django_cms_tools *.py
-recursive-include django_cms_tools_test_project *.py
+recursive-include django_cms_tools_test_project *.py *.html
 recursive-include django_cms_tools_tests *.py
 
 recursive-exclude * __pycache__
