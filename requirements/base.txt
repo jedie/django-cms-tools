@@ -2,7 +2,7 @@
 # basic requirements
 #
 
-django<1.9
+django
 
 # Django CMS
 # http://docs.django-cms.org/en/latest/upgrade/index.html
