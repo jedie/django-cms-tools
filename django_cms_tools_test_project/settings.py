@@ -61,6 +61,7 @@ INSTALLED_APPS = (
     'cms', # https://github.com/divio/django-cms
     'menus', # Part of Django-CMS
 
+    'easy_thumbnails', # https://github.com/SmileyChris/easy-thumbnails
     'treebeard', # https://github.com/django-treebeard/django-treebeard
     'sekizai', # https://github.com/ojii/django-sekizai
     'djangocms_text_ckeditor', # https://github.com/divio/djangocms-text-ckeditor
