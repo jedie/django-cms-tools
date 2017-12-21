@@ -122,6 +122,21 @@ pk:3 /en/foo/bar/                             INHERIT
 }}}
 
 
+== running tests
+
+Run all tests in all environment combinations via tox:
+
+{{{
+$ python3 setup.py tox
+}}}
+
+Run all tests in current environment via pytest:
+
+{{{
+$ python3 setup.py test
+}}}
+
+
 == Django compatibility
 
 |= django-cms-tools |= django version |= python         |
