@@ -5,6 +5,7 @@ Miscellaneous tools/helpers for django CMS.
 Look also at the siblings project: [[https://github.com/jedie/django-tools|django-tools]] (Tools/helpers around Django).
 
 | {{https://travis-ci.org/jedie/django-cms-tools.svg|Build Status on travis-ci.org}} | [[https://travis-ci.org/jedie/django-cms-tools/|travis-ci.org/jedie/django-cms-tools]] |
+| {{https://codecov.io/gh/jedie/django-cms-tools/branch/master/graph/badge.svg|Coverage Status on codecov.io}} | [[https://codecov.io/gh/jedie/django-cms-tools|codecov.io/gh/jedie/django-tools]] |
 | {{https://coveralls.io/repos/jedie/django-cms-tools/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/django-cms-tools|coveralls.io/r/jedie/django-cms-tools]] |
 | {{https://landscape.io/github/jedie/django-cms-tools/master/landscape.svg|Status on landscape.io}} | [[https://landscape.io/github/jedie/django-cms-tools/master|landscape.io/github/jedie/django-cms-tools/master]] |
 
@@ -124,11 +125,11 @@ pk:3 /en/foo/bar/                             INHERIT
 == Django compatibility
 
 |= django-cms-tools |= django version |= python         |
-| **dev**           | 1.8             | 3.5, 3.6        |
+| >=v0.5.1          | 1.8, v1.11      | 3.5, 3.6, pypy3 |
 | v0.4.0            | 1.8             | 2.7, 3.5, 3.6   |
 | v0.1.x            | 1.8             | 2.7, 3.4, 3.5   |
 
-(Look also into [[https://github.com/jedie/django-cms-tools/blob/master/.travis.yml|.travis.yml]] for version combination tested via travis-ci)
+(See also combinations in [[https://github.com/jedie/django-cms-tools/blob/master/.travis.yml|.travis.yml]] and [[https://github.com/jedie/django-cms-tools/blob/master/tox.ini|tox.ini]])
 
 == TODO:
 
@@ -138,6 +139,10 @@ pk:3 /en/foo/bar/                             INHERIT
 
 == history
 
+* v0.5.1 - 21.12.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.5.0...v0.5.1|compare v0.5.0...v0.5.1]]
+** refactor travis/tox/pytest/coverage stuff
+** Tests can be run via {{{python3 setup.py tox}}} and/or {{{python3 setup.py test}}}
+** Test also with pypy3 on Travis CI.
 * v0.5.0 - 19.12.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.4.0...v0.5.0|compare v0.4.0...v0.5.0]]
 ** Skip official support for python v2 (remove from text matrix)
 ** NEW: {{{./manage.py template_info}}}
