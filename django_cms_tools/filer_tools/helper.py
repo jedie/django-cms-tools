@@ -12,8 +12,6 @@ from easy_thumbnails.exceptions import InvalidImageFormatError
 from filer.fields.file import FilerFileField
 from filer.utils.loader import load_model
 
-Image = load_model(settings.FILER_IMAGE_MODEL)
-
 log = logging.getLogger(__name__)
 
 
@@ -71,6 +69,7 @@ def collect_all_filer_ids(verbose=False):
 
 
 def get_filer_attr(file_obj, attr_name):
+    Image = load_model(settings.FILER_IMAGE_MODEL)
     if not isinstance(file_obj, Image):
         raise AttributeError("'%s' is not a '%s' instance!" % (repr(file_obj), repr(Image)))
 
@@ -89,7 +88,7 @@ def filer_obj_exists(file_obj, verbose=False):
             log.error(msg)
         return False
 
-
+    Image = load_model(settings.FILER_IMAGE_MODEL)
     if isinstance(file_obj, Image):
         try:
             icons = get_filer_attr(file_obj, attr_name="icons")
