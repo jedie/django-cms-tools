@@ -6,11 +6,13 @@ import collections
 import logging
 
 from django.apps import apps
+from django.conf import settings
 
 from easy_thumbnails.exceptions import InvalidImageFormatError
-
 from filer.fields.file import FilerFileField
-from filer.models.imagemodels import Image
+from filer.utils.loader import load_model
+
+Image = load_model(settings.FILER_IMAGE_MODEL)
 
 log = logging.getLogger(__name__)
 
@@ -67,18 +69,62 @@ def collect_all_filer_ids(verbose=False):
 
     return filer_ids
 
+
+def get_filer_attr(file_obj, attr_name):
+    if not isinstance(file_obj, Image):
+        raise AttributeError("'%s' is not a '%s' instance!" % (repr(file_obj), repr(Image)))
+
+    try:
+        return getattr(file_obj, attr_name)
+    except InvalidImageFormatError as err:
+        raise AttributeError("Can't get '%s' from '%s': %s" % (attr_name, repr(file_obj), err))
+
+
 def filer_obj_exists(file_obj, verbose=False):
     if file_obj is None:
+        msg = "No file obj given"
+        if verbose:
+            print(msg)
+        else:
+            log.error(msg)
         return False
 
-    #{% if object.icons.32 %}
 
     if isinstance(file_obj, Image):
         try:
-            has_icons = getattr(file_obj, "icons", False)
-        except InvalidImageFormatError:
-            return False
-        return has_icons
+            icons = get_filer_attr(file_obj, attr_name="icons")
+        except AttributeError as err:
+            if verbose:
+                print(err)
+            else:
+                log.error(err)
+        else:
+            if icons:
+                return True
+
+            msg = "'%s' hasn't .icons" % repr(file_obj)
+            if verbose:
+                print(msg)
+            else:
+                log.error(msg)
+
+        try:
+            thumbnails = get_filer_attr(file_obj, attr_name="thumbnails")
+        except AttributeError as err:
+            if verbose:
+                print(err)
+            else:
+                log.error(err)
+        else:
+            if thumbnails:
+                return True
+
+            msg = "'%s' hasn't .thumbnails" % repr(file_obj)
+            if verbose:
+                print(msg)
+            else:
+                log.error(msg)
+
 
     file = file_obj.file
     try:
@@ -87,16 +133,23 @@ def filer_obj_exists(file_obj, verbose=False):
         # Catch 'Exception' here, because of differend errors, depends on
         # used file storage backend.
         # e.g.: IOError, AzureMissingResourceHttpError etc.
+        msg="Read file error: %s" % err
         if verbose:
-            log.error("Read file error: %s", err)
-            print("Error: %s" % err)
+            print(msg)
+        else:
+            log.error(msg)
 
         return False
     finally:
         file.close()
 
     # print("head:", repr(head))
-
-    if head:
+    if len(head):
         return True
+
+    msg="file '%s' is empty" % repr(file_obj)
+    if verbose:
+        print(msg)
+    else:
+        log.error(msg)
     return False

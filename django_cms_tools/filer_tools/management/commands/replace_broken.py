@@ -4,13 +4,16 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 import sys
+from pprint import pformat
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.utils import translation
 
-from filer.models.imagemodels import Image
+from filer.utils.loader import load_model
 
-from django_cms_tools.filer_tools.helper import filer_obj_exists, \
-    iter_filer_fields
+# https://github.com/jedie/django-cms-tools
+from django_cms_tools.filer_tools.helper import filer_obj_exists, iter_filer_fields
 
 log = logging.getLogger(__name__)
 
@@ -29,6 +32,22 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.verbosity = int(options.get('verbosity'))
 
+        # e.g.: Parler models needs activated translations:
+        language_code = settings.LANGUAGE_CODE
+        self.stdout.write("activate %r translations." % language_code)
+        translation.activate(language_code)
+
+        self.stdout.write("settings.FILER_IMAGE_MODEL: %r" % settings.FILER_IMAGE_MODEL)
+
+        Image = load_model(settings.FILER_IMAGE_MODEL)
+        self.stdout.write("Use filer Image class: %s" % repr(Image))
+
+        image_count = Image.objects.all().count()
+        self.stdout.write("There are %i images in database." % image_count)
+        if image_count==0:
+            self.stderr.write("ERROR: There are not images in database!")
+            sys.exit(1)
+
         image_fallback_id=int(options.get("id"))
 
         try:
@@ -42,7 +61,9 @@ class Command(BaseCommand):
             self.stderr.write("Given filer image ID %r doesn't exists!" % image_fallback_id)
             sys.exit(1)
 
-        self.stdout.write("Use fallback image: %s" % fallback_image)
+        self.stdout.write("Use fallback image: %s (%s)" % (fallback_image, fallback_image.file.name))
+        self.stdout.write("icons: %s" % pformat(fallback_image.icons))
+        self.stdout.write("thumbnails: %s" % pformat(fallback_image.thumbnails))
 
         total_existing_images = 0
         total_replace_images = 0
@@ -57,6 +78,7 @@ class Command(BaseCommand):
             replace_images = existing_images.copy()
 
             for instance in queryset:
+                save_needed = False
                 for field in fields:
                     file_obj = getattr(instance, field.name)
                     if file_obj is None:
@@ -69,9 +91,12 @@ class Command(BaseCommand):
                         existing_images[field] += 1
                     else:
                         setattr(instance, field.name, fallback_image)
-                        instance.save()
+                        save_needed = True
                         total_replace_images += 1
                         replace_images[field] += 1
+
+                if save_needed:
+                    instance.save()
 
                 instance_checked += 1
 
