@@ -122,6 +122,20 @@ pk:3 /en/foo/bar/                             INHERIT
 }}}
 
 
+== run test project
+
+{{{
+.../django-cms-tools$ ./run_test_project_dev_server.sh
+}}}
+
+or:
+
+{{{
+.../django-cms-tools$ cd django_cms_tools_test_project/
+.../django-cms-tools/django_cms_tools_test_project$ ./manage.py run_test_project_dev_server
+}}}
+
+
 == running tests
 
 Run all tests in all environment combinations via tox:

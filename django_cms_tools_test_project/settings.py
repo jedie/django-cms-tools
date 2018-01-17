@@ -75,6 +75,9 @@ INSTALLED_APPS = (
     'django_cms_tools_test_project.test_cms_plugin',
 )
 
+ROOT_URLCONF = 'django_cms_tools_test_project.urls'
+WSGI_APPLICATION = 'django_cms_tools_test_project.wsgi.application'
+
 MIDDLEWARE_CLASSES = (
     'cms.middleware.utils.ApphookReloadMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -91,8 +94,6 @@ MIDDLEWARE_CLASSES = (
     'cms.middleware.toolbar.ToolbarMiddleware',
     'cms.middleware.language.LanguageCookieMiddleware',
 )
-
-ROOT_URLCONF = 'django_cms_tools_test_project.urls'
 
 TEMPLATES = [
     {
@@ -118,8 +119,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'test_project.wsgi.application'
 
 
 # Database
