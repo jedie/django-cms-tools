@@ -2,6 +2,11 @@
 !.travis.yml
 !.coveralls.yml
 
+# from django_cms_tools_test_project
+static/
+media/
+test_project_db.sqlite3
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
