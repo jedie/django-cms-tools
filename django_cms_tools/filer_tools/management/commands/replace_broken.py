@@ -32,10 +32,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.verbosity = int(options.get('verbosity'))
 
-        # e.g.: Parler models needs activated translations:
-        language_code = settings.LANGUAGE_CODE
-        self.stdout.write("activate %r translations." % language_code)
-        translation.activate(language_code)
+        if settings.USE_I18N:
+            # e.g.: Parler models needs activated translations:
+            language_code = settings.LANGUAGE_CODE
+            self.stdout.write("activate %r translations." % language_code)
+            translation.activate(language_code)
 
         self.stdout.write("settings.FILER_IMAGE_MODEL: %r" % settings.FILER_IMAGE_MODEL)
 
