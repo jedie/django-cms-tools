@@ -62,11 +62,13 @@ class Command(BaseCommand):
             return
 
         for page in pages:
+            try:
+                url = page.get_absolute_url()
+            except Exception as err:
+                url = "<ERROR: %s>" % err
+
             self.stdout.write(
-                "pk:{pk} {url:45}".format(
-                    pk=page.pk,
-                    url=page.get_absolute_url(),
-                ),
+                "pk:{pk} {url:45}".format(pk=page.pk, url=url),
                 ending=" "
             )
             for attribute in attributes:
