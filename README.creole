@@ -122,6 +122,31 @@ pk:3 /en/foo/bar/                             INHERIT
 }}}
 
 
+=== 'cms_plugin_info' management command
+
+Activate e.g.:
+
+{{{
+INSTALLED_APPS = [
+    ...
+    'django_cms_tools',
+    ...
+]
+}}}
+It looks like:
+{{{
+$ ./manage.py cms_plugin_info
+
+There are 4 CMS plugins:
+'Django CMS Tools Test'
+    * RelatedPlugin (Related Plugin)
+'Generic'
+    * PlaceholderPlugin (Placeholder)
+    * AliasPlugin (Alias)
+    * TextPlugin (Text)
+}}}
+
+
 == run test project
 
 {{{
@@ -169,6 +194,7 @@ $ python3 setup.py test
 == history
 
 * *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.5.2...master|compare v0.5.2...master]]
+** NEW: {{{./manage.py cms_plugin_info}}} to generate a list of all registered Django CMS plugins
 * v0.5.2 - 10.01.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.5.1...v0.5.2|compare v0.5.1...v0.5.2]]
 ** enhance and bugfix 'replace_broken' command
 * v0.5.1 - 21.12.2017 - [[https://github.com/jedie/django-cms-tools/compare/v0.5.0...v0.5.1|compare v0.5.0...v0.5.1]]
