@@ -2,8 +2,6 @@
 
 from __future__ import unicode_literals, print_function
 
-import pytest
-
 from cms.models import Page, settings, Title
 
 try:
@@ -47,10 +45,14 @@ class Unittests(SimpleTestCase):
         self.assertEqual(names, ['Deutsch', 'English'])
 
 
-@pytest.mark.usefixtures(
-    create_cms_index_pages.__name__,
-)
 class ExistingCmsPageTests(BaseTestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        assert Page.objects.all().count() == 0
+        create_cms_index_pages()
+        assert Page.objects.all().count() == 2
+
     def setUp(self):
         super(ExistingCmsPageTests, self).setUp()
         self.page = Page.objects.get(is_home=True, publisher_is_draft=False)
@@ -119,15 +121,14 @@ class TwoSlotsPageCreator(CmsPageCreator):
     placeholder_slots = ("one", "two")
 
 
-@pytest.fixture()
-def empty_page_fixture():
-    PageTestFixture().create()
-
-
-@pytest.mark.usefixtures(
-    empty_page_fixture.__name__
-)
 class CreatePageTests(CmsPageTestUtilsMixin, BaseTestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        assert Page.objects.all().count() == 0
+        PageTestFixture().create()
+        assert Page.objects.all().count() == 2
+
     def assert_test_pages(self):
         self.assert_page_titles(
             language_code="en",
@@ -178,16 +179,21 @@ class CreatePageTests(CmsPageTestUtilsMixin, BaseTestCase):
         self.assert_test_pages() # recreated ?
 
 
-@pytest.mark.usefixtures(
-    create_cms_index_pages.__name__,
-    create_testapp_cms_plugin_page.__name__,
-)
 class CreatePluginPageTests(BaseTestCase):
     """
     Tests for plugin page generation with:
 
         django_cms_tools.fixtures.pages.create_cms_plugin_page
     """
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        assert Page.objects.all().count() == 0
+        create_cms_index_pages()
+        assert Page.objects.all().count() == 2
+        create_testapp_cms_plugin_page()
+        assert Page.objects.all().count() == 4
+
     def test_urls_en(self):
         pages = Page.objects.public()
         urls = [page.get_absolute_url(language="en") for page in pages]
@@ -272,8 +278,14 @@ class CreatePluginPageTests(BaseTestCase):
         )
 
 
-@pytest.mark.usefixtures(create_cms_index_pages.__name__)
 class CreateCMSPageTests(BaseTestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        assert Page.objects.all().count() == 0
+        create_cms_index_pages()
+        assert Page.objects.all().count() == 2
+
     def test_urls_en(self):
         pages = Page.objects.public()
         urls = [page.get_absolute_url(language="en") for page in pages]
