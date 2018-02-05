@@ -256,6 +256,8 @@ setup(
     classifiers=[c.strip() for c in classifiers.splitlines()
                  if c.strip() and not c.startswith('#')],
     packages=find_packages(),
+    python_requires='>=3.5',
+    install_requires=["django", "django-cms"],
     include_package_data=True,
     cmdclass={
         'test': TestCommand,

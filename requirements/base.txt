@@ -2,12 +2,6 @@
 # basic requirements
 #
 
-# Django CMS
-# http://docs.django-cms.org/en/latest/upgrade/index.html
-# Currently Django CMS v3.5 is not supported, yet.
-# see: https://github.com/jedie/django-cms-tools/issues/1
-django-cms<3.5
-
 #     'treebeard', # https://github.com/django-treebeard/django-treebeard
 #    'sekizai', # https://github.com/ojii/django-sekizai
 # https://github.com/divio/djangocms-text-ckeditor
