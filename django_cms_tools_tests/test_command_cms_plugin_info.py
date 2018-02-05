@@ -30,8 +30,8 @@ class TestCmsPluginInfoCommand(DjangoCommandMixin, BaseUnittestCase):
             Django CMS Tools Test
                 * RelatedPlugin (Related Plugin)
             Generic
-                * PlaceholderPlugin (Placeholder)
                 * AliasPlugin (Alias)
+                * PlaceholderPlugin (Placeholder)
                 * TextPlugin (Text)
             """
         )
