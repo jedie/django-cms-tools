@@ -27,7 +27,7 @@ class Command(BaseCommand):
             )
 
         for module, plugins in sorted(plugin_info.items()):
-            self.stdout.write(self.style.NOTICE(repr(module)))
+            self.stdout.write(self.style.NOTICE(str(module)))
             for plugin_name, plugin in plugins:
                 self.stdout.write(
                     "    * %s (%s)" % (plugin_name, plugin.name)
