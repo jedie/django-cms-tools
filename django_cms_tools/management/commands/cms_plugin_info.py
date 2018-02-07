@@ -30,5 +30,15 @@ class Command(BaseCommand):
             self.stdout.write(self.style.NOTICE(str(module)))
             for plugin_name, plugin in sorted(plugins):
                 self.stdout.write(
-                    "    * %s (%s)" % (plugin_name, plugin.name)
+                    "    * %s (%s)" % (
+                        self.style.SQL_FIELD(plugin_name),
+                        plugin.name
+                    )
                 )
+
+                if plugin.allow_children:
+                    self.stdout.write("        child classes: %s" % repr(plugin.child_classes))
+
+                if plugin.require_parent:
+                    self.stdout.write("        parent classes: %s" % repr(plugin.parent_classes))
+
