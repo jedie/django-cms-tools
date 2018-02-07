@@ -99,7 +99,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            "django_cms_tools_test_project/templates/",
+            os.path.join(BASE_DIR, "templates/"),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
