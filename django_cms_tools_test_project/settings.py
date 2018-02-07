@@ -206,53 +206,63 @@ CMS_PLACEHOLDER_CONF = {
 # cut 'pathname' in log output
 
 import logging
-try:
-    old_factory = logging.getLogRecordFactory()
-except AttributeError: # e.g.: Python < v3.2
-    pass
-else:
-    def cut_path(pathname, max_length):
-        if len(pathname)<=max_length:
-            return pathname
-        return "...%s" % pathname[-(max_length-3):]
 
-    def record_factory(*args, **kwargs):
-        record = old_factory(*args, **kwargs)
-        record.pathname = cut_path(record.pathname, 30)
-        return record
-
-    logging.setLogRecordFactory(record_factory)
+old_factory = logging.getLogRecordFactory()
 
 
-#-----------------------------------------------------------------------------
+def cut_path(pathname, max_length):
+    if len(pathname)<=max_length:
+        return pathname
+    return "...%s" % pathname[-(max_length-3):]
 
 
+def record_factory(*args, **kwargs):
+    record = old_factory(*args, **kwargs)
+    record.cut_path = cut_path(record.pathname, 30)
+    return record
+
+
+logging.setLogRecordFactory(record_factory)
+
+
+# -----------------------------------------------------------------------------
+
+
+# https://docs.python.org/3/library/logging.html#logging-levels
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)8s %(pathname)s:%(lineno)-3s %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
+            'format': '%(levelname)8s %(cut_path)s:%(lineno)-3s %(message)s'
         },
     },
     'handlers': {
-        'null': {'class': 'logging.NullHandler',},
         'console': {
             'class': 'logging.StreamHandler',
-            # 'formatter': 'simple'
-            'formatter': 'verbose'
-        },
+            'formatter': 'verbose',
+        }
     },
     'loggers': {
-        "django_cms_tools": {
-            'handlers': [
-                # 'null',
-                'console'
-            ],
+        '': {
+            'handlers': ['console'],
             'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django_tools': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django_cms_tools': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
         },
     },
 }
