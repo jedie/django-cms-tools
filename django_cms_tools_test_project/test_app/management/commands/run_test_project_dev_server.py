@@ -28,6 +28,7 @@ class Command(RunServerCommand):
 
         if "RUN_MAIN" not in os.environ:
             # RUN_MAIN added by auto reloader, see: django/utils/autoreload.py
+            self.verbose_call("makemigrations") # helpfull for developming and add/change models ;)
             self.verbose_call("migrate")
 
             # django.contrib.staticfiles.management.commands.collectstatic.Command
