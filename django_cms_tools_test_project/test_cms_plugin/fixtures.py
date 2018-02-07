@@ -8,8 +8,6 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
-import pytest
-
 from cms.api import add_plugin
 
 from django_cms_tools_test_project.test_cms_plugin.models import EntryModel
@@ -22,7 +20,6 @@ from django_cms_tools_test_project.test_cms_plugin.cms_plugin import RelatedPlug
 log = logging.getLogger(__name__)
 
 
-@pytest.fixture(scope="class")
 def create_testapp_cms_plugin_page():
     """
     Create cms plugin page for the test app in all existing languages
@@ -69,7 +66,6 @@ class ParentCmsPageCreator(CmsPageCreator):
         return "parent_test"
 
 
-@pytest.fixture(scope="session")
 def create_related_plugin():
     RelatedPluginPageCreator(
         placeholder_slots=("content",)
