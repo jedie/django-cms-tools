@@ -23,7 +23,7 @@ class AnchorPlugin(CMSPluginBase):
     """
     name = _("Anchor")
     model = AnchorPluginModel
-    render_template = "anchor_menu/anchor.html"
+    render_template = app_settings.ANCHOR_MENU_TEMPLATE_ANCHOR
     cache = False
     prepopulated_fields = {"slug": ("title",)}
 
@@ -37,7 +37,7 @@ class DropDownAnchorMenuPlugin(CMSPluginBase):
     Render a anchor menu
     """
     name = _("Drop-Down Anchor Menu")
-    render_template = "anchor_menu/menu.html"
+    render_template = app_settings.ANCHOR_MENU_TEMPLATE_MENU
     cache = False
 
     def render(self, context, instance, placeholder):

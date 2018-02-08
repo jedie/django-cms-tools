@@ -20,6 +20,8 @@ INSTALLED_APPS = (
 # optional settings:
 # more info see: django_cms_tools/plugin_anchor_menu/app_settings.py
 
+#ANCHOR_MENU_TEMPLATE_ANCHOR = "anchor_menu/anchor.html"
+#ANCHOR_MENU_TEMPLATE_MENU = "anchor_menu/menu.html"
 #ANCHOR_MENU_JQUERY_URL = "/static/admin/js/vendor/jquery/jquery.min.js"
 #ANCHOR_MENU_ID = "anchor_menu"
 #ANCHOR_MENU_SCROLL = True
