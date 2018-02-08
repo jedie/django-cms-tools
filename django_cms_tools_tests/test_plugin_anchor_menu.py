@@ -26,11 +26,11 @@ class AnchorMenuTests(BaseTestCase):
 
                 '<select id="anchor_menu">',
                 '<option>please select anchor</option>',
-                '<option value="#title-0">Title no. 0</option>',
-                '<option value="#title-1">Title no. 1</option>',
+                '<option value="#dummy-text-no-0">dummy text no. 0</option>',
+                '<option value="#dummy-text-no-1">dummy text no. 1</option>',
 
-                '<span id="title-0"></span>',
-                '<span id="title-1"></span>',
+                '<span id="dummy-text-no-0"></span>',
+                '<span id="dummy-text-no-1"></span>',
 
                 'var select_menu=$("#anchor_menu");'
             ),
@@ -40,4 +40,6 @@ class AnchorMenuTests(BaseTestCase):
             template_name='base.html',
         )
 
+    # TODO: test AnchorPluginModel.validate_unique
+    # TODO: test DropDownAnchorMenuPlugin functionality
     # TODO: test JS functionality, too ;)

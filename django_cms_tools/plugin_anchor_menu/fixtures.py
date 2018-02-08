@@ -2,6 +2,7 @@ import logging
 
 from cms.api import add_plugin
 from django.conf import settings
+from django.utils.text import slugify
 
 from django_cms_tools.fixtures.pages import CmsPageCreator
 from django_cms_tools.plugin_anchor_menu import constants as plugin_anchor_menu_constants
@@ -29,12 +30,15 @@ class AnchorTestPageCreator(CmsPageCreator):
         )
 
         for i in range(10):
+            title="dummy text no. %i" % i
+            slug=slugify(title)
+            # log.debug("Create ancor %r with slug %s", title, slug)
             add_plugin(
                 placeholder=placeholder,
                 plugin_type=plugin_anchor_menu_constants.ANCHOR_PLUGIN_NAME,
                 language=language_code,
-                title="Title no. %i" % i,
-                slug="title-%i" % i,
+                title=title,
+                slug=slug,
             )
             add_plugin(
                 placeholder=placeholder,
