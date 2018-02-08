@@ -70,6 +70,9 @@ INSTALLED_APPS = (
     'django_cms_tools',
     'django_cms_tools.filer_tools',
 
+    # Own cms plugins:
+    'django_cms_tools.plugin_anchor_menu',
+
     # Test project stuff:
     'django_cms_tools_test_project.test_app',
     'django_cms_tools_test_project.test_cms_plugin',
@@ -127,7 +130,7 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'test_project_db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, "..", "test_project_db.sqlite3"),
         # 'NAME': ":memory:"
     }
 }
@@ -181,24 +184,23 @@ CMS_PERMISSION = True
 # from djangocms_text_ckeditor.cms_plugins import TextPlugin
 CKEDITOR = "TextPlugin"
 
-class PlaceholderContent(object):
-    name = "content"
-
-    @classmethod
-    def config(cls, text="foobar"):
-        return {
-            'name': _("Content"),
-            'plugins': [CKEDITOR],
-            'default_plugins': [
-                {
-                    'plugin_type': CKEDITOR,
-                    'values': {'body': text},
-                },
-            ],
-        }
+from django_cms_tools.plugin_anchor_menu import constants as plugin_anchor_menu_constants
 
 CMS_PLACEHOLDER_CONF = {
-    PlaceholderContent.name: PlaceholderContent.config(text="Lorem ipsum dolor sit amet"),
+    "content": {
+        'name': _("Content"),
+        'plugins': [
+            CKEDITOR,
+            plugin_anchor_menu_constants.ANCHOR_PLUGIN_NAME,
+            plugin_anchor_menu_constants.DROP_DOWN_ANCHOR_MENU_PLUGIN_NAME,
+        ],
+        'default_plugins': [
+            {
+                'plugin_type': CKEDITOR,
+                'values': {'body': "Lorem ipsum dolor sit amet"},
+            },
+        ],
+    },
 }
 
 

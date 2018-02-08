@@ -196,6 +196,7 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 == history
 
 * *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.5.2...master|compare v0.5.2...master]]
+** NEW: Django-CMS plugin for build a page anchor menu
 ** NEW: {{{./manage.py cms_plugin_info}}} to generate a list of all registered Django CMS plugins
 * v0.5.2 - 10.01.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.5.1...v0.5.2|compare v0.5.1...v0.5.2]]
 ** enhance and bugfix 'replace_broken' command

@@ -26,11 +26,13 @@ class TestCmsPluginInfoCommand(DjangoCommandMixin, BaseUnittestCase):
 
         self.assertEqual_dedent(output,
             """
-            There are 4 CMS plugins:
+            There are 6 CMS plugins:
             Django CMS Tools Test
                 * RelatedPlugin (Related Plugin)
             Generic
                 * AliasPlugin (Alias)
+                * AnchorPlugin (Anchor)
+                * DropDownAnchorMenuPlugin (Drop-Down Anchor Menu)
                 * PlaceholderPlugin (Placeholder)
                 * TextPlugin (Text)
             """

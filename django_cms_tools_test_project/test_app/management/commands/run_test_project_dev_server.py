@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 
+import os
 import sys
 
-import os
+from django.contrib.auth import get_user_model
+from django.contrib.staticfiles.management.commands.runserver import Command as RunServerCommand
+from django.core.management import call_command
+
+# Django CMS Tools
+from django_cms_tools.plugin_anchor_menu.fixtures import create_anchor_test_page
 
 print("sys.real_prefix:", getattr(sys, "real_prefix", "-"))
 print("sys.prefix:", sys.prefix)
 
-from django.contrib.auth import get_user_model
 
-from django.core.management import call_command
 
-from django.contrib.staticfiles.management.commands.runserver import Command as RunServerCommand
 
 class Command(RunServerCommand):
     """
@@ -39,7 +42,7 @@ class Command(RunServerCommand):
             if qs.count() == 0:
                 self.verbose_call("createsuperuser")
 
+            create_anchor_test_page()
+
         options["insecure_serving"] = True
         super(Command, self).handle(*args, **options)
-
-

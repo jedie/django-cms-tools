@@ -1,0 +1,38 @@
+{% load i18n l10n sekizai_tags %}
+
+<select id="{{ ANCHOR_MENU_ID }}">
+    <option>{% trans "please select anchor" %}</option>
+    {% for anchor in anchors %}
+        <option value="#{{ anchor.slug }}">{{ anchor.title }}</option>
+    {% endfor %}
+</select>
+
+{% addtoblock "js" %}
+{% if "ANCHOR_MENU_JQUERY_URL" %}<script src="{{ ANCHOR_MENU_JQUERY_URL }}"></script>{% endif %}
+<script type="text/javascript">
+$.noConflict();
+jQuery(document).ready(function($) {
+    {% if DEBUG %}console.log("loaded jQuery v"+$.fn.jquery+" loaded.");{% endif %}
+    var select_menu=$("#{{ ANCHOR_MENU_ID }}");
+    select_menu.change(function() {
+        var anchor=$(this).val();
+        {% if DEBUG %}console.log("selected: '"+anchor+"'");{% endif %}
+
+        var offset=$(anchor).offset();
+        if (offset === undefined) {
+            {% if DEBUG %}console.log("skip");{% endif %}
+        } else {
+            {% if ANCHOR_MENU_SCROLL %}
+                var offset_top = offset.top
+                {% if DEBUG %}console.log("scroll to: "+offset_top);{% endif %}
+                $(document).scrollTop(offset_top);
+            {% else %}
+                {% if DEBUG %}console.log("set href to: '"+anchor+"'");{% endif %}
+                window.location.href = anchor;
+            {% endif %}
+        }
+    });
+    {% if DEBUG %}console.log("init '"+select_menu.selector+"' done.");{% endif %}
+});
+</script>
+{% endaddtoblock %}

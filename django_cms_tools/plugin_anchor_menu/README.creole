@@ -1,0 +1,47 @@
+= "Anchor menu" Django-CMS plugin
+
+There are two CMS-Plugins:
+
+* "Drop-Down Anchor Menu": creates the menu of all existing anchors
+* "Anchor": place a anchor into the page
+
+
+== setup
+
+settings:
+
+{{{
+INSTALLED_APPS = (
+    ...
+    'django_cms_tools.plugin_anchor_menu',
+    ...
+)
+
+# optional settings:
+# more info see: django_cms_tools/plugin_anchor_menu/app_settings.py
+
+#ANCHOR_MENU_JQUERY_URL = "/static/admin/js/vendor/jquery/jquery.min.js"
+#ANCHOR_MENU_ID = "anchor_menu"
+#ANCHOR_MENU_SCROLL = True
+}}}
+
+
+Add plugin to CMS_PLACEHOLDER_CONF, e.g.:
+
+{{{
+from django_cms_tools.plugin_anchor_menu import constants as plugin_anchor_menu_constants
+
+CMS_PLACEHOLDER_CONF = {
+    "content": {
+        #...
+        'plugins': [
+            #...
+            plugin_anchor_menu_constants.ANCHOR_PLUGIN_NAME,
+            plugin_anchor_menu_constants.DROP_DOWN_ANCHOR_MENU_PLUGIN_NAME,
+            #...
+        ],
+        #...
+    },
+}
+}}}
+
