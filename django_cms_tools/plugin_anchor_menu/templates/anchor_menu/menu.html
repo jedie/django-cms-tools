@@ -1,7 +1,7 @@
 {% load i18n l10n sekizai_tags %}
 
 <select id="{{ menu_id }}">
-    <option>{% trans "please select anchor" %}</option>
+    {% if first_label %}<option>{{ first_label }}</option>{% endif %}
     {% for anchor in anchors %}
         <option value="#{{ anchor.slug }}">{{ anchor.title }}</option>
     {% endfor %}

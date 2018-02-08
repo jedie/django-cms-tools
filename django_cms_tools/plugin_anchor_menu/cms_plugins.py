@@ -48,6 +48,7 @@ class DropDownAnchorMenuPlugin(CMSPluginBase):
         )
         context.update({
             "menu_id": instance.menu_id,
+            "first_label": instance.first_label,
             "scroll_mode": instance.scroll_mode,
             "anchors": anchors,
             "ANCHOR_MENU_JQUERY_URL": app_settings.ANCHOR_MENU_JQUERY_URL,

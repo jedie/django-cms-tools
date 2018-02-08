@@ -72,6 +72,12 @@ class DropDownAnchorMenuPluginModel(CMSPlugin):
         default=app_settings.ANCHOR_MENU_DEFAULT_TYPE,
     )
 
+    first_label=models.CharField(_("First label"), max_length=254,
+        help_text=_("Label for the first option. (The first anchor will be used, if empty)"),
+        default=_("Please select"),
+        blank=True, null=True
+    )
+
     @property
     def scroll_mode(self):
         return self.link_type == self.TYPE_SCROLL
