@@ -23,7 +23,7 @@ class AnchorPlugin(CMSPluginBase):
     """
     name = _("Anchor")
     model = AnchorPluginModel
-    render_template = "anchor_menu/ancor.html"
+    render_template = "anchor_menu/anchor.html"
     cache = False
     prepopulated_fields = {"slug": ("title",)}
 
