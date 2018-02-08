@@ -12,6 +12,13 @@ Look also at the siblings project: [[https://github.com/jedie/django-tools|djang
 
 == existing stuff
 
+=== Django-CMS plugins
+
+==== page anchor menu
+
+Add a anchor menu to a CMS page.
+More info in: [[https://github.com/jedie/django-cms-tools/tree/master/django_cms_tools/plugin_anchor_menu#readme|django_cms_tools/plugin_anchor_menu/README.creole]]
+
 === test fixture creation
 
 ==== django_cms_tools.fixtures.pages
