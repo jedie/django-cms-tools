@@ -17,13 +17,15 @@ class AnchorPluginModel(CMSPlugin):
     slug=models.SlugField(verbose_name=_("Slug"), max_length=255)
 
     def validate_field_unique_on_page(self, error_dict, field_name):
+        assert hasattr(self, field_name)
         unique_checks=[
             (AnchorPluginModel, ("placeholder", "language", field_name)),
         ]
         errors = self._perform_unique_checks(unique_checks)
         if errors:
+            value = getattr(self, field_name)
             error_dict[field_name] = _(
-                "{field_name} already exists on current page"
+                "{field_name} '%s' already exists on current page" % value
             ).format(
                 field_name=field_name
             )
