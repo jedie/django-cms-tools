@@ -4,7 +4,7 @@
 <html>
     <head>
         <title>Django-CMS-Tools Test Project</title>
-        <meta name="robots" content="noindex, follow">
+        <meta name="robots" content="{% block 'meta_robots_content' %}noindex, nofollow{% endblock %}">
         {% render_block "css" %}
     </head>
     <body>

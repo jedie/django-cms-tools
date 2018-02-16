@@ -69,8 +69,8 @@ class CmsPageCreator(object):
     default_language_code = settings.LANGUAGE_CODE # First language to start create the page
     template = TEMPLATE_INHERITANCE_MAGIC
     in_navigation = True
-    apphook = None
-    apphook_namespace = None
+    apphook = None            # e.g.: "FooBarApp"
+    apphook_namespace = None  # e.g.: "foobar"
     placeholder_slots = ("content",)
 
     dummy_text_count = 3

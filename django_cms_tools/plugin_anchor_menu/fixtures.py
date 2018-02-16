@@ -55,5 +55,5 @@ class AnchorTestPageCreator(CmsPageCreator):
 
 
 # called from django_cms_tools_test_project.test_app.management.commands.run_test_project_dev_server.Command#handle
-def create_anchor_test_page():
-    AnchorTestPageCreator(delete_first=True).create()
+def create_anchor_test_page(delete_first=False):
+    AnchorTestPageCreator(delete_first=delete_first).create()

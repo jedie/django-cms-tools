@@ -70,12 +70,19 @@ INSTALLED_APPS = (
     'sekizai', # https://github.com/ojii/django-sekizai
     'djangocms_text_ckeditor', # https://github.com/divio/djangocms-text-ckeditor
 
+    # https://pypi.org/project/django-parler
+    'parler',
+
+    # https://pypi.org/project/django-ya-model-publisher/
+    'publisher',
+
     # Own management commands:
     'django_cms_tools',
     'django_cms_tools.filer_tools',
 
     # Own cms plugins:
     'django_cms_tools.plugin_anchor_menu',
+    'django_cms_tools.plugin_landing_page',
 
     # Test project stuff:
     'django_cms_tools_test_project.test_app',
@@ -111,8 +118,13 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR, "templates/"),
         ],
-        'APP_DIRS': True,
         'OPTIONS': {
+            'loaders': [
+                ('django.template.loaders.cached.Loader', (
+                    'django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                )),
+            ],
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -144,16 +156,47 @@ DATABASES = {
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.8/topics/i18n/
+# https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en'
+# Default and fallback language:
+# https://docs.djangoproject.com/en/1.11/ref/settings/#language-code
+LANGUAGE_CODE = "en"
+
+# http://django-parler.readthedocs.org/en/latest/quickstart.html#configuration
+PARLER_LANGUAGES = {
+    1: [
+        {
+            "name": _("German"),
+            "code": "de",
+            "fallbacks": [LANGUAGE_CODE],
+            "hide_untranslated": False,
+        },
+        {
+            "name": _("English"),
+            "code": "en",
+            "fallbacks": ["de"],
+            "hide_untranslated": False,
+        },
+    ],
+    "default": { # all SITE_ID"s
+        "fallbacks": [LANGUAGE_CODE],
+        "redirect_on_fallback": False,
+    },
+}
+
 
 # https://docs.djangoproject.com/en/1.8/ref/settings/#languages
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGES = (
-  ('de', _('German')),
-  ('en', _('English')),
-)
+LANGUAGES = tuple([(d["code"], d["name"]) for d in PARLER_LANGUAGES[1]])
+
+LANGUAGE_DICT = dict(LANGUAGES) # useful to get translated name by language code
+
+# http://docs.django-cms.org/en/latest/reference/configuration.html#std:setting-CMS_LANGUAGES
+# CMS_LANGUAGES = PARLER_LANGUAGES
+
+# http://django-parler.readthedocs.org/en/latest/quickstart.html#configuration
+PARLER_DEFAULT_LANGUAGE_CODE = LANGUAGE_CODE
+
 
 TIME_ZONE = 'UTC'
 
@@ -201,7 +244,7 @@ CKEDITOR = "TextPlugin"
 from django_cms_tools.plugin_anchor_menu import constants as plugin_anchor_menu_constants
 
 CMS_PLACEHOLDER_CONF = {
-    "content": {
+    None: {
         'name': _("Content"),
         'plugins': [
             CKEDITOR,

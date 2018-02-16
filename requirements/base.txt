@@ -9,3 +9,15 @@ djangocms-text-ckeditor
 
 # https://github.com/jedie/django-tools
 django-tools>=0.37
+
+# https://pypi.org/project/django-parler
+# https://github.com/django-parler/django-parler
+# https://django-parler.readthedocs.io/en/latest/changelog.html
+django-parler
+
+# https://pypi.org/project/aldryn-translation-tools/
+aldryn_translation_tools
+
+# https://github.com/wearehoods/django-ya-model-publisher
+# https://pypi.org/project/django-ya-model-publisher/
+django-ya-model-publisher>=0.6.7
