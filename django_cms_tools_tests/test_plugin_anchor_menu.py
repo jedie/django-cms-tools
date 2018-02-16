@@ -25,7 +25,7 @@ class AnchorMenuTests(BaseTestCase):
                 '<title>Django-CMS-Tools Test Project</title>',
 
                 '<select id="anchor_menu">',
-                '<option>please select anchor</option>',
+                '<option>Please select</option>',
                 '<option value="#dummy-text-no-0">dummy text no. 0</option>',
                 '<option value="#dummy-text-no-1">dummy text no. 1</option>',
 
