@@ -177,10 +177,16 @@ class CmsPageCreator(object):
             assert parent.publisher_is_draft==True, "Parent page '%s' must be a draft!" % parent
 
         if self.delete_first:
-            pages = Page.objects.filter(
-                title_set__slug=self.slug,
-                parent=parent,
-            )
+            if self.apphook_namespace is not None:
+                pages = Page.objects.filter(
+                    application_namespace=self.apphook_namespace,
+                    parent=parent,
+                )
+            else:
+                pages = Page.objects.filter(
+                    title_set__slug=self.slug,
+                    parent=parent,
+                )
             log.debug("Delete %i pages...", pages.count())
             pages.delete()
         else:
