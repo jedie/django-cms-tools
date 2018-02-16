@@ -41,10 +41,12 @@ DEBUG = True
 SITE_ID=1
 
 
-ALLOWED_HOSTS = ['*']
+from django_tools.settings_utils import FnMatchIps
 
-from django_tools.settings_utils import InternalIps
-INTERNAL_IPS = InternalIps(["127.0.0.1", "::1", "192.168.*.*", "10.0.*.*"])
+# Required for the debug toolbar to be displayed:
+INTERNAL_IPS = FnMatchIps(["localhost", "127.0.0.1", "::1", "172.*.*.*", "192.168.*.*", "10.0.*.*"])
+
+ALLOWED_HOSTS = INTERNAL_IPS
 
 
 # Application definition
@@ -57,6 +59,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+
+    'debug_toolbar', # https://github.com/jazzband/django-debug-toolbar/
 
     'cms', # https://github.com/divio/django-cms
     'menus', # Part of Django-CMS
@@ -81,7 +85,10 @@ INSTALLED_APPS = (
 ROOT_URLCONF = 'django_cms_tools_test_project.urls'
 WSGI_APPLICATION = 'django_cms_tools_test_project.wsgi.application'
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
+    # https://github.com/jazzband/django-debug-toolbar/
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
     'cms.middleware.utils.ApphookReloadMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -165,6 +172,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# https://django-debug-toolbar.readthedocs.io/en/stable/configuration.html#debug-toolbar-config
+from debug_toolbar.settings import CONFIG_DEFAULTS as DEBUG_TOOLBAR_CONFIG
+
+# don't load jquery from ajax.googleapis.com, just use django's version:
+DEBUG_TOOLBAR_CONFIG["JQUERY_URL"] = STATIC_URL + "admin/js/vendor/jquery/jquery.min.js"
 
 
 PASSWORD_HASHERS = ( # Speedup tests
