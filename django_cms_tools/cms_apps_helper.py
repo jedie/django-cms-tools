@@ -48,6 +48,9 @@ class CMSAppHelperMixin:
 
     def get_absolute_url(self, view_path, reverse_kwargs, language):
         app_page = self.get_app_page()
+        if not app_page:
+            return "#"
+
         namespace = app_page.application_namespace
 
         with force_language(language):
@@ -60,7 +63,12 @@ class CMSAppHelperMixin:
 
     def get_app_page(self):
         page_qs = Page.objects.public()
-        app_page = page_qs.get(application_urls=self.app_hook_name)
+        try:
+            app_page = page_qs.get(application_urls=self.app_hook_name)
+        except Page.DoesNotExist as err:
+            log.error("Can't get page with application_urls=%r: %s", self.app_hook_name, err)
+            app_page = None
+
         return app_page
 
     def add_view_on_page_toolbar_links(self, menu, current_lang):
