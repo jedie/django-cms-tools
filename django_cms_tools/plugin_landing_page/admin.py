@@ -27,7 +27,6 @@ log = logging.getLogger(__name__)
 
 @admin.register(LandingPageModel)
 class LandingPageAdmin(PlaceholderAdminMixin, AllTranslationsMixin, PublisherParlerAdmin):
-
     def view_on_page_link(self, obj):
         available_languages = obj.get_available_languages()
 

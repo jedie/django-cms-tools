@@ -12,6 +12,7 @@ from django.conf import settings
 from django.utils import translation
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
 
+from django_cms_tools.fixtures.languages import iter_languages
 from django_cms_tools.fixtures.pages import create_cms_plugin_page, CmsPageCreator
 from django_cms_tools.plugin_landing_page.models import LandingPageModel
 
@@ -19,9 +20,7 @@ log = logging.getLogger(__name__)
 
 
 def create_dummy_landing_pages(delete_first=False):
-    language_code=settings.LANGUAGE_CODE
-    with translation.override(language_code):
-
+    for language_code, lang_name in iter_languages(languages=None):
         if delete_first:
             queryset = LandingPageModel.objects.all()
             log.info("Delete %i LandingPageModel...", queryset.count())
@@ -30,7 +29,7 @@ def create_dummy_landing_pages(delete_first=False):
         qs = LandingPageModel.objects.language(language_code=language_code)
 
         for no in range(1,5):
-            title="Dummy No. %i" % no
+            title="Dummy No. %i (%s)" % (no, language_code)
             instance, created = qs.get_or_create(
                 publisher_is_draft=True,
                 translations__language_code=language_code,
@@ -41,16 +40,18 @@ def create_dummy_landing_pages(delete_first=False):
                 instance.slug = None
                 instance.save()
 
-
                 dummy_text = (
-                    "<h3>dummy text part no. {no}</h3>\n"
+                    "<h3>dummy text part no. {no} in {lang_name}</h3>\n"
                     "<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt"
                     " ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud"
                     " exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute"
                     " iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
                     " Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt"
                     " mollit anim id est laborum.</p>"
-                ).format(no = no)
+                ).format(
+                    no = no,
+                    lang_name = lang_name,
+                )
 
                 add_plugin(
                     placeholder=instance.content,
@@ -71,13 +72,22 @@ class LandingPageCmsPluginPageCreator(CmsPageCreator):
 
     placeholder_slots = () # Don't add any plugins
 
+    def __init__(self, *args, parent_page=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.parent_page = parent_page
+
+    def get_parent_page(self):
+        return self.parent_page
+
     def get_slug(self, language_code, lang_name):
         return "lp"
 
 
-def create_landing_page_test_page(delete_first=False):
+def create_landing_page_test_page(delete_first=False, parent_page=None):
     # Create LandingPageApp page in all existing languages:
 
-    plugin_page = LandingPageCmsPluginPageCreator(delete_first=delete_first).create()
+    plugin_page, created = LandingPageCmsPluginPageCreator(delete_first=delete_first, parent_page=parent_page).create()
 
     create_dummy_landing_pages(delete_first=delete_first)
+
+    return plugin_page, created

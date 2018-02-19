@@ -353,9 +353,10 @@ def create_cms_index_pages(placeholder_slot="content"):
     create cms home page and fill >content< placeholder with TextPlugin
     """
     try:
-        Page.objects.get(is_home=True, publisher_is_draft=False)
+        index_page = Page.objects.get(is_home=True, publisher_is_draft=False)
     except Page.DoesNotExist:
         log.debug('Create index page in "en" and...')
+
         index_page = create_page(
             title="index in English",
             template=TEMPLATE_INHERITANCE_MAGIC,
@@ -377,9 +378,12 @@ def create_cms_index_pages(placeholder_slot="content"):
                     body='index page in %s' % lang_name
                 )
                 index_page.publish(language_code)
+        created = True
     else:
+        created = False
         log.debug('Index page already exists.')
 
+    return index_page, created
 
 
 class CmsPluginPageCreator(CmsPageCreator):
