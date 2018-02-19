@@ -56,10 +56,10 @@ class LandingPageModel(EditModeAndChangePermissionMixin, UpdateTimeBaseModel, Pu
                 "Clear it to have it re-created automatically."),
         ),
     )
-    robots_index = models.BooleanField(_("Robots-Index"), default=False,
+    robots_index = models.BooleanField(_("Robots-Index"), default=True,
         help_text=_("If checked: meta robots 'index' is set, otherwise 'noindex'.")
     )
-    robots_follow = models.BooleanField(_("Robots-Follow"), default=False,
+    robots_follow = models.BooleanField(_("Robots-Follow"), default=True,
         help_text=_("If checked: meta robots 'follow' is set, otherwise 'nofollow'.")
     )
 
