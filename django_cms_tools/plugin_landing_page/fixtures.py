@@ -71,6 +71,7 @@ def create_dummy_landing_pages(delete_first=False):
 
 
 class LandingPageCmsPluginPageCreator(CmsPageCreator):
+    in_navigation = False # Don't display the landing page app in menu/sitemaps etc.
     apphook='LandingPageApp'
     apphook_namespace='landingpage'
 
