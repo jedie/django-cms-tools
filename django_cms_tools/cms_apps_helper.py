@@ -50,7 +50,7 @@ class CMSAppHelperMixin:
             try:
                 return reverse(viewname, kwargs=reverse_kwargs)
             except NoReverseMatch as err:
-                log.error("Can't reverse url: %s", err)
+                log.error("Can't reverse %r with '%s': %s", viewname, repr(reverse_kwargs), err)
                 return "#"
 
     def get_app_page(self):
