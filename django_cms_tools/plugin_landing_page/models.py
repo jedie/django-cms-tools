@@ -81,7 +81,7 @@ class LandingPageModel(EditModeAndChangePermissionMixin, UpdateTimeBaseModel, Pu
     def __str__(self):
         return "LandingPage %s" % self.get_absolute_url()
 
-    class Meta:
+    class Meta(PublisherParlerAutoSlugifyModel.Meta):
         ordering = ("-createtime",)
         verbose_name = _("Landing Page")
         verbose_name_plural = _("Landing Pages")
