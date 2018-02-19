@@ -22,7 +22,7 @@ class AnchorMenuTests(BaseTestCase):
         response = self.client.get(self.url, HTTP_ACCEPT_LANGUAGE='en')
         self.assertResponse(response,
             must_contain=(
-                '<title>Django-CMS-Tools Test Project</title>',
+                '<title>AnchorTestPageCreator in en</title>',
 
                 '<select id="anchor_menu">',
                 '<option>Please select</option>',
