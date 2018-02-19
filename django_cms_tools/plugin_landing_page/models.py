@@ -83,5 +83,5 @@ class LandingPageModel(EditModeAndChangePermissionMixin, UpdateTimeBaseModel, Pu
 
     class Meta:
         ordering = ("-createtime",)
-        verbose_name = _("LandingPage")
-        verbose_name_plural = _("LandingPages")
+        verbose_name = _("Landing Page")
+        verbose_name_plural = _("Landing Pages")
