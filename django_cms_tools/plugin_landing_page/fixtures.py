@@ -7,13 +7,17 @@
 
 import logging
 
-from cms.api import add_plugin
 from django.conf import settings
 from django.utils import translation
+from django.utils.translation import ugettext_lazy as _
+
+from cms.api import add_plugin
+
 from djangocms_text_ckeditor.cms_plugins import TextPlugin
 
+# Django CMS Tools
 from django_cms_tools.fixtures.languages import iter_languages
-from django_cms_tools.fixtures.pages import create_cms_plugin_page, CmsPageCreator
+from django_cms_tools.fixtures.pages import CmsPageCreator, create_cms_plugin_page
 from django_cms_tools.plugin_landing_page.models import LandingPageModel
 
 log = logging.getLogger(__name__)
@@ -78,6 +82,9 @@ class LandingPageCmsPluginPageCreator(CmsPageCreator):
 
     def get_parent_page(self):
         return self.parent_page
+
+    def get_title(self, language_code, lang_name):
+        return _("Landing Pages")
 
     def get_slug(self, language_code, lang_name):
         return "lp"
