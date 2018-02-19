@@ -7,11 +7,16 @@
 
 import logging
 
-from cms.utils.i18n import force_language
-from django.urls import reverse, NoReverseMatch
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import Page
+from cms.utils.i18n import force_language
+
+try:
+    from django.urls import reverse, NoReverseMatch
+except ImportError:  # Django < 1.10 pragma: no cover
+    from django.core.urlresolvers import reverse, NoReverseMatch
+
 
 log = logging.getLogger(__name__)
 
