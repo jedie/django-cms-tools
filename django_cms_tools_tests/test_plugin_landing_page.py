@@ -185,13 +185,13 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
                 'Logout superuser',
 
                 'change list',
-                'href="/en/admin/plugin_landing_page/landingpagemodel/?_popup=1"',
+                'href="/en/admin/plugin_landing_page/landingpagemodel/"',
 
                 'Add new Landing Page...',
-                'href="/en/admin/plugin_landing_page/landingpagemodel/add/?_popup=1"',
+                'href="/en/admin/plugin_landing_page/landingpagemodel/add/"',
 
                 'Change current Landing Page...',
-                'href="/en/admin/plugin_landing_page/landingpagemodel/11/change/?language=en&amp;_popup=1"',
+                'href="/en/admin/plugin_landing_page/landingpagemodel/11/change/?language=en"',
             ),
             must_not_contain=("Error",),
             template_name="landing_page/landing_page.html",
@@ -200,3 +200,30 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
             html=False,
             browser_traceback=True
         )
+
+    def test_add_new_langing_page(self):
+        self.login(usertype='superuser')
+
+        LandingPageModel.objects.all().delete()
+
+        response = self.client.post(
+            path="/en/admin/plugin_landing_page/landingpagemodel/add/?language=en",
+            data={
+                "title": "a new langing page",
+                "robots_index": "on",
+                "robots_follow": "on",
+                "_save_published": "Save and Publish",
+            },
+            HTTP_ACCEPT_LANGUAGE="en"
+        )
+        self.assertRedirects(response,
+            expected_url="/en/admin/plugin_landing_page/landingpagemodel/",
+            status_code=302,
+            fetch_redirect_response=False
+        )
+
+        self.assertEqual(LandingPageModel.objects.count(), 2)  # draft+published
+
+        landing_page = LandingPageModel.objects.published()[0]
+        self.assertEqual(landing_page.title, "a new langing page")
+

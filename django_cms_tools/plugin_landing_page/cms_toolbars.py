@@ -7,28 +7,24 @@
 
 import logging
 
-from cms.toolbar_base import CMSToolbar
-from cms.utils.urlutils import admin_reverse
 from django.contrib.admin.options import IS_POPUP_VAR
 from django.urls import NoReverseMatch
 from django.utils.http import urlencode
 from django.utils.translation import ugettext_lazy as _
 
+from cms.toolbar_base import CMSToolbar
 from cms.toolbar_pool import toolbar_pool
+from cms.utils.urlutils import admin_reverse
 
 # Django CMS Tools
-from django_cms_tools.plugin_landing_page.app_settings import LANDING_PAGE_ALWAYS_ADD_TOOLBAR, \
-    LANDING_PAGE_TOOLBAR_VERBOSE_NAME
+from django_cms_tools.plugin_landing_page.app_settings import (
+    LANDING_PAGE_ALWAYS_ADD_TOOLBAR, LANDING_PAGE_TOOLBAR_VERBOSE_NAME
+)
 from django_cms_tools.plugin_landing_page.cms_apps import get_landing_page_app
-from django_cms_tools.plugin_landing_page.constants import LANDING_PAGE_TOOLBAR_NAME, ADMIN_REVERSE_PREFIX
+from django_cms_tools.plugin_landing_page.constants import ADMIN_REVERSE_PREFIX, LANDING_PAGE_TOOLBAR_NAME
 from django_cms_tools.plugin_landing_page.models import LandingPageModel
 
 log = logging.getLogger(__name__)
-
-
-
-
-
 
 
 @toolbar_pool.register
@@ -53,7 +49,7 @@ class LandingPageToolbar(CMSToolbar):
                 except NoReverseMatch as err:
                     log.error("Can't append 'admin change list link' to cms toolbar: %s" % err)
                 else:
-                    url += "?%s" % urlencode({IS_POPUP_VAR: 1})
+                    # url += "?%s" % urlencode({IS_POPUP_VAR: 1})
                     menu.add_sideframe_item(
                         name=_('change list'),
                         url=url,
@@ -65,7 +61,7 @@ class LandingPageToolbar(CMSToolbar):
                 except NoReverseMatch as err:
                     log.error("Can't append 'admin add link' to cms toolbar: %s" % err)
                 else:
-                    url += "?%s" % urlencode({IS_POPUP_VAR: 1})
+                    # url += "?%s" % urlencode({IS_POPUP_VAR: 1})
                     menu.add_modal_item(
                         name=_('Add new Landing Page'),
                         url=url,

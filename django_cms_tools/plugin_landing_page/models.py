@@ -9,14 +9,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
-from django.core.urlresolvers import reverse
 from django.db import models
-from django.urls import NoReverseMatch
-from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models.fields import PlaceholderField
-from cms.utils.i18n import force_language
 
 from parler.models import TranslatedFields
 from publisher.models import PublisherParlerAutoSlugifyModel

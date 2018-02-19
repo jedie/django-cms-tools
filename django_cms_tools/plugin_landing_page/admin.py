@@ -11,12 +11,9 @@ from django.conf import settings
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 
-from cms.admin.placeholderadmin import FrontendEditableAdminMixin, PlaceholderAdminMixin
+from cms.admin.placeholderadmin import PlaceholderAdminMixin
 
 from aldryn_translation_tools.admin import AllTranslationsMixin
-from parler.admin import TranslatableAdmin
-
-# https://github.com/jedie/django-tools
 from publisher.admin import PublisherParlerAdmin
 
 # Django CMS Tools
@@ -66,5 +63,3 @@ class LandingPageAdmin(PlaceholderAdminMixin, AllTranslationsMixin, PublisherPar
             ),
         }),
     )
-
-

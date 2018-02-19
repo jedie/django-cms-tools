@@ -53,7 +53,7 @@ class LandingPageDetailView(TranslatableSlugMixin, DetailView):
         url = admin_reverse(ADMIN_REVERSE_PREFIX + "_change", args=[draft.pk])
         url += "?%s" % urlencode({
             "language": self.language,
-            IS_POPUP_VAR: 1,
+            # IS_POPUP_VAR: 1,
         })
 
         menu.add_modal_item(_('Change current Landing Page'), url=url)
