@@ -69,5 +69,11 @@ class LandingPageDetailView(TranslatableSlugMixin, DetailView):
 
         return instance
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.object: # LandingPageModel instance
+            context["title"]=self.object.title
+        return context
+
     def get_template_names(self):
         return ["landing_page/landing_page.html"]

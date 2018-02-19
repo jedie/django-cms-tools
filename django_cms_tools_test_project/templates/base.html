@@ -3,8 +3,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Django-CMS-Tools Test Project</title>
-        <meta name="robots" content="{% block 'meta_robots_content' %}noindex, nofollow{% endblock %}">
+        <title>{% block "title" %}{% page_attribute "page_title" %}{% endblock %}</title>
+        <meta name="robots" content="{% block "meta_robots_content" %}noindex, nofollow{% endblock %}">
         {% render_block "css" %}
     </head>
     <body>

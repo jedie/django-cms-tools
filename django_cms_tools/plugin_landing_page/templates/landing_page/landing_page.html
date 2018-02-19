@@ -1,6 +1,8 @@
 {% extends CMS_TEMPLATE %}
 {% load cms_tags %}
 
+{% block "title" %}{{ object.title }}{% endblock %}
+
 {% block "meta_robots_content" %}{% if not object.robots_index %}no{% endif %}index, {% if not object.robots_follow %}no{% endif %}follow{% endblock %}
 
 {% block content %}
