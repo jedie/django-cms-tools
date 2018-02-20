@@ -21,3 +21,7 @@ aldryn_translation_tools
 # https://github.com/wearehoods/django-ya-model-publisher
 # https://pypi.org/project/django-ya-model-publisher/
 django-ya-model-publisher>=0.6.7
+
+
+# https://github.com/nephila/django-meta
+django-meta

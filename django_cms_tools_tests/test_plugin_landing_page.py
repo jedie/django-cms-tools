@@ -83,6 +83,7 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
         response = self.client.get("/en/lp/dummy-no-2-en/", HTTP_ACCEPT_LANGUAGE="en")
         self.assertResponse(response,
             must_contain=(
+                "<title>Dummy No. 2 (en)</title>",
                 "Django-CMS-Tools Test Project",
                 "dummy text part no. 2 in English",
                 "Lorem ipsum dolor sit amet",

@@ -7,26 +7,27 @@
 
 import logging
 
-from cms.utils.urlutils import admin_reverse
 from django.contrib.admin.options import IS_POPUP_VAR
 from django.utils.http import urlencode
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView
 
 from cms.utils import get_language_from_request
+from cms.utils.urlutils import admin_reverse
 
 from menus.utils import set_language_changer
+from meta.views import MetadataMixin
 from parler.views import TranslatableSlugMixin
 
 # Django CMS Tools
 from django_cms_tools.plugin_landing_page.app_settings import LANDING_PAGE_TOOLBAR_VERBOSE_NAME
-from django_cms_tools.plugin_landing_page.constants import LANDING_PAGE_TOOLBAR_NAME, ADMIN_REVERSE_PREFIX
+from django_cms_tools.plugin_landing_page.constants import ADMIN_REVERSE_PREFIX, LANDING_PAGE_TOOLBAR_NAME
 from django_cms_tools.plugin_landing_page.models import LandingPageModel
 
 log = logging.getLogger(__name__)
 
 
-class LandingPageDetailView(TranslatableSlugMixin, DetailView):
+class LandingPageDetailView(MetadataMixin, TranslatableSlugMixin, DetailView):
     model = LandingPageModel
 
     def get(self, request, *args, **kwargs):
@@ -58,22 +59,26 @@ class LandingPageDetailView(TranslatableSlugMixin, DetailView):
 
         menu.add_modal_item(_('Change current Landing Page'), url=url)
 
+    def set_meta(self, instance):
+        """
+        Set django-meta stuff from LandingPageModel instance.
+        """
+        self.use_title_tag = True
+        self.title = instance.title
+
     def get_object(self, queryset=None):
         instance = super().get_object(queryset=queryset)
 
-        # Translate the slug while changing the language.
+        # Translate the slug while changing the language:
         set_language_changer(self.request, instance.get_absolute_url)
 
-        # Append "edit current" link into toolbar menu
+        # Append "edit current" link into toolbar menu:
         self.extend_toolbar(instance)
 
-        return instance
+        # Set django-meta stuff from LandingPageModel instance:
+        self.set_meta(instance)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.object: # LandingPageModel instance
-            context["title"]=self.object.title
-        return context
+        return instance
 
     def get_template_names(self):
         return ["landing_page/landing_page.html"]
