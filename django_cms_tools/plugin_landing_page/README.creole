@@ -1,0 +1,26 @@
+= Django-CMS plugin "Landing Page"
+
+== setup
+
+settings:
+
+{{{
+INSTALLED_APPS = (
+    ...
+    'django_cms_tools.plugin_landing_page',
+    ...
+)
+
+# optional settings:
+# more info see: django_cms_tools/plugin_landing_page/app_settings.py
+
+# LANDING_PAGE_TEMPLATE = "landing_page/landing_page.html"
+# LANDING_PAGE_HIDE_INDEX_VIEW = True
+# LANDING_PAGE_ALWAYS_ADD_TOOLBAR = True
+# LANDING_PAGE_TOOLBAR_VERBOSE_NAME = _("Landing Pages")
+}}}
+
+You can create a langing page app page in all existing languages with:
+{{{
+$ ./manage.py create_landing_page
+}}}
