@@ -210,7 +210,7 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 == history
 
 * *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.5.2...master|compare v0.5.2...master]]
-* v0.6.0 - [[https://github.com/jedie/django-cms-tools/compare/v0.5.2...v0.5.3|compare v0.5.2...v0.5.3]]
+* v0.6.0 - 20.02.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.5.2...v0.5.3|compare v0.5.2...v0.5.3]]
 ** remove test runs with Django v1.8
 ** NEW: Django-CMS plugin for create "landing pages"
 ** NEW: Django-CMS plugin for build a page anchor menu
