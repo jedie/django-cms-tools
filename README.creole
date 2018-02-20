@@ -191,6 +191,7 @@ $ python3 setup.py test
 == Django compatibility
 
 |= django-cms-tools |= Django CMS |= django version |= python         |
+| >=v0.6            | 3.4.x       | v1.11           | 3.5, 3.6, pypy3 |
 | >=v0.5.1          | 3.4.x       | 1.8, v1.11      | 3.5, 3.6, pypy3 |
 | v0.4.0            |             | 1.8             | 2.7, 3.5, 3.6   |
 | v0.1.x            |             | 1.8             | 2.7, 3.4, 3.5   |
@@ -202,12 +203,16 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 == TODO:
 
  * Add tests for 'filer commands'
- * Support Django 1.9 and 1.10 and run tests against these versions.
+ * Support Django CMS v3.5 and run tests against these versions.
+ * Support Django v2.0 and run tests against these versions.
 
 
 == history
 
 * *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.5.2...master|compare v0.5.2...master]]
+* v0.6.0 - [[https://github.com/jedie/django-cms-tools/compare/v0.5.2...v0.5.3|compare v0.5.2...v0.5.3]]
+** remove test runs with Django v1.8
+** NEW: Django-CMS plugin for create "landing pages"
 ** NEW: Django-CMS plugin for build a page anchor menu
 ** NEW: {{{./manage.py cms_plugin_info}}} to generate a list of all registered Django CMS plugins
 * v0.5.2 - 10.01.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.5.1...v0.5.2|compare v0.5.1...v0.5.2]]
