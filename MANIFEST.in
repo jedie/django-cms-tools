@@ -5,12 +5,15 @@ include README.creole
 include tox.ini
 include pytest.ini
 
-recursive-include django_cms_tools *.py
+recursive-include django_cms_tools *.py *.html *.js *.css
 recursive-include django_cms_tools_test_project *.py *.html
 recursive-include django_cms_tools_tests *.py
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
+
+recursive-exclude django_cms_tools_test_project/media *
+recursive-exclude django_cms_tools_test_project/static *
 
 include requirements.txt
 recursive-include requirements *.txt
