@@ -210,6 +210,7 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 == history
 
 * *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.0...master|compare v0.6.0...master]]
+** Update "landing page" plugin to new publisher API
 * v0.6.0 - 20.02.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.5.2...v0.6.0|compare v0.5.2...v0.6.0]]
 ** remove test runs with Django v1.8
 ** NEW: Django-CMS plugin for create "landing pages"
