@@ -209,8 +209,8 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.5.2...master|compare v0.5.2...master]]
-* v0.6.0 - 20.02.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.5.2...v0.5.3|compare v0.5.2...v0.5.3]]
+* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.0...master|compare v0.6.0...master]]
+* v0.6.0 - 20.02.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.5.2...v0.6.0|compare v0.5.2...v0.6.0]]
 ** remove test runs with Django v1.8
 ** NEW: Django-CMS plugin for create "landing pages"
 ** NEW: Django-CMS plugin for build a page anchor menu
@@ -255,7 +255,7 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 == links ==
 
 | Homepage   | http://github.com/jedie/django-cms-tools
-| PyPi       | http://pypi.python.org/pypi/django-cms-tools/
+| PyPi       | https://pypi.org/project/django-cms-tools/
 
 
 == donation ==
