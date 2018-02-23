@@ -36,9 +36,19 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
         cls.url_en = cls.plugin_page.get_absolute_url(language="en")
         cls.url_de = cls.plugin_page.get_absolute_url(language="de")
 
+        cls.landing_page_2_en = LandingPageModel.objects.language(language_code="en").published().get(
+            translations__language_code="en",
+            translations__slug="dummy-no-2-en",
+        )
+        cls.landing_page_2_en_url = cls.landing_page_2_en.get_absolute_url(language="en")
+
     def test_setUp(self):
         self.assertEqual(self.url_en, "/en/lp/")
         self.assertEqual(self.url_de, "/de/lp/")
+        self.assertEqual(self.landing_page_2_en.slug, "dummy-no-2-en")
+        self.assertEqual(self.landing_page_2_en.is_published, True)
+        self.assertEqual(self.landing_page_2_en.is_visible, True)
+        self.assertEqual(self.landing_page_2_en_url, "/en/lp/dummy-no-2-en/")
 
     def test_urls(self):
         pages = Page.objects.public()
@@ -175,7 +185,7 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
             browser_traceback=True
         )
 
-    def test_toolbar_links(self):
+    def test_toolbar_links_no_edit_mode(self):
         self.login(usertype='superuser')
 
         response = self.client.get("/en/lp/dummy-no-2-en/", HTTP_ACCEPT_LANGUAGE="en")
@@ -190,9 +200,40 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
 
                 'Add new Landing Page...',
                 'href="/en/admin/plugin_landing_page/landingpagemodel/add/"',
+            ),
+            must_not_contain=(
+                "Error",
+                'Change &#39;Landing Page&#39; in admin...', # The Link will be not added in edit mode!
+            ),
+            template_name="landing_page/landing_page.html",
+            messages=[],
+            status_code=200,
+            html=False,
+            browser_traceback=True
+        )
 
-                'Change current Landing Page...',
-                'href="/en/admin/plugin_landing_page/landingpagemodel/11/change/?language=en"',
+    def test_toolbar_links_edit_mode(self):
+        self.login(usertype='superuser')
+
+        change_url = "/en/admin/plugin_landing_page/landingpagemodel/%i/change/?language=en" % (
+            self.landing_page_2_en.get_draft_object().pk
+        )
+
+        response = self.client.get("/en/lp/dummy-no-2-en/?edit", HTTP_ACCEPT_LANGUAGE="en")
+        self.assertResponse(response,
+            must_contain=(
+                '<title>Dummy No. 2 (en)</title>',
+                'Double-click to edit',
+                'Logout superuser',
+
+                'change list',
+                'href="/en/admin/plugin_landing_page/landingpagemodel/"',
+
+                'Add new Landing Page...',
+                'href="/en/admin/plugin_landing_page/landingpagemodel/add/"',
+
+                'href="%s"' % change_url,
+                'Change &#39;Landing Page&#39; in admin...',
             ),
             must_not_contain=("Error",),
             template_name="landing_page/landing_page.html",
