@@ -495,14 +495,10 @@ class DummyPageGenerator(CmsPageCreator):
             for level in range(1, self.levels+1):
                 self.current_level = level
 
-                log.info(self.current_level, self.current_count)
+                log.info("Level: %i current count: %i" % (self.current_level, self.current_count))
 
-                page = self.create_page() # Create page (and page title) in default language
+                page, created = self.create_page() # Create page (and page title) in default language
                 self.page_data[(self.current_level, self.current_count)] = page
-
-                self.create_title(page) # Create page title in all other languages
-                self.fill_content(page) # Add content to the created page.
-                self.publish(page) # Publish page in all languages
 
         # Force to reload the url configuration.
         # Important for unittests to "find" all plugins ;)
