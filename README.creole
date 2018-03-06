@@ -209,7 +209,9 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.3...master|compare v0.6.3...master]]
+* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.4...master|compare v0.6.4...master]]
+* v0.6.4 - 06.03.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.3...v0.6.4|compare v0.6.3...v0.6.4]]
+** Update {{{django_cms_tools.fixtures.pages.DummyPageGenerator}}} to changes API
 * v0.6.3 - 23.02.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.2...v0.6.3|compare v0.6.2...v0.6.3]]
 ** Rename landing page and anchor menu plugins via django.apps.AppConfig
 ** Update publisher itegration tests
