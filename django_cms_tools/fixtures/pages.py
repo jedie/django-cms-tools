@@ -497,7 +497,7 @@ class DummyPageGenerator(CmsPageCreator):
 
                 log.info("Level: %i current count: %i" % (self.current_level, self.current_count))
 
-                page, created = self.create_page() # Create page (and page title) in default language
+                page, created = super().create() # Create page (and page title) in default language
                 self.page_data[(self.current_level, self.current_count)] = page
 
         # Force to reload the url configuration.
