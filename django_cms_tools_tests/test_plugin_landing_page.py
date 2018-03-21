@@ -6,6 +6,8 @@
 """
 
 
+from django.utils import translation
+
 from cms.models import Page, settings
 
 # https://github.com/jedie/django-tools
@@ -43,6 +45,18 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
         cls.landing_page_2_en_url = cls.landing_page_2_en.get_absolute_url(language="en")
 
     def test_setUp(self):
+        with translation.override("en"):
+            qs = LandingPageModel.objects.language(language_code="en").all().published()
+            titles = [item.title for item in qs]
+            titles.sort()
+            print(titles)
+            self.assertEqual(titles, [
+                'Dummy No. 1 (de)', 'Dummy No. 1 (en)',
+                'Dummy No. 2 (de)', 'Dummy No. 2 (en)',
+                'Dummy No. 3 (de)', 'Dummy No. 3 (en)',
+                'Dummy No. 4 (de)', 'Dummy No. 4 (en)'
+            ])
+
         self.assertEqual(self.url_en, "/en/lp/")
         self.assertEqual(self.url_de, "/de/lp/")
         self.assertEqual(self.landing_page_2_en.slug, "dummy-no-2-en")
