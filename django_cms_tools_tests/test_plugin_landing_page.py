@@ -4,7 +4,7 @@
     :copyleft: 2018 by the django-cms-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
+from pprint import pprint
 
 from django.utils import translation
 
@@ -33,36 +33,45 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
 
         cls.plugin_page, created = create_landing_page_test_page(parent_page=index_page)
         assert Page.objects.all().count() == 4
-        assert LandingPageModel.objects.count() == 16  # 4 dummies * 2 languages * 2 public/draft
+        assert LandingPageModel.objects.count() == 10  # 5 dummies * 2 public/draft
 
         cls.url_en = cls.plugin_page.get_absolute_url(language="en")
         cls.url_de = cls.plugin_page.get_absolute_url(language="de")
 
         cls.landing_page_2_en = LandingPageModel.objects.language(language_code="en").published().get(
             translations__language_code="en",
-            translations__slug="dummy-no-2-en",
+            translations__slug="landingpagemodel-en-2",
         )
         cls.landing_page_2_en_url = cls.landing_page_2_en.get_absolute_url(language="en")
 
     def test_setUp(self):
         with translation.override("en"):
             qs = LandingPageModel.objects.language(language_code="en").all().published()
-            titles = [item.title for item in qs]
-            titles.sort()
-            print(titles)
-            self.assertEqual(titles, [
-                'Dummy No. 1 (de)', 'Dummy No. 1 (en)',
-                'Dummy No. 2 (de)', 'Dummy No. 2 (en)',
-                'Dummy No. 3 (de)', 'Dummy No. 3 (en)',
-                'Dummy No. 4 (de)', 'Dummy No. 4 (en)'
+            qs = qs.order_by("createtime")
+
+            info = []
+            for lp in qs:
+                info.append(
+                    (lp.title, list(lp.get_available_languages()))
+                )
+
+            pprint(info)
+
+            # Every dummy entry should be translated in de and en:
+            self.assertEqual(info, [
+                ('LandingPage dummy No. 1 (en)', ['de', 'en']),
+                ('LandingPage dummy No. 2 (en)', ['de', 'en']),
+                ('LandingPage dummy No. 3 (en)', ['de', 'en']),
+                ('LandingPage dummy No. 4 (en)', ['de', 'en']),
+                ('LandingPage dummy No. 5 (en)', ['de', 'en'])
             ])
 
         self.assertEqual(self.url_en, "/en/lp/")
         self.assertEqual(self.url_de, "/de/lp/")
-        self.assertEqual(self.landing_page_2_en.slug, "dummy-no-2-en")
+        self.assertEqual(self.landing_page_2_en.slug, "landingpagemodel-en-2")
         self.assertEqual(self.landing_page_2_en.is_published, True)
         self.assertEqual(self.landing_page_2_en.is_visible, True)
-        self.assertEqual(self.landing_page_2_en_url, "/en/lp/dummy-no-2-en/")
+        self.assertEqual(self.landing_page_2_en_url, "/en/lp/landingpagemodel-en-2/")
 
     def test_urls(self):
         pages = Page.objects.public()
@@ -80,16 +89,13 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
         landing_pages = LandingPageModel.objects.published()
         urls = [landing_page.get_absolute_url(language="en") for landing_page in landing_pages]
         urls.sort()
-        print(urls)
+        pprint(urls)
         self.assertEqual(urls, [
-            "/en/lp/dummy-no-1-de/",
-            "/en/lp/dummy-no-1-en/",
-            "/en/lp/dummy-no-2-de/",
-            "/en/lp/dummy-no-2-en/",
-            "/en/lp/dummy-no-3-de/",
-            "/en/lp/dummy-no-3-en/",
-            "/en/lp/dummy-no-4-de/",
-            "/en/lp/dummy-no-4-en/"
+            '/en/lp/landingpagemodel-en-1/',
+            '/en/lp/landingpagemodel-en-2/',
+            '/en/lp/landingpagemodel-en-3/',
+            '/en/lp/landingpagemodel-en-4/',
+            '/en/lp/landingpagemodel-en-5/'
         ])
 
     def test_redirect_list_url(self):
@@ -104,10 +110,10 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
         )
 
     def test_landing_page_view(self):
-        response = self.client.get("/en/lp/dummy-no-2-en/", HTTP_ACCEPT_LANGUAGE="en")
+        response = self.client.get("/en/lp/landingpagemodel-en-2/", HTTP_ACCEPT_LANGUAGE="en")
         self.assertResponse(response,
             must_contain=(
-                "<title>Dummy No. 2 (en)</title>",
+                "<title>LandingPage dummy No. 2 (en)</title>",
                 "Django-CMS-Tools Test Project",
                 "dummy text part no. 2 in English",
                 "Lorem ipsum dolor sit amet",
@@ -124,7 +130,7 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
         landing_page = qs.get(
             publisher_is_draft=True,
             translations__language_code="en",
-            translations__slug="dummy-no-3-en",
+            translations__slug="landingpagemodel-en-3",
         )
 
 
@@ -134,10 +140,10 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
         self.assertEqual(public.robots_index, True)
         self.assertEqual(public.robots_follow, True)
 
-        response = self.client.get("/en/lp/dummy-no-3-en/", HTTP_ACCEPT_LANGUAGE="en")
+        response = self.client.get("/en/lp/landingpagemodel-en-3/", HTTP_ACCEPT_LANGUAGE="en")
         self.assertResponse(response,
             must_contain=(
-                '<title>Dummy No. 3 (en)</title>',
+                '<title>LandingPage dummy No. 3 (en)</title>',
                 '<meta name="robots" content="index, follow">',
             ),
             must_not_contain=("Error",),
@@ -159,10 +165,10 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
         self.assertEqual(public.robots_index, False)
         self.assertEqual(public.robots_follow, True)
 
-        response = self.client.get("/en/lp/dummy-no-3-en/", HTTP_ACCEPT_LANGUAGE="en")
+        response = self.client.get("/en/lp/landingpagemodel-en-3/", HTTP_ACCEPT_LANGUAGE="en")
         self.assertResponse(response,
             must_contain=(
-                '<title>Dummy No. 3 (en)</title>',
+                '<title>LandingPage dummy No. 3 (en)</title>',
                 '<meta name="robots" content="noindex, follow">',
             ),
             must_not_contain=("Error",),
@@ -185,10 +191,10 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
         self.assertEqual(public.robots_index, True)
         self.assertEqual(public.robots_follow, False)
 
-        response = self.client.get("/en/lp/dummy-no-3-en/", HTTP_ACCEPT_LANGUAGE="en")
+        response = self.client.get("/en/lp/landingpagemodel-en-3/", HTTP_ACCEPT_LANGUAGE="en")
         self.assertResponse(response,
             must_contain=(
-                '<title>Dummy No. 3 (en)</title>',
+                '<title>LandingPage dummy No. 3 (en)</title>',
                 '<meta name="robots" content="index, nofollow">',
             ),
             must_not_contain=("Error",),
@@ -202,10 +208,10 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
     def test_toolbar_links_no_edit_mode(self):
         self.login(usertype='superuser')
 
-        response = self.client.get("/en/lp/dummy-no-2-en/", HTTP_ACCEPT_LANGUAGE="en")
+        response = self.client.get("/en/lp/landingpagemodel-en-2/", HTTP_ACCEPT_LANGUAGE="en")
         self.assertResponse(response,
             must_contain=(
-                '<title>Dummy No. 2 (en)</title>',
+                '<title>LandingPage dummy No. 2 (en)</title>',
                 'Double-click to edit',
                 'Logout superuser',
 
@@ -233,10 +239,10 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
             self.landing_page_2_en.get_draft_object().pk
         )
 
-        response = self.client.get("/en/lp/dummy-no-2-en/?edit", HTTP_ACCEPT_LANGUAGE="en")
+        response = self.client.get("/en/lp/landingpagemodel-en-2/?edit", HTTP_ACCEPT_LANGUAGE="en")
         self.assertResponse(response,
             must_contain=(
-                '<title>Dummy No. 2 (en)</title>',
+                '<title>LandingPage dummy No. 2 (en)</title>',
                 'Double-click to edit',
                 'Logout superuser',
 
@@ -282,4 +288,3 @@ class LandingPageTest(TestUserMixin, BaseTestCase):
 
         landing_page = LandingPageModel.objects.published()[0]
         self.assertEqual(landing_page.title, "a new langing page")
-
