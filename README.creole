@@ -209,7 +209,11 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.4...master|compare v0.6.4...master]]
+* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.5...master|compare v0.6.5...master]]
+* v0.6.5 - 22.03.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.4...v0.6.5|compare v0.6.4...v0.6.5]]
+** Use {{{ParlerDummyGenerator}}} (for landing page test fixtures) from django-tools
+** {{{django_cms_tools.fixtures.languages.iter_languages}}} was moved to django-tools!
+** Bugfix: DummyPageGenerator creates non-published pages
 * v0.6.4 - 06.03.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.3...v0.6.4|compare v0.6.3...v0.6.4]]
 ** Update {{{django_cms_tools.fixtures.pages.DummyPageGenerator}}} to changes API
 * v0.6.3 - 23.02.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.2...v0.6.3|compare v0.6.2...v0.6.3]]

@@ -1,23 +1,11 @@
-# coding: utf-8
 
-from __future__ import absolute_import, print_function, unicode_literals
-
-import logging
-
-from django.conf import settings
-from django.utils import translation
+import warnings
 
 
-log = logging.getLogger(__name__)
+try:
+    from django_tools.fixture_tools.languages import iter_languages # for compatibility
+except ImportError as err:
+    raise ImportError("%s (It's new in django-tools v0.39.2")
 
 
-def iter_languages(languages=None):
-    """
-    Iterate over all existing languages with activated translations.   
-    """
-    if languages is None:
-        languages = settings.LANGUAGES
-
-    for language_code, lang_name in languages:
-        with translation.override(language_code):
-            yield language_code, lang_name
+warnings.warn("django_cms_tools.fixtures.languages will be removed in the future! Use from django-tools!", PendingDeprecationWarning)
