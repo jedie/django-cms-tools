@@ -209,7 +209,9 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.5...master|compare v0.6.5...master]]
+* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.6...master|compare v0.6.6...master]]
+* v0.6.6 - 09.04.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.5...v0.6.6|compare v0.6.5...v0.6.6]]
+** NEW: {{{./manage.py orphaned_plugin_info}}} to get a list about Django CMS uninstalled/unsaved plugins
 * v0.6.5 - 22.03.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.4...v0.6.5|compare v0.6.4...v0.6.5]]
 ** Use {{{ParlerDummyGenerator}}} (for landing page test fixtures) from django-tools
 ** {{{django_cms_tools.fixtures.languages.iter_languages}}} was moved to django-tools!
