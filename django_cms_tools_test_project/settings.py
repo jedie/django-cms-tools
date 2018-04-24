@@ -248,11 +248,12 @@ from django_cms_tools.plugin_anchor_menu import constants as plugin_anchor_menu_
 CMS_PLACEHOLDER_CONF = {
     None: {
         'name': _("Content"),
-        'plugins': [
-            CKEDITOR,
-            plugin_anchor_menu_constants.ANCHOR_PLUGIN_NAME,
-            plugin_anchor_menu_constants.DROP_DOWN_ANCHOR_MENU_PLUGIN_NAME,
-        ],
+        # Don't define 'plugin' to enable all existing CMS plugins
+        # 'plugins': [
+        #     CKEDITOR,
+        #     plugin_anchor_menu_constants.ANCHOR_PLUGIN_NAME,
+        #     plugin_anchor_menu_constants.DROP_DOWN_ANCHOR_MENU_PLUGIN_NAME,
+        # ],
         'default_plugins': [
             {
                 'plugin_type': CKEDITOR,
