@@ -24,7 +24,59 @@ More info in: [[https://github.com/jedie/django-cms-tools/tree/master/django_cms
 A app to create landing pages.
 More info in: [[https://github.com/jedie/django-cms-tools/tree/master/django_cms_tools/plugin_landing_page#readme|django_cms_tools/plugin_landing_page/README.creole]]
 
+
+=== Test utilities
+
+
+==== Add CMS Plugin unittest test case
+
+{{{django_cms_tools.unittest_utils.add_cms_plugin.TestAddPluginTestCase}}} - TestCase to test "add CMS plugin via admin"
+
+
+==== Generate Add CMS Plugin unittest skeleton
+
+e.g.:
+{{{
+$ ./manage.py generate_add_plugin_test_code plugin_anchor_menu.AnchorPlugin
+
+from django_cms_tools.unittest_utils.add_cms_plugin import TestAddPluginTestCase
+
+class AddPluginTestCase(TestAddPluginTestCase):
+    """
+    Tests for plugin_anchor_menu.AnchorPluginModel
+
+    Based on a skeleton generated via:
+        ./manage.py generate_add_plugin_test_code plugin_anchor_menu.AnchorPlugin
+    """
+
+    def test_anchorplugin_de_1(self):
+        # plugin name in de: 'Anchor'
+        self.create_plugin(
+            language_code = "de",
+            plugin_parent=None,
+            plugin_type="AnchorPlugin",
+
+            title='dummy text no. 0', # CharField, String (up to 254)
+            slug='dummy-text-no-0', # SlugField, Slug (up to 255)
+        )
+        response = self.assert_plugin(
+            language_code="de",
+            must_contain_html=[
+                "<XXX></XXX>", # TODO: Add plugin html output here!
+            ],
+            must_contain=[
+                "dummy text no. 0",
+            ],
+            template_name="anchor_menu/anchor.html",
+        )
+
+    def test_anchorplugin_de_2(self):
+...
+}}}
+
+
 === test fixture creation
+
 
 ==== django_cms_tools.fixtures.pages
 
@@ -209,7 +261,8 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.6...master|compare v0.6.6...master]]
+* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.7...master|compare v0.6.7...master]]
+* v0.6.7 - 24.04.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.6...v0.6.7|compare v0.6.6...v0.6.7]]
 ** NEW: Generate 'add cms plugin' skeleton code with {{{./manage.py generate_add_plugin_test_code}}}
 * v0.6.6 - 09.04.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.5...v0.6.6|compare v0.6.5...v0.6.6]]
 ** NEW: {{{./manage.py orphaned_plugin_info}}} to get a list about Django CMS uninstalled/unsaved plugins

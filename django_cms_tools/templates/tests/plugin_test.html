@@ -1,0 +1,13 @@
+<!DOCTYPE html>{% load cms_tags menu_tags sekizai_tags meta %}
+<html>
+<head>
+    <title>{% if meta.title %}{{ meta.title }}{% else %}{% page_attribute "page_title" %}{% endif %}</title>
+    <meta charset="UTF-8">
+    {% render_block "css" %}
+</head>
+<body>
+{% cms_toolbar %}
+{% placeholder "plugin_test_content" %}
+{% render_block "js" %}
+</body>
+</html>

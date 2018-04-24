@@ -235,6 +235,7 @@ PASSWORD_HASHERS = ( # Speedup tests
 CMS_TEMPLATES = (
     ('base.html', 'Basic Page'),
     ('two_placeholder_slots.html', 'Page with two placeholders'),
+    ('tests/plugin_test.html', "Add CMS-Plugin test template") # django_cms_tools/templates/tests/plugin_test.html
 )
 CMS_PERMISSION = True
 

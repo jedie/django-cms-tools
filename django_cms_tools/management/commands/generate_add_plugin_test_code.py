@@ -53,4 +53,8 @@ class Command(BaseCommand):
 
         for plugin_type, plugin in plugins:
             content = plugin_test_generator.generate(plugin_type, plugin, count)
+            print()
+            print("#"*79)
             print(content)
+            print("#"*79)
+            print()

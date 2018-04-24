@@ -4,7 +4,7 @@
     :copyleft: 2018 by the django-cms-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
+import sys
 
 from django.conf import settings
 from django.db import models
@@ -84,12 +84,9 @@ class CmsPluginUnittestGenerator:
                 print("# Warning: They exists only %i items in %r!" % (existing_count, model_label))
                 print("#")
 
-            references = []
             for no, entry in enumerate(language_qs, 1):
                 prefix_lines = [
                     "",
-                    "#"*79,
-                    "#",
                     "def test_{type}_{lang}_{no}(self):".format(
                         type = plugin_type.lower(),
                         lang= language_code,
@@ -109,6 +106,7 @@ class CmsPluginUnittestGenerator:
                     '    plugin_type="%s",' % plugin_type,
                     "",
                 ]
+                references = []
                 for field in plugin.model._meta.fields: # django.db.models.fields.Field
                     if field.hidden:
                         continue
@@ -131,12 +129,15 @@ class CmsPluginUnittestGenerator:
                         ]
                         continue
 
+                    comment = field.description % {
+                        "max_length": field.max_length,
+                    }
                     item_lines.append(
                         "    {name}={value!r}, # {internal_type}, {comment}".format(
                             name = field.name,
                             value = value,
                             internal_type = internal_type,
-                            comment = field.description
+                            comment = comment
 
                         )
                     )
@@ -145,32 +146,51 @@ class CmsPluginUnittestGenerator:
 
                 item_lines.append(')')
 
-                item_lines.append('response = self.assert_plugin("en",')
+                item_lines += [
+                    'response = self.assert_plugin(',
+                    '    language_code="%s",' % language_code,
+                    '    must_contain_html=[',
+                    '        "<XXX></XXX>", # TODO: Add plugin html output here!',
+                    '    ],',
+                    '    must_contain=[',
+                ]
+
                 added_references = 0
                 for value in references:
                     if value.strip():
                         added_references += 1
-                        item_lines.append('    "%s",' % value)
+                        item_lines.append('        "%s",' % value)
 
                 if not added_references:
                     item_lines.append('    "XXX", # TODO: Add plugin output here!')
-                item_lines.append(')')
 
-                item_lines.append('self.assertTemplateUsed(response, template_name="%s")' % plugin.render_template)
-                item_lines.append('self.assertResponse(response,')
-                item_lines.append('    must_contain=(')
-                item_lines.append("        '<XXX></XXX>', # TODO: Add plugin html output here!")
-                item_lines.append('    ),')
-                item_lines.append('    html=True,')
-                item_lines.append(')')
+                item_lines += [
+                    '    ],',
+                    '    template_name="%s",' % plugin.render_template,
+                    ')',
+                ]
 
                 item_lines = ["    %s" % line for line in item_lines]
 
                 item_lines = prefix_lines + item_lines
                 lines += item_lines
 
+        lines = ["    %s" % line for line in lines] # indent all lines
+
+        # Add 'header':
+        prefix_lines = [
+            "from django_cms_tools.unittest_utils.add_cms_plugin import TestAddPluginTestCase",
+            "",
+            "class AddPluginTestCase(TestAddPluginTestCase):",
+            '    """',
+            '    Tests for %s' % model_label,
+            '',
+            '    Based on a skeleton generated via:',
+            '        %s' % " ".join(sys.argv),
+            '    """',
+        ]
+        lines = prefix_lines + lines
+
         content = "\n".join(lines)
         return content
-
-    # def from_queryset(self, queryset):
 
