@@ -42,10 +42,13 @@ class CmsPluginUnittestGenerator:
 
     def print_all_plugins(self):
         print("All CMS plugin types:")
+        plugin_count = 0
         for label, plugin_type, plugin in self.iter_plugins():
             model = plugin.model
             count = model.objects.all().count()
             print("%6i instances: %r" % (count, label))
+            plugin_count += 1
+        print("\nThere are %i plugins.\n" % plugin_count)
 
     def get_plugins_startwith_label(self, prefix):
         plugins = []
