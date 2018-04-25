@@ -59,6 +59,7 @@ class CmsPluginUnittestGeneratorTestCase(DjangoCommandMixin, BaseUnittestCase):
 
         self.assertIn("def test_textplugin_de_1(self):", output)
         self.assertIn('plugin_type="TextPlugin",', output)
-        self.assertIn("body='<h2>Dummy no. 1 in Deutsch (placeholder content)</h2>', # TextField, Text", output)
+        self.assertIn("post_data={", output)
+        self.assertIn("'body': '<h2>Dummy no. 1 in Deutsch (placeholder content)</h2>', # TextField, Text", output)
 
         self.assertIn("def test_textplugin_en_2(self):", output)

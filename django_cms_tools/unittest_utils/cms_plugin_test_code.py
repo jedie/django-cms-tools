@@ -63,6 +63,7 @@ class CmsPluginUnittestGenerator:
                     "",
                 ]
                 references = []
+                post_data = []
                 for field in plugin.model._meta.fields: # django.db.models.fields.Field
                     if field.hidden:
                         continue
@@ -88,8 +89,8 @@ class CmsPluginUnittestGenerator:
                     comment = field.description % {
                         "max_length": field.max_length,
                     }
-                    item_lines.append(
-                        "    {name}={value!r}, # {internal_type}, {comment}".format(
+                    post_data.append(
+                        "{name!r}: {value!r}, # {internal_type}, {comment}".format(
                             name = field.name,
                             value = value,
                             internal_type = internal_type,
@@ -100,9 +101,11 @@ class CmsPluginUnittestGenerator:
                     if internal_type == "CharField" and value:
                         references.append(value)
 
-                item_lines.append(')')
-
+                item_lines.append('    post_data={')
+                item_lines += ["        %s" % line for line in post_data]
                 item_lines += [
+                    '    }',
+                    ')',
                     'response = self.assert_plugin(',
                     '    language_code="%s",' % language_code,
                     '    must_contain_html=[',
@@ -118,7 +121,7 @@ class CmsPluginUnittestGenerator:
                         item_lines.append('        "%s",' % value)
 
                 if not added_references:
-                    item_lines.append('    "XXX", # TODO: Add plugin output here!')
+                    item_lines.append('        "XXX", # TODO: Add plugin output here!')
 
                 item_lines += [
                     '    ],',
@@ -149,4 +152,3 @@ class CmsPluginUnittestGenerator:
 
         content = "\n".join(lines)
         return content
-

@@ -65,8 +65,10 @@ class AddPluginTestCase(TestAddPluginTestCase):
             plugin_parent=None,
             plugin_type="AnchorPlugin",
 
-            title='dummy text no. 0', # CharField, String (up to 254)
-            slug='dummy-text-no-0', # SlugField, Slug (up to 255)
+            post_data={
+                "title": 'dummy text no. 0', # CharField, String (up to 254)
+                "slug": 'dummy-text-no-0', # SlugField, Slug (up to 255)
+            }
         )
         response = self.assert_plugin(
             language_code="de",
@@ -85,8 +87,10 @@ class AddPluginTestCase(TestAddPluginTestCase):
             plugin_parent=None,
             plugin_type="AnchorPlugin",
 
-            title='dummy text no. 1', # CharField, String (up to 254)
-            slug='dummy-text-no-1', # SlugField, Slug (up to 255)
+            post_data={
+                "title": 'dummy text no. 1', # CharField, String (up to 254)
+                "slug": 'dummy-text-no-1', # SlugField, Slug (up to 255)
+            }
         )
         response = self.assert_plugin(
             language_code="de",
@@ -104,8 +108,10 @@ class AddPluginTestCase(TestAddPluginTestCase):
             plugin_parent=None,
             plugin_type="AnchorPlugin",
 
-            title='dummy text no. 2', # CharField, String (up to 254)
-            slug='dummy-text-no-2', # SlugField, Slug (up to 255)
+            post_data={
+                "title": 'dummy text no. 2', # CharField, String (up to 254)
+                "slug": 'dummy-text-no-2', # SlugField, Slug (up to 255)
+            }
         )
         response = self.assert_plugin(
             language_code="en",
@@ -123,8 +129,10 @@ class AddPluginTestCase(TestAddPluginTestCase):
             plugin_parent=None,
             plugin_type="AnchorPlugin",
 
-            title='dummy text no. 3', # CharField, String (up to 254)
-            slug='dummy-text-no-3', # SlugField, Slug (up to 255)
+            post_data={
+                "title": 'dummy text no. 3', # CharField, String (up to 254)
+                "slug": 'dummy-text-no-3', # SlugField, Slug (up to 255)
+            }
         )
         response = self.assert_plugin(
             language_code="en",

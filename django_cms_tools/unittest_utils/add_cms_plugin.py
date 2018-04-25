@@ -73,8 +73,7 @@ class TestAddPluginTestCase(TestUserMixin, ClientBaseTestCase):
         )
         plugin_qs.delete()
 
-
-    def create_plugin(self, language_code, plugin_parent, plugin_type, **plugin_kwargs):
+    def create_plugin(self, language_code, plugin_parent, plugin_type, post_data):
         # placeholder_draft = self.placeholder_draft[language_code]
 
         if plugin_parent is not None:
@@ -102,9 +101,9 @@ class TestAddPluginTestCase(TestUserMixin, ClientBaseTestCase):
             url = response.url
             print("redirect url: %r" % url)
 
-        pprint(plugin_kwargs)
+        pprint(post_data)
         response = self.client.post(url,
-            data=plugin_kwargs,
+            data=post_data,
             HTTP_ACCEPT_LANGUAGE=language_code
         )
         if response.status_code == 302:

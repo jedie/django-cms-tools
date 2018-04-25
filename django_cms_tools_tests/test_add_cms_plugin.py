@@ -17,10 +17,12 @@ class AddPluginTestCase(TestAddPluginTestCase):
             plugin_parent=None,
             plugin_type="TextPlugin",
 
-            body=( # TextField, Text
-                '<h3>dummy text in de</h3>\n'
-                '<p>Lorem ipsum dolor sit amet, consectetur adipisici elit...</p>'
-            ),
+            post_data={
+                "body": ( # TextField, Text
+                    '<h3>dummy text in de</h3>\n'
+                    '<p>Lorem ipsum dolor sit amet, consectetur adipisici elit...</p>'
+                ),
+            }
         )
         response = self.assert_plugin(
             language_code="de",
@@ -37,10 +39,12 @@ class AddPluginTestCase(TestAddPluginTestCase):
             plugin_parent=None,
             plugin_type="TextPlugin",
 
-            body=( # TextField, Text
-                '<h3>dummy text in en</h3>\n'
-                '<p>Lorem ipsum dolor sit amet, consectetur adipisici elit...</p>'
-            ),
+            post_data={
+                "body": ( # TextField, Text
+                    '<h3>dummy text in en</h3>\n'
+                    '<p>Lorem ipsum dolor sit amet, consectetur adipisici elit...</p>'
+                ),
+            }
         )
         response = self.assert_plugin(
             language_code="en",
