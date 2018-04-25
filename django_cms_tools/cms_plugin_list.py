@@ -4,20 +4,21 @@
     :copyleft: 2018 by the django-cms-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-import sys
 
-from django.conf import settings
-from django.db import models
-from django.utils import translation
 
 from cms.models import CMSPlugin
 from cms.plugin_pool import plugin_pool
 
-# https://github.com/jedie/django-tools
-from django_tools.unittest_utils.model_test_code_generator import ModelTestGenerator
-
 
 class CmsPluginList:
+    def get_plugin_by_type(self, plugin_type):
+        plugin = plugin_pool.get_plugin(name=plugin_type)
+        model = plugin.model
+        app_label = model._meta.app_label
+
+        label = "%s.%s" % (app_label, plugin_type)
+        return (label, plugin_type, plugin)
+
     def iter_plugins(self):
         plugin_types = CMSPlugin.objects.all().order_by('plugin_type')
 
@@ -29,11 +30,7 @@ class CmsPluginList:
 
         data = []
         for plugin_type in plugin_types:
-            plugin = plugin_pool.get_plugin(name=plugin_type)
-            model = plugin.model
-            app_label = model._meta.app_label
-
-            label = "%s.%s" % (app_label, plugin_type)
+            label, plugin_type, plugin = self.get_plugin_by_type(plugin_type)
             data.append(
                 (label, plugin_type, plugin)
             )

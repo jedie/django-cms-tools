@@ -75,6 +75,17 @@ class AddPluginTestCase(TestAddPluginTestCase):
 }}}
 
 
+==== Display usage of a CMS-Plugin
+
+List all existing plugins by calling:
+
+{{{./manage.py list_page_by_plugin}}}
+
+To display CMS-Plugin usage, add the plugin name as argument, e.g.:
+
+{{{./manage.py list_page_by_plugin TextPlugin}}}
+
+
 === test fixture creation
 
 
@@ -262,6 +273,7 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 == history
 
 * *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.7...master|compare v0.6.7...master]]
+** NEW: Display usage of a CMS-Plugin by: {{{./manage.py list_page_by_plugin}}}
 * v0.6.7 - 24.04.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.6...v0.6.7|compare v0.6.6...v0.6.7]]
 ** NEW: Generate 'add cms plugin' skeleton code with {{{./manage.py generate_add_plugin_test_code}}}
 * v0.6.6 - 09.04.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.5...v0.6.6|compare v0.6.5...v0.6.6]]
