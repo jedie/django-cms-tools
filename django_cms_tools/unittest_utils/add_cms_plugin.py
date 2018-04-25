@@ -64,26 +64,7 @@ class TestAddPluginTestCase(TestUserMixin, ClientBaseTestCase):
         super().setUpTestData()
 
         cls.test_page, created = CmsPluginTestPageCreator().create()
-        assert created
-
         cls.test_placeholder = cls.test_page.placeholders.all()[0]
-
-        # for language_code, lang_name in settings.LANGUAGES:
-        #     test_page = cls.get_test_page(slug=slug, language_code=language_code)
-        #     cls.test_page_public[language_code] = test_page
-        #
-        #     url = test_page.get_absolute_url(language=language_code)
-        #     cls.test_page_url[language_code] = url
-        #
-        #     draft_page = test_page.get_draft_object()
-        #     cls.test_page_draft[language_code] = draft_page
-        #
-        #     draft_placeholder = draft_page.placeholders.all()[0]
-        #     cls.placeholder_draft[language_code] = draft_placeholder
-        #
-        #     plugin_qs = CMSPlugin.objects.filter(
-        #         placeholder__slot=draft_placeholder.slot
-        #     )
 
     def setUp(self):
         super().setUp()
