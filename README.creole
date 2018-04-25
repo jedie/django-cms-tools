@@ -272,8 +272,10 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.7...master|compare v0.6.7...master]]
+* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.8...master|compare v0.6.8...master]]
+* v0.6.8 - 25.04.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.7...v0.6.8|compare v0.6.7...v0.6.8]]
 ** NEW: Display usage of a CMS-Plugin by: {{{./manage.py list_page_by_plugin}}}
+** Change in {{{create_plugin()}}} the {{{**plugin_kwargs}}} argument to {{{post_data}}}
 * v0.6.7 - 24.04.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.6...v0.6.7|compare v0.6.6...v0.6.7]]
 ** NEW: Generate 'add cms plugin' skeleton code with {{{./manage.py generate_add_plugin_test_code}}}
 * v0.6.6 - 09.04.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.5...v0.6.6|compare v0.6.5...v0.6.6]]
