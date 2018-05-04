@@ -1,4 +1,3 @@
-
 """
     :created: 24.04.2018 by Jens Diemer
     :copyleft: 2018 by the django-cms-tools team, see AUTHORS for more details.
@@ -16,6 +15,7 @@ from django_tools.unittest_utils.model_test_code_generator import ModelTestGener
 
 
 class CmsPluginUnittestGenerator:
+
     def generate(self, plugin_type, plugin, count):
         plugin_model = plugin.model
         model_label = plugin_model._meta.label
@@ -29,13 +29,13 @@ class CmsPluginUnittestGenerator:
             language_qs = language_qs[:count]
 
             existing_count = language_qs.count()
-            if existing_count==0:
+            if existing_count == 0:
                 print("#")
                 print("# %r doesn't exists in '%s'" % (model_label, language_code))
                 print("#")
                 continue
 
-            if existing_count<count:
+            if existing_count < count:
                 print("#")
                 print("# Warning: They exists only %i items in %r!" % (existing_count, model_label))
                 print("#")
@@ -44,16 +44,14 @@ class CmsPluginUnittestGenerator:
                 prefix_lines = [
                     "",
                     "def test_{type}_{lang}_{no}(self):".format(
-                        type = plugin_type.lower(),
-                        lang= language_code,
-                        no = no,
+                        type=plugin_type.lower(),
+                        lang=language_code,
+                        no=no,
                     ),
                 ]
                 if language_code != "en":
                     with translation.override(language_code):
-                        prefix_lines.append(
-                            "    # plugin name in %s: '%s'" % (language_code, plugin.name)
-                        )
+                        prefix_lines.append("    # plugin name in %s: '%s'" % (language_code, plugin.name))
 
                 item_lines = [
                     "self.create_plugin(",
@@ -81,8 +79,7 @@ class CmsPluginUnittestGenerator:
                     value = getattr(entry, field.name)
                     if isinstance(value, models.Model):
                         prefix_lines += [
-                            "    %s" % line
-                            for line in model_test_generator.test_code_for_instance(instance=value)
+                            "    %s" % line for line in model_test_generator.test_code_for_instance(instance=value)
                         ]
                         continue
 
@@ -134,7 +131,7 @@ class CmsPluginUnittestGenerator:
                 item_lines = prefix_lines + item_lines
                 lines += item_lines
 
-        lines = ["    %s" % line for line in lines] # indent all lines
+        lines = ["    %s" % line for line in lines]  # indent all lines
 
         # Add 'header':
         prefix_lines = [

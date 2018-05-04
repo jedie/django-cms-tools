@@ -1,21 +1,18 @@
-# coding: utf-8
-
 """
     created 2017 by Jens Diemer
 """
-
-from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
 from cms.api import add_plugin
 
-from django_cms_tools_test_project.test_cms_plugin.models import EntryModel
+# https://github.com/jedie/django-tools
+from django_tools.fixture_tools.languages import iter_languages
 
 # Django CMS Tools
-from django_cms_tools.fixtures.languages import iter_languages
 from django_cms_tools.fixtures.pages import CmsPageCreator, CmsPluginPageCreator
 from django_cms_tools_test_project.test_cms_plugin.cms_plugin import RelatedPlugin
+from django_cms_tools_test_project.test_cms_plugin.models import EntryModel
 
 log = logging.getLogger(__name__)
 
@@ -31,6 +28,7 @@ def create_testapp_cms_plugin_page():
 
 
 class RelatedPluginPageCreator(CmsPageCreator):
+
     def get_title(self, language_code, lang_name):
         return "Related CMS Plugin Test"
 
@@ -41,10 +39,10 @@ class RelatedPluginPageCreator(CmsPageCreator):
                 language=language_code,
                 plugin_type=RelatedPlugin,
             )
-            for no in range(1,8):
+            for no in range(1, 8):
                 EntryModel.objects.create(
                     plugin=plugin_instance,
-                    text = "CMS plugin entry no.: %i" % no,
+                    text="CMS plugin entry no.: %i" % no,
                 )
 
             log.info('Plugin "%s" (pk:%i) added.', str(plugin_instance), plugin_instance.pk)
@@ -52,10 +50,10 @@ class RelatedPluginPageCreator(CmsPageCreator):
 
 
 class ParentCmsPageCreator(CmsPageCreator):
-    placeholder_slots = () # create a empty page, without dummy content
+    placeholder_slots = ()  # create a empty page, without dummy content
 
     def __init__(self, parent_page, *args, **kwargs):
-        assert parent_page.publisher_is_draft==True, "Parent page '%s' must be a draft!" % parent_page
+        assert parent_page.publisher_is_draft == True, "Parent page '%s' must be a draft!" % parent_page
         self.parent_page = parent_page
         super(ParentCmsPageCreator, self).__init__(*args, **kwargs)
 
@@ -67,6 +65,4 @@ class ParentCmsPageCreator(CmsPageCreator):
 
 
 def create_related_plugin():
-    RelatedPluginPageCreator(
-        placeholder_slots=("content",)
-    ).create()
+    RelatedPluginPageCreator(placeholder_slots=("content",)).create()

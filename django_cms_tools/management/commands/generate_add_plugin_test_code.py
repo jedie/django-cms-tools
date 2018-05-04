@@ -1,10 +1,8 @@
-
 """
     :created: 24.04.2018 by Jens Diemer
     :copyleft: 2018 by the django-cms-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
 
 from django.core.management import BaseCommand
 from django.utils import translation
@@ -26,7 +24,9 @@ class Command(BaseCommand):
     help = "Generate unittest skeletons for Django CMS plugin admin add view."
 
     def add_arguments(self, parser):
-        parser.add_argument('plugin_label', nargs="?",
+        parser.add_argument(
+            'plugin_label',
+            nargs="?",
             help='Name of the Django CMS plugin. (can only be the first characters! We use "startwith"'
         )
         parser.add_argument('--translation', help='Language code that will be activated', default="en")
@@ -56,7 +56,7 @@ class Command(BaseCommand):
         for plugin_type, plugin in plugins:
             content = plugin_test_generator.generate(plugin_type, plugin, count)
             print()
-            print("#"*79)
+            print("#" * 79)
             print(content)
-            print("#"*79)
+            print("#" * 79)
             print()
