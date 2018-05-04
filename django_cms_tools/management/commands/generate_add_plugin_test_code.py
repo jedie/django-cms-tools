@@ -30,7 +30,7 @@ class Command(BaseCommand):
             help='Name of the Django CMS plugin. (can only be the first characters! We use "startwith"'
         )
         parser.add_argument('--translation', help='Language code that will be activated', default="en")
-        parser.add_argument('--count', help='Number of data records to be generated.', type=int, default=2)
+        parser.add_argument('--count', help='Number of data records to be generated.', type=int, default=1)
 
     def handle(self, *args, **options):
         plugin_label = options['plugin_label']
