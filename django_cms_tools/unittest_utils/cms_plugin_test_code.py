@@ -48,6 +48,12 @@ class CmsPluginUnittestGenerator:
                         lang=language_code,
                         no=no,
                     ),
+                    '    """',
+                    '    Tests for {label} in {lang}'.format(
+                        label=model_label,
+                        lang=lang_name,
+                    ),
+                    '    """',
                 ]
                 if language_code != "en":
                     with translation.override(language_code):
@@ -62,39 +68,60 @@ class CmsPluginUnittestGenerator:
                 ]
                 references = []
                 post_data = []
-                for field in plugin.model._meta.fields: # django.db.models.fields.Field
-                    if field.hidden:
+
+                fields = plugin.model._meta.fields
+                prefix_lines += [
+                    "    # %s fields:" % model_label,
+                    "    # %s" % ",".join([field.name for field in fields])
+                ]
+
+                for field in fields:
+                    # field == django.db.models.fields.Field
+
+                    if field.hidden or field.auto_created:
                         continue
+
+                    comment_post_line = False
 
                     if not field.editable:
-                        continue
-
-                    internal_type = field.get_internal_type()
-                    if internal_type == "AutoField":
-                        continue
+                        comment_post_line = True
 
                     if field.name == "cmsplugin_ptr":
+                        comment_post_line = True
+
+                    try:
+                        value = getattr(entry, field.name)
+                    except AttributeError:
+                        post_data.append("# %r: ???" % field.name)
                         continue
 
-                    value = getattr(entry, field.name)
                     if isinstance(value, models.Model):
                         prefix_lines += [
                             "    %s" % line for line in model_test_generator.test_code_for_instance(instance=value)
                         ]
-                        continue
+                        value = "%s.pk" % value._meta.model_name
+                    else:
+                        value = repr(value)
 
-                    comment = field.description % {
-                        "max_length": field.max_length,
-                    }
-                    post_data.append(
-                        "{name!r}: {value!r}, # {internal_type}, {comment}".format(
-                            name = field.name,
-                            value = value,
-                            internal_type = internal_type,
-                            comment = comment
+                    try:
+                        description = field.description
+                    except AttributeError:
+                        # e.g.: 'ManyToOneRel' object has no attribute 'description'
+                        comment = "(no description)"
+                    else:
+                        comment = description % {
+                            "max_length": field.max_length,
+                        }
 
-                        )
+                    internal_type = field.get_internal_type()
+                    post_line = "{name!r}: {value}, # {internal_type}, {comment}".format(
+                        name=field.name, value=value, internal_type=internal_type, comment=comment
                     )
+                    if comment_post_line:
+                        # continue
+                        post_line = "# %s" % post_line
+                    post_data.append(post_line)
+
                     if internal_type == "CharField" and value:
                         references.append(value)
 
@@ -115,7 +142,7 @@ class CmsPluginUnittestGenerator:
                 for value in references:
                     if value.strip():
                         added_references += 1
-                        item_lines.append('        "%s",' % value)
+                        item_lines.append('        %s,' % value)
 
                 if not added_references:
                     item_lines.append('        "XXX", # TODO: Add plugin output here!')
@@ -139,8 +166,6 @@ class CmsPluginUnittestGenerator:
             "",
             "class AddPluginTestCase(TestAddPluginTestCase):",
             '    """',
-            '    Tests for %s' % model_label,
-            '',
             '    Based on a skeleton generated via:',
             '        %s' % " ".join(sys.argv),
             '    """',
