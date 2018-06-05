@@ -175,6 +175,14 @@ e.g.: You would like to make a clone of a existing installation, but without to 
 # start: {{{$ ./manage.py replace_broken 123}}}
 
 
+=== filer 'export_filer_images' management command
+
+The **export_filer_images** stores all used filer image files to disk. e.g.:
+{{{
+$ ./manage.py export_filer_images my_backups
+}}}
+
+
 === 'template_info' management command
 
 Activate e.g.:
@@ -273,6 +281,7 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 == history
 
 * *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.9...master|compare v0.6.9...master]]
+** NEW: management command: 'export_filer_images' to store all filer images on disk
 * v0.6.9 - 04.05.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.8...v0.6.9|compare v0.6.8...v0.6.9]]
 ** Enhance 'Generate 'add cms plugin' skeleton code'
 * v0.6.8 - 25.04.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.7...v0.6.8|compare v0.6.7...v0.6.8]]

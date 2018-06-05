@@ -71,12 +71,9 @@ INSTALLED_APPS = (
     'treebeard', # https://github.com/django-treebeard/django-treebeard
     'sekizai', # https://github.com/ojii/django-sekizai
     'djangocms_text_ckeditor', # https://github.com/divio/djangocms-text-ckeditor
-
-    # https://pypi.org/project/django-parler
-    'parler',
-
-    # https://pypi.org/project/django-ya-model-publisher/
-    'publisher',
+    'filer', # https://github.com/divio/django-filer
+    'parler', # https://pypi.org/project/django-parler
+    'publisher', # https://pypi.org/project/django-ya-model-publisher/
 
     # Own management commands:
     'django_cms_tools',
