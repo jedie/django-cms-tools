@@ -59,7 +59,12 @@ def collect_all_filer_ids(verbose=False):
         for field in fields:
             ids = model.objects.values_list(field.name, flat=True)
             ids = set(ids)
-            filer_ids[field.default_model_class].update(ids)
+
+            model_class = field.default_model_class
+            if isinstance(model_class, str):
+                model_class = load_model(model_class)
+
+            filer_ids[model_class].update(ids)
 
     if verbose:
         for model_class, ids in filer_ids.items():
