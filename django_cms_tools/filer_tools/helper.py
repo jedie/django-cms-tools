@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 def iter_filer_fields():
     app_configs = apps.get_app_configs()
     for app_config in app_configs:
-        app_name= app_config.name
+        app_name = app_config.name
 
         models = app_config.get_models()
         for model in models:
@@ -129,7 +129,6 @@ def filer_obj_exists(file_obj, verbose=False):
             else:
                 log.error(msg)
 
-
     file = file_obj.file
     try:
         head = file.read(10)
@@ -137,7 +136,7 @@ def filer_obj_exists(file_obj, verbose=False):
         # Catch 'Exception' here, because of differend errors, depends on
         # used file storage backend.
         # e.g.: IOError, AzureMissingResourceHttpError etc.
-        msg="Read file error: %s" % err
+        msg = "Read file error: %s" % err
         if verbose:
             print(msg)
         else:
@@ -151,7 +150,7 @@ def filer_obj_exists(file_obj, verbose=False):
     if len(head):
         return True
 
-    msg="file '%s' is empty" % repr(file_obj)
+    msg = "file '%s' is empty" % repr(file_obj)
     if verbose:
         print(msg)
     else:
