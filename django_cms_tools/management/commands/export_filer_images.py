@@ -83,7 +83,7 @@ class Command(BaseCommand):
             self.stdout.write("activate %r translations." % language_code)
             translation.activate(language_code)
 
-        destination = Path(options.get("destination")).resolve()
+        destination = Path(options.get("destination"))
         if not destination.is_dir():
             self.stderr.write("Given destination '%s' is not a existing directory!" % destination)
             sys.exit(-1)
