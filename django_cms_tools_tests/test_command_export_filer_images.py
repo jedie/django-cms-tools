@@ -36,7 +36,7 @@ class ExportFilerImagesTestCase1(DjangoCommandMixin, BaseUnittestCase):
         output = buff.get_output()
         print(output)
 
-        self.assertIn("/does/not/exists' is not a existing directory", output)
+        self.assertIn("does/not/exists' is not a existing directory", output)
 
 
 class ExportFilerImagesTestCase2(TestUserMixin, DjangoCommandMixin, BaseUnittestCase):
