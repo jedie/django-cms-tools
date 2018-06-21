@@ -332,13 +332,23 @@ class CmsPageCreator(object):
     def create(self):
         page, created = self.create_page() # Create page (and page title) in default language
         self.create_title(page) # Create page title in all other languages
+
+        #
+        # We publish the page before self.fill_content()
+        #
+        # Maybe the create process will try to find the published
+        # page instance (e.g.: get_absolute_url() may be called)
+        self.publish(page)
+
         if created:
             # Add plugins only on new created pages
             # otherwise we will add more and more plugins
             # on every run!
             for placeholder_slot in self.placeholder_slots:
                 self.fill_content(page, placeholder_slot) # Add content to the created page.
-        self.publish(page) # Publish page in all languages
+
+            # Publish again, to make the filled content available:
+            self.publish(page)
 
         # Force to reload the url configuration.
         # Important for unittests to "find" all plugins ;)
