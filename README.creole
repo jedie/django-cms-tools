@@ -281,6 +281,8 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 == history
 
 * *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.10...master|compare v0.6.10...master]]
+* v0.6.11 - 21.06.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.10...v0.6.11|compare v0.6.10...v0.6.11]]
+** Bugfix CmsPageCreator if create process will try to find the published page instance
 * v0.6.10 - 05.06.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.9...v0.6.10|compare v0.6.9...v0.6.10]]
 ** NEW: management command: 'export_filer_images' to store all filer images on disk
 ** Bugfix {{{django_cms_tools.filer_tools.helper.collect_all_filer_ids}}} if {{{default_model_class}}} is a string
