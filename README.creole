@@ -86,6 +86,14 @@ To display CMS-Plugin usage, add the plugin name as argument, e.g.:
 {{{./manage.py list_page_by_plugin TextPlugin}}}
 
 
+=== CMS related test assertments
+
+{{{django_cms_tools.unittest_utils.assertments}}} contains CMS related test assertments:
+
+* {{{assert_public_cms_app_namespaces()}}} - Check if given namespaces exists.
+* {{{assert_public_cms_page_urls()}}} - Check if given urls exist.
+
+
 === test fixture creation
 
 
