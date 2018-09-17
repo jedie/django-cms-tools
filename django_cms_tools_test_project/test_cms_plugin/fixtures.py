@@ -10,7 +10,7 @@ from cms.api import add_plugin
 from django_tools.fixture_tools.languages import iter_languages
 
 # Django CMS Tools
-from django_cms_tools.fixtures.pages import CmsPageCreator, CmsPluginPageCreator
+from django_cms_tools.fixture_helper.pages import CmsPageCreator, CmsPluginPageCreator
 from django_cms_tools_test_project.test_cms_plugin.cms_plugin import RelatedPlugin
 from django_cms_tools_test_project.test_cms_plugin.models import EntryModel
 

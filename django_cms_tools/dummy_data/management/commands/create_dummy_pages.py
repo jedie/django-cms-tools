@@ -4,7 +4,7 @@ from __future__ import unicode_literals, print_function
 
 from django.core.management.base import BaseCommand
 
-from django_cms_tools.fixtures.pages import create_dummy_pages
+from django_cms_tools.fixture_helper.pages import create_dummy_pages
 
 
 class Command(BaseCommand):

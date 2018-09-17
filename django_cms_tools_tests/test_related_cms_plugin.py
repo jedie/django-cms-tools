@@ -8,7 +8,7 @@ from cms.models import Page
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 
 # Django CMS Tools
-from django_cms_tools.fixtures.pages import create_cms_index_pages
+from django_cms_tools.fixture_helper.pages import create_cms_index_pages
 from django_cms_tools_test_project.test_cms_plugin.fixtures import create_related_plugin
 
 

@@ -4,7 +4,7 @@ from cms.api import add_plugin
 from django.conf import settings
 from django.utils.text import slugify
 
-from django_cms_tools.fixtures.pages import CmsPageCreator
+from django_cms_tools.fixture_helper.pages import CmsPageCreator
 from django_cms_tools.plugin_anchor_menu import constants as plugin_anchor_menu_constants
 
 

@@ -17,7 +17,7 @@ from djangocms_text_ckeditor.cms_plugins import TextPlugin
 from django_tools.parler_utils.parler_fixtures import ParlerDummyGenerator
 
 # Django CMS Tools
-from django_cms_tools.fixtures.pages import CmsPageCreator
+from django_cms_tools.fixture_helper.pages import CmsPageCreator
 from django_cms_tools.plugin_landing_page.models import LandingPageModel
 
 log = logging.getLogger(__name__)

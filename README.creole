@@ -278,10 +278,19 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
  * Support Django v2.0 and run tests against these versions.
 
 
+== Backwards-incompatible changes
+
+=== v0.7
+
+* {{{django_cms_tools.fixtures}}} renamed to: {{{django_cms_tools.fixture_helper}}}
+* remove {{{django_cms_tools.fixtures.languages}}}
+
+
 == history
 
 * *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.10...master|compare v0.6.10...master]]
 * v0.7.0 - TBD
+** {{{django_cms_tools.fixtures}}} renamed to: {{{django_cms_tools.fixture_helper}}}
 ** remove {{{django_cms_tools.fixtures.languages}}}
 * v0.6.11 - 21.06.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.10...v0.6.11|compare v0.6.10...v0.6.11]]
 ** Bugfix CmsPageCreator if create process will try to find the published page instance

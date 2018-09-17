@@ -21,7 +21,7 @@ from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import TestUserMixin
 
 # Django CMS Tools
-from django_cms_tools.fixtures.pages import CmsPageCreator
+from django_cms_tools.fixture_helper.pages import CmsPageCreator
 from django_cms_tools.unittest_utils.page_mixins import CmsPageTestUtilsMixin
 
 PLUGIN_TEST_PLACEHOLDER_SLOT="plugin_test_content"

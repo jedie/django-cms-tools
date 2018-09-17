@@ -1,25 +1,22 @@
-# coding: utf-8
-
-from __future__ import absolute_import, print_function, unicode_literals
-
 import logging
 
 import pytest
 
 from django.utils import translation
 
+from cms.api import add_plugin, create_page, create_title
+from cms.constants import TEMPLATE_INHERITANCE_MAGIC
+from cms.models import CMSPlugin, Page, Title, settings
+from cms.utils import apphook_reload
+
+# https://github.com/jedie/django-tools
+from django_tools.fixture_tools.languages import iter_languages
+
 try:
     # https://pypi.org/project/python-slugify/
     from slugify import slugify
 except ImportError:
     from django.template.defaultfilters import slugify
-
-from cms.api import create_page, create_title, add_plugin
-from cms.constants import TEMPLATE_INHERITANCE_MAGIC
-from cms.models import Page, CMSPlugin, settings, Title
-from cms.utils import apphook_reload
-
-from django_cms_tools.fixtures.languages import iter_languages
 
 log = logging.getLogger(__name__)
 
@@ -30,16 +27,18 @@ def get_or_create_placeholder(page, placeholder_slot, delete_existing=False):
     Optional: Delete existing placeholder.
     """
     placeholder, created = page.placeholders.get_or_create(
-        slot=placeholder_slot
-    )
+        slot=placeholder_slot)
     if created:
-        log.debug("Create placeholder %r for page %r", placeholder_slot, page.get_title())
+        log.debug("Create placeholder %r for page %r", placeholder_slot,
+                  page.get_title())
     else:
-        log.debug("Use existing placeholder %r for page %r", placeholder_slot, page.get_title())
+        log.debug("Use existing placeholder %r for page %r", placeholder_slot,
+                  page.get_title())
 
     if delete_existing:
-        queryset = CMSPlugin.objects.all().filter(placeholder = placeholder)
-        log.info("Delete %i CMSPlugins on placeholder %s...", queryset.count(), placeholder)
+        queryset = CMSPlugin.objects.all().filter(placeholder=placeholder)
+        log.info("Delete %i CMSPlugins on placeholder %s...", queryset.count(),
+                 placeholder)
         queryset.delete()
 
     return placeholder, created
@@ -56,7 +55,8 @@ def publish_page(page, languages):
             page.publish(language_code)
             log.info('page "%s" published in %s: %s', page, lang_name, url)
         else:
-            log.info('published page "%s" already exists in %s: %s', page, lang_name, url)
+            log.info('published page "%s" already exists in %s: %s', page,
+                     lang_name, url)
     return page.reload()
 
 
@@ -65,13 +65,13 @@ class CmsPageCreator(object):
     Create a normal Django CMS page
     """
     # Some defaults:
-    languages = settings.LANGUAGES # Languages for created content.
-    default_language_code = settings.LANGUAGE_CODE # First language to start create the page
+    languages = settings.LANGUAGES  # Languages for created content.
+    default_language_code = settings.LANGUAGE_CODE  # First language to start create the page
     template = TEMPLATE_INHERITANCE_MAGIC
     in_navigation = True
-    apphook = None            # e.g.: "FooBarApp"
+    apphook = None  # e.g.: "FooBarApp"
     apphook_namespace = None  # e.g.: "foobar"
-    placeholder_slots = ("content",)
+    placeholder_slots = ("content", )
 
     dummy_text_count = 3
 
@@ -83,8 +83,7 @@ class CmsPageCreator(object):
         " exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute"
         " iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
         " Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt"
-        " mollit anim id est laborum.</p>"
-    )
+        " mollit anim id est laborum.</p>")
     suffix_dummy_part = "<p>(absolute url: {absolute_url})</p>"
 
     def __init__(self, delete_first=False, placeholder_slots=None):
@@ -103,7 +102,7 @@ class CmsPageCreator(object):
         """
         :return: 'menu_title' string for cms.api.create_page()
         """
-        return None # No extra title for menu
+        return None  # No extra title for menu
 
     def get_slug(self, language_code, lang_name):
         """
@@ -115,7 +114,7 @@ class CmsPageCreator(object):
         title = self.get_title(language_code, lang_name)
         assert title != ""
 
-        title = str(title) # e.g.: evaluate a lazy translation
+        title = str(title)  # e.g.: evaluate a lazy translation
 
         slug = slugify(title)
         assert slug != "", "Title %r results in empty slug!" % title
@@ -133,7 +132,8 @@ class CmsPageCreator(object):
         Used for 'parent' in cms.api.create_page()
         """
         try:
-            home_page_draft = Page.objects.get(is_home=True, publisher_is_draft=True)
+            home_page_draft = Page.objects.get(
+                is_home=True, publisher_is_draft=True)
         except Page.DoesNotExist:
             log.error('ERROR: "home page" doesn\'t exists!')
             raise RuntimeError('no home page')
@@ -149,7 +149,7 @@ class CmsPageCreator(object):
         """
         Publish the page in all languages.
         """
-        assert page.publisher_is_draft==True, "Page '%s' must be a draft!" % page
+        assert page.publisher_is_draft == True, "Page '%s' must be a draft!" % page
         publish_page(page, languages=self.languages)
 
     def create_page(self, **extra_kwargs):
@@ -167,14 +167,16 @@ class CmsPageCreator(object):
             # for evaluate the language name lazy translation
             # e.g.: settings.LANGUAGE_CODE is not "en"
 
-            self.default_lang_name = dict(self.languages)[self.default_language_code]
-            self.slug = self.get_slug(self.default_language_code, self.default_lang_name)
+            self.default_lang_name = dict(
+                self.languages)[self.default_language_code]
+            self.slug = self.get_slug(self.default_language_code,
+                                      self.default_lang_name)
             assert self.slug != ""
 
         page = None
-        parent=self.get_parent_page()
+        parent = self.get_parent_page()
         if parent is not None:
-            assert parent.publisher_is_draft==True, "Parent page '%s' must be a draft!" % parent
+            assert parent.publisher_is_draft == True, "Parent page '%s' must be a draft!" % parent
 
         if self.delete_first:
             if self.apphook_namespace is not None:
@@ -195,26 +197,29 @@ class CmsPageCreator(object):
                 queryset = Page.objects.drafts()
                 queryset = queryset.filter(parent=parent)
                 try:
-                    page = queryset.get(application_namespace=self.apphook_namespace)
+                    page = queryset.get(
+                        application_namespace=self.apphook_namespace)
                 except Page.DoesNotExist:
-                    pass # Create page
+                    pass  # Create page
                 else:
                     log.debug("Use existing page: %s", page)
-                    created=False
+                    created = False
                     return page, created
             else:
                 # Not a plugin page
-                queryset = Title.objects.filter(language=self.default_language_code)
+                queryset = Title.objects.filter(
+                    language=self.default_language_code)
                 queryset = queryset.filter(page__parent=parent)
                 try:
                     title = queryset.filter(slug=self.slug).first()
                 except Title.DoesNotExist:
-                    pass # Create page
+                    pass  # Create page
                 else:
                     if title is not None:
-                        log.debug("Use page from title with slug %r", self.slug)
+                        log.debug("Use page from title with slug %r",
+                                  self.slug)
                         page = title.page
-                        created=False
+                        created = False
 
         if page is None:
             with translation.override(self.default_language_code):
@@ -223,9 +228,12 @@ class CmsPageCreator(object):
                 # e.g.: settings.LANGUAGE_CODE is not "en"
 
                 page = create_page(
-                    title=self.get_title(self.default_language_code, self.default_lang_name),
-                    menu_title=self.get_menu_title(self.default_language_code, self.default_lang_name),
-                    template=self.get_template(self.default_language_code, self.default_lang_name),
+                    title=self.get_title(self.default_language_code,
+                                         self.default_lang_name),
+                    menu_title=self.get_menu_title(self.default_language_code,
+                                                   self.default_lang_name),
+                    template=self.get_template(self.default_language_code,
+                                               self.default_lang_name),
                     language=self.default_language_code,
                     slug=self.slug,
                     published=False,
@@ -233,12 +241,12 @@ class CmsPageCreator(object):
                     in_navigation=self.in_navigation,
                     apphook=self.apphook,
                     apphook_namespace=self.apphook_namespace,
-                    **extra_kwargs
-                )
-                created=True
-                log.debug("Page created in %s: %s", self.default_lang_name, page)
+                    **extra_kwargs)
+                created = True
+                log.debug("Page created in %s: %s", self.default_lang_name,
+                          page)
 
-        assert page.publisher_is_draft==True
+        assert page.publisher_is_draft == True
         return page, created
 
     def create_title(self, page):
@@ -255,37 +263,41 @@ class CmsPageCreator(object):
                     language=language_code,
                     title=self.get_title(language_code, lang_name),
                     page=page,
-                    slug = slug,
+                    slug=slug,
                 )
                 log.debug("Title created: %s", title)
             else:
                 log.debug("Page title exist: %s", title)
 
     def get_dummy_text(self, page, no, placeholder, language_code, lang_name):
-        if no==1:
+        if no == 1:
             source = self.prefix_dummy_part
-        elif no==self.dummy_text_count:
+        elif no == self.dummy_text_count:
             source = self.suffix_dummy_part
         else:
             source = self.dummy_text_part
 
         dummy_text = source.format(
-            absolute_url = page.get_absolute_url(language=language_code),
-            no = no,
-            slot = placeholder.slot,
-            language_code = language_code,
-            lang_name = lang_name,
+            absolute_url=page.get_absolute_url(language=language_code),
+            no=no,
+            slot=placeholder.slot,
+            language_code=language_code,
+            lang_name=lang_name,
         )
         return dummy_text
 
-    def get_add_plugin_kwargs(self, page, no, placeholder, language_code, lang_name):
+    def get_add_plugin_kwargs(self, page, no, placeholder, language_code,
+                              lang_name):
         """
         Return "content" for create the plugin.
         Called from self.add_plugins()
         """
         return {
-            "plugin_type": 'TextPlugin', # djangocms_text_ckeditor
-            "body": self.get_dummy_text(page, no, placeholder, language_code, lang_name)
+            "plugin_type":
+            'TextPlugin',  # djangocms_text_ckeditor
+            "body":
+            self.get_dummy_text(page, no, placeholder, language_code,
+                                lang_name)
         }
 
     def add_plugins(self, page, placeholder):
@@ -293,20 +305,17 @@ class CmsPageCreator(object):
         Add a "TextPlugin" in all languages.
         """
         for language_code, lang_name in iter_languages(self.languages):
-            for no in range(1, self.dummy_text_count+1):
+            for no in range(1, self.dummy_text_count + 1):
                 add_plugin_kwargs = self.get_add_plugin_kwargs(
-                    page, no, placeholder, language_code, lang_name
-                )
+                    page, no, placeholder, language_code, lang_name)
 
                 log.info(
                     'add plugin to placeholder "%s" (pk:%i) in: %s - no: %i',
-                    placeholder, placeholder.pk, lang_name, no
-                )
+                    placeholder, placeholder.pk, lang_name, no)
                 plugin = add_plugin(
                     placeholder=placeholder,
                     language=language_code,
-                    **add_plugin_kwargs
-                )
+                    **add_plugin_kwargs)
                 log.info('Plugin "%s" (pk:%r) added.', str(plugin), plugin.pk)
                 placeholder.save()
 
@@ -315,8 +324,7 @@ class CmsPageCreator(object):
         Add a placeholder if not exists.
         """
         placeholder, created = get_or_create_placeholder(
-            page, placeholder_slot, delete_existing=self.delete_first
-        )
+            page, placeholder_slot, delete_existing=self.delete_first)
         return placeholder, created
 
     def fill_content(self, page, placeholder_slot):
@@ -324,14 +332,16 @@ class CmsPageCreator(object):
         Add a placeholder to the page.
         Here we add a "TextPlugin" in all languages.
         """
-        if len(placeholder_slot)==1:
+        if len(placeholder_slot) == 1:
             raise RuntimeError(placeholder_slot)
-        placeholder, created = self.get_or_create_placeholder(page, placeholder_slot)
+        placeholder, created = self.get_or_create_placeholder(
+            page, placeholder_slot)
         self.add_plugins(page, placeholder)
 
     def create(self):
-        page, created = self.create_page() # Create page (and page title) in default language
-        self.create_title(page) # Create page title in all other languages
+        page, created = self.create_page(
+        )  # Create page (and page title) in default language
+        self.create_title(page)  # Create page title in all other languages
 
         #
         # We publish the page before self.fill_content()
@@ -345,7 +355,8 @@ class CmsPageCreator(object):
             # otherwise we will add more and more plugins
             # on every run!
             for placeholder_slot in self.placeholder_slots:
-                self.fill_content(page, placeholder_slot) # Add content to the created page.
+                self.fill_content(
+                    page, placeholder_slot)  # Add content to the created page.
 
             # Publish again, to make the filled content available:
             self.publish(page)
@@ -372,9 +383,9 @@ def create_cms_index_pages(placeholder_slot="content"):
             template=TEMPLATE_INHERITANCE_MAGIC,
             language=settings.LANGUAGE_CODE,
             published=False,
-            in_navigation=True
-        )
-        placeholder, created = index_page.placeholders.get_or_create(slot=placeholder_slot)
+            in_navigation=True)
+        placeholder, created = index_page.placeholders.get_or_create(
+            slot=placeholder_slot)
         for language_code, lang_name in settings.LANGUAGES:
             with translation.override(language_code):
                 title = 'index in %s' % lang_name
@@ -383,10 +394,9 @@ def create_cms_index_pages(placeholder_slot="content"):
                     create_title(language_code, title, index_page)
                 add_plugin(
                     placeholder=placeholder,
-                    plugin_type='TextPlugin', # djangocms_text_ckeditor
+                    plugin_type='TextPlugin',  # djangocms_text_ckeditor
                     language=language_code,
-                    body='index page in %s' % lang_name
-                )
+                    body='index page in %s' % lang_name)
                 index_page.publish(language_code)
         created = True
     else:
@@ -404,7 +414,7 @@ class CmsPluginPageCreator(CmsPageCreator):
     The idea is to inherit from this class and update it for your need by
     overwrite some methods ;)
     """
-    placeholder_slots=() # Fill no placeholders
+    placeholder_slots = ()  # Fill no placeholders
 
     def __init__(self, apphook, apphook_namespace, *args, **kwargs):
         self.apphook = apphook
@@ -430,7 +440,8 @@ class CmsPluginPageCreator(CmsPageCreator):
         """
         plugin = CMSPlugin.objects.filter(plugin_type=self.apphook)
         if plugin.exists():
-            log.debug('Plugin page for "%s" plugin already exist, ok.', self.apphook)
+            log.debug('Plugin page for "%s" plugin already exist, ok.',
+                      self.apphook)
             raise plugin
 
         page, created = super(CmsPluginPageCreator, self).create()
@@ -457,14 +468,17 @@ def create_cms_plugin_page(apphook, apphook_namespace, placeholder_slot=None):
         apphook=apphook,
         apphook_namespace=apphook_namespace,
     )
-    creator.placeholder_slot=placeholder_slot
+    creator.placeholder_slot = placeholder_slot
     plugin_page = creator.create()
     return plugin_page
 
 
-
 class DummyPageGenerator(CmsPageCreator):
-    def __init__(self, delete_first=False, title_prefix=None, levels=3, count=2):
+    def __init__(self,
+                 delete_first=False,
+                 title_prefix=None,
+                 levels=3,
+                 count=2):
         if title_prefix is None:
             self.title_prefix = self.__class__.__name__
         else:
@@ -481,11 +495,8 @@ class DummyPageGenerator(CmsPageCreator):
         """
         :return: 'title' string for cms.api.create_page()
         """
-        title = "%s %i-%i in %s" % (
-            self.title_prefix,
-            self.current_count, self.current_level,
-            language_code
-        )
+        title = "%s %i-%i in %s" % (self.title_prefix, self.current_count,
+                                    self.current_level, language_code)
         log.info(title)
         return title
 
@@ -497,17 +508,19 @@ class DummyPageGenerator(CmsPageCreator):
             # 'root' page
             return None
         else:
-            return self.page_data[(self.current_level-1, self.current_count)]
+            return self.page_data[(self.current_level - 1, self.current_count)]
 
     def create(self):
-        for count in range(1, self.count+1):
+        for count in range(1, self.count + 1):
             self.current_count = count
-            for level in range(1, self.levels+1):
+            for level in range(1, self.levels + 1):
                 self.current_level = level
 
-                log.info("Level: %i current count: %i" % (self.current_level, self.current_count))
+                log.info("Level: %i current count: %i" % (self.current_level,
+                                                          self.current_count))
 
-                page, created = super().create() # Create page (and page title) in default language
+                page, created = super().create(
+                )  # Create page (and page title) in default language
                 self.page_data[(self.current_level, self.current_count)] = page
 
         # Force to reload the url configuration.
@@ -522,6 +535,5 @@ def create_dummy_pages(delete_first, title_prefix, levels, count):
         delete_first=delete_first,
         title_prefix=title_prefix,
         levels=levels,
-        count=count
-    ).create()
+        count=count).create()
     return page_data

@@ -15,7 +15,7 @@ from django_tools.unittest_utils.unittest_base import BaseUnittestCase
 
 # Django CMS Tools
 import django_cms_tools_test_project
-from django_cms_tools.fixtures.pages import create_cms_index_pages
+from django_cms_tools.fixture_helper.pages import create_cms_index_pages
 from django_cms_tools_test_project.test_cms_plugin.fixtures import create_testapp_cms_plugin_page
 
 MANAGE_DIR = os.path.abspath(os.path.dirname(django_cms_tools_test_project.__file__))

@@ -15,7 +15,7 @@ from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import TestUserMixin
 
 # Django CMS Tools
-from django_cms_tools.fixtures.pages import create_cms_index_pages
+from django_cms_tools.fixture_helper.pages import create_cms_index_pages
 from django_cms_tools.plugin_landing_page import app_settings
 from django_cms_tools.plugin_landing_page.fixtures import create_landing_page_test_page
 from django_cms_tools.plugin_landing_page.models import LandingPageModel
