@@ -261,7 +261,11 @@ setup(
                  if c.strip() and not c.startswith('#')],
     packages=find_packages(),
     python_requires='>=3.5',
-    install_requires=["django", "django-cms"],
+    install_requires=[
+        "django",
+        "django-tools>=0.42.1",
+        "django-cms",
+    ],
     include_package_data=True,
     cmdclass={
         'test': TestCommand,

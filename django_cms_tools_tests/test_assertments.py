@@ -11,9 +11,7 @@ from django_tools.unittest_utils.user import TestUserMixin
 # Django CMS Tools
 from django_cms_tools.fixture_helper.pages import create_cms_index_pages
 from django_cms_tools.plugin_landing_page.fixtures import create_landing_page_test_page
-from django_cms_tools.unittest_utils.assertments import (
-    assert_language_code, assert_public_cms_app_namespaces,
-    assert_public_cms_page_urls)
+from django_cms_tools.unittest_utils.assertments import assert_public_cms_app_namespaces, assert_public_cms_page_urls
 
 
 class AssertmentsTestCase(TestUserMixin, BaseTestCase):
@@ -50,11 +48,3 @@ class AssertmentsTestCase(TestUserMixin, BaseTestCase):
             assert_public_cms_page_urls,
             language_code="XX",
             urls=["/de/lp/"])
-
-    def test_assert_language_code(self):
-        assert_language_code(language_code="de")
-        assert_language_code(language_code="en")
-
-    def test_assert_language_code_failed(self):
-        self.assertRaises(
-            AssertionError, assert_language_code, language_code="XX")

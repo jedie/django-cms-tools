@@ -4,19 +4,11 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from django.conf import settings
+# https://github.com/jedie/django-tools
+from django_tools.unittest_utils.assertments import assert_language_code
 
 # Django CMS Tools
 from django_cms_tools.fixture_helper.page_utils import get_public_cms_app_namespaces, get_public_cms_page_urls
-
-
-def assert_language_code(*, language_code):
-    """
-    Check if given language_code is in settings.LANGUAGES
-    """
-    existing_language_codes = tuple(dict(settings.LANGUAGES).keys())
-    assert language_code in existing_language_codes, "%r not in settings.LANGUAGES=%r" % (
-        language_code, settings.LANGUAGES)
 
 
 def assert_public_cms_app_namespaces(*, cms_app_namespaces):
