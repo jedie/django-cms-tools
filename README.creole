@@ -296,8 +296,8 @@ It's on the TODO, see: [[https://github.com/jedie/django-cms-tools/issues/1|issu
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.6.10...master|compare v0.6.10...master]]
-* v0.7.0 - TBD
+* *dev* - [[https://github.com/jedie/django-cms-tools/compare/v0.7.0...master|compare v0.7.0...master]]
+* v0.7.0 - 18.09.2018 - [[https://github.com/jedie/django-cms-tools/compare/v0.6.11...v0.7.0|compare v0.6.11...v0.7.0]]
 ** {{{django_cms_tools.fixtures}}} renamed to: {{{django_cms_tools.fixture_helper}}}
 ** remove {{{django_cms_tools.fixtures.languages}}}
 ** NEW: {{{django_cms_tools.unittest_utils.assertments}}}
