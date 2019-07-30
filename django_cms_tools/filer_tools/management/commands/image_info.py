@@ -5,6 +5,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 
 from django.core.management.base import BaseCommand
+from django.db import DatabaseError
 from django.db.models import Sum
 from django.template.defaultfilters import filesizeformat
 
@@ -24,7 +25,13 @@ class Command(BaseCommand):
         total_missing_images = 0
         for app_name, model, object_name, fields in iter_filer_fields():
             queryset = model.objects.all()
-            model_count = queryset.count()
+
+            try:
+                model_count = queryset.count()
+            except DatabaseError as err:
+                self.stderr.write("\nSkip %s.%s: %s" % (app_name, model.__name__, err))
+                continue
+
             self.stdout.write("\n%i items - %s.%s" % (model_count, app_name, model.__name__))
 
             instance_checked = 0

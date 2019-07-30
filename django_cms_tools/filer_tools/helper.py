@@ -7,6 +7,7 @@ import logging
 
 from django.apps import apps
 from django.conf import settings
+from django.db import DatabaseError
 
 from easy_thumbnails.exceptions import InvalidImageFormatError
 from filer.fields.file import FilerFileField
@@ -58,7 +59,12 @@ def collect_all_filer_ids(verbose=False):
 
         for field in fields:
             ids = model.objects.values_list(field.name, flat=True)
-            ids = set(ids)
+
+            try:
+                ids = set(ids)
+            except DatabaseError as err:
+                log.error("Skip %s: %s", model_pgk_name, err)
+                continue
 
             model_class = field.default_model_class
             if isinstance(model_class, str):
