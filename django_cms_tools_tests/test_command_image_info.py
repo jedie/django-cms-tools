@@ -27,7 +27,6 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
         output = self.call_manage_py(["image_info"], manage_dir=MANAGE_DIR)
         print(output)
 
-        self.assertNotIn("ERROR", output)
         self.assertIn("existing images..: 0", output)
         self.assertIn("missing images...: 0", output)
 
