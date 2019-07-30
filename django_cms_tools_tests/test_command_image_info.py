@@ -1,21 +1,16 @@
-# coding: utf-8
-
-from __future__ import unicode_literals, print_function
-
-
 import os
 from unittest import TestCase
 
+# https://github.com/jedie/django-tools
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
 
+# Django CMS Tools
 import django_cms_tools_test_project
-
 
 MANAGE_DIR = os.path.abspath(os.path.dirname(django_cms_tools_test_project.__file__))
 
 
 class TestListModelsCommand(DjangoCommandMixin, TestCase):
-
     def test_image_info_help(self):
         output = self.call_manage_py(["image_info", "--help"], manage_dir=MANAGE_DIR)
         print(output)
@@ -31,4 +26,3 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
         self.assertIn("missing images...: 0", output)
 
     # TODO: Add real tests ;)
-
